@@ -23,10 +23,20 @@ begin
   begin 
     case op is     
       when ALU_NOP =>
-        report "exec ALU_NOP";
+        --report "exec ALU_NOP";
         z <= '-';
         r <= b;
+
       when ALU_SLT =>
+        -- SLT = Set Less Than
+        if signed(a) < signed(b) then 
+          r <= (others=>'0');
+        else 
+          r <= (Others=>'1');
+        end if;
+
+        z <= not r(0);
+
         report "exec ALU_SLT";
       when ALU_SLTU =>
         report "exec ALU_SLTU";
