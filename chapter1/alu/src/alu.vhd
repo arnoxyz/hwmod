@@ -24,6 +24,8 @@ begin
     case op is     
       when ALU_NOP =>
         report "exec ALU_NOP";
+        z <= '-';
+        r <= b;
       when ALU_SLT =>
         report "exec ALU_SLT";
       when ALU_SLTU =>
