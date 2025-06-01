@@ -28,6 +28,7 @@ begin
         r <= b;
 
       when ALU_SLT =>
+        --report "exec ALU_SLT";
         -- SLT = Set Less Than
         if signed(a) < signed(b) then 
           r <= (others=>'0');
@@ -37,9 +38,16 @@ begin
 
         z <= not r(0);
 
-        report "exec ALU_SLT";
       when ALU_SLTU =>
-        report "exec ALU_SLTU";
+        --report "exec ALU_SLTU";
+        -- SLT U = Set Less Than Unsigned=Inputs
+        if unsigned(a) < unsigned(b) then 
+          r <= (others=>'0');
+        else 
+          r <= (Others=>'1');
+        end if;
+
+        z <= not r(0);
       when ALU_SLL =>
         report "exec ALU_SLL";
       when ALU_SRL =>

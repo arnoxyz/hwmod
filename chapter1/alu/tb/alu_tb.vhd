@@ -38,8 +38,17 @@ begin
     begin 
       -- apply inputs to the UUT
       op <= cmd;
-      a <= std_ulogic_vector(to_unsigned(input_a, DATA_WIDTH));
-      b <= std_ulogic_vector(to_unsigned(input_b, DATA_WIDTH));
+      if input_a < 0 then 
+        a <= std_ulogic_vector(to_signed(input_a, DATA_WIDTH));
+      else 
+        a <= std_ulogic_vector(to_unsigned(input_a, DATA_WIDTH));
+      end if;
+      if input_b < 0 then 
+        b <= std_ulogic_vector(to_signed(input_b, DATA_WIDTH));
+      else 
+        b <= std_ulogic_vector(to_unsigned(input_b, DATA_WIDTH));
+      end if;
+
       wait for 1 ns;
 
       case cmd is     
@@ -60,6 +69,15 @@ begin
 
         when ALU_SLTU =>
           report "(sim) check ALU_SLTU";
+          if to_unsigned(input_a, DATA_WIDTH) < to_unsigned(input_b, DATA_WIDTH) then 
+            assert r = ZERO report "ALU_SLTU  r not '1', " & 
+                                   "r= " & to_string(r) & ", a= " & to_string(a) & ", b= " & to_string(a);
+          else 
+            assert r = ONES  report "ALU_SLTU  r not '0', " & "r= " & to_string(r) & ", b= " & to_string(b);
+          end if;
+
+          assert z = not r(0) report "ALU_SLT z not r(0), " & "z= " & to_string(z) & ", r(0)= "& to_string(r(0));
+
         when ALU_SLL =>
           report "(sim) check ALU_SLL";
         when ALU_SRL =>
@@ -86,7 +104,8 @@ begin
     -- exec(cmd, input1, input2);
     exec(ALU_NOP, 1, 2);
 
-    exec(ALU_SLT, 1, 2);
+    exec(ALU_SLT, -1, -20);
+    exec(ALU_SLTU, 1, 2);
     report "(sim) done";
 		wait;
 	end process;
