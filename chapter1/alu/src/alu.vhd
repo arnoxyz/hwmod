@@ -20,6 +20,7 @@ end entity;
 architecture beh of alu is 
 begin 
   comb : process(all) is 
+    constant x : integer := log2c(DATA_WIDTH);
   begin 
     case op is     
       when ALU_NOP =>
@@ -50,10 +51,16 @@ begin
         z <= not r(0);
       when ALU_SLL =>
         report "exec ALU_SLL";
+        -- SLL = Shift Left Logical
+        r <= std_ulogic_vector(shift_left(unsigned(a), to_integer(unsigned(b(x-1 downto 0)))));
+        z <= '-';
+
       when ALU_SRL =>
         report "exec ALU_SRL";
+        -- SRL = Shift Right Logical
       when ALU_SRA =>
         report "exec ALU_SRA";
+        -- SRL = Shift Right Arithmetical
       when ALU_ADD =>
         report "exec ALU_ADD";
       when ALU_SUB =>
