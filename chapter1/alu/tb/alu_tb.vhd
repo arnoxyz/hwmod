@@ -92,10 +92,15 @@ begin
             report "ALU_SRL is not correct " & "sll a= " & to_string(to_unsigned(input_a, DATA_WIDTH)) 
                  & " by " & to_string(input_b) & " & result: " & to_string(r);
 
-            assert z = '-' report "ALU_SLL z not '-', " & "z= " & to_string(z);
+            assert z = '-' report "ALU_SRL z not '-', " & "z= " & to_string(z);
 
         when ALU_SRA =>
           report "(sim) check ALU_SRA";
+            assert r = std_ulogic_vector(shift_right(to_signed(input_a, DATA_WIDTH), input_b)) 
+            report "ALU_SRA is not correct " & "sll a= " & to_string(to_signed(input_a, DATA_WIDTH)) 
+                 & " by " & to_string(input_b) & " & result: " & to_string(r);
+
+            assert z = '-' report "ALU_SRA z not '-', " & "z= " & to_string(z);
         when ALU_ADD =>
           report "(sim) check ALU_ADD";
         when ALU_SUB =>
@@ -124,6 +129,9 @@ begin
 
     exec(ALU_SRL, 2, 1);
     exec(ALU_SRL, 4, 2);
+
+    exec(ALU_SRA, -8, 1);
+    exec(ALU_SRA, 4, 2);
     report "(sim) done";
 		wait;
 	end process;
