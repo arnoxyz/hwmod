@@ -58,6 +58,9 @@ begin
       when ALU_SRL =>
         report "exec ALU_SRL";
         -- SRL = Shift Right Logical
+        r <= std_ulogic_vector(shift_right(unsigned(a), to_integer(unsigned(b(x-1 downto 0)))));
+        z <= '-';
+
       when ALU_SRA =>
         report "exec ALU_SRA";
         -- SRL = Shift Right Arithmetical
