@@ -53,17 +53,17 @@ begin
 
         z <= not r(0);
       when ALU_SLL =>
-        report "exec ALU_SLL";
+        -- report "exec ALU_SLL";
         -- SLL = Shift Left Logical
         r <= std_ulogic_vector(shift_left(unsigned(a), to_integer(unsigned(b(x-1 downto 0)))));
 
       when ALU_SRL =>
-        report "exec ALU_SRL";
+        -- report "exec ALU_SRL";
         -- SRL = Shift Right Logical
         r <= std_ulogic_vector(shift_right(unsigned(a), to_integer(unsigned(b(x-1 downto 0)))));
 
       when ALU_SRA =>
-        report "exec ALU_SRA";
+        -- report "exec ALU_SRA";
         -- SRL = Shift Right Arithmetical
         r <= std_ulogic_vector(shift_right(signed(a), to_integer(unsigned(b(x-1 downto 0)))));
 
