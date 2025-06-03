@@ -22,6 +22,9 @@ begin
   comb : process(all) is 
     constant x : integer := log2c(DATA_WIDTH);
   begin 
+    -- drive z to don't care as default
+    z <= '-';
+
     case op is     
       when ALU_NOP =>
         --report "exec ALU_NOP";
@@ -53,23 +56,25 @@ begin
         report "exec ALU_SLL";
         -- SLL = Shift Left Logical
         r <= std_ulogic_vector(shift_left(unsigned(a), to_integer(unsigned(b(x-1 downto 0)))));
-        z <= '-';
 
       when ALU_SRL =>
         report "exec ALU_SRL";
         -- SRL = Shift Right Logical
         r <= std_ulogic_vector(shift_right(unsigned(a), to_integer(unsigned(b(x-1 downto 0)))));
-        z <= '-';
 
       when ALU_SRA =>
         report "exec ALU_SRA";
         -- SRL = Shift Right Arithmetical
         r <= std_ulogic_vector(shift_right(signed(a), to_integer(unsigned(b(x-1 downto 0)))));
-        z <= '-';
+
       when ALU_ADD =>
         report "exec ALU_ADD";
+        r <= std_ulogic_vector(signed(a)+signed(b));
+
       when ALU_SUB =>
         report "exec ALU_SUB";
+        r <= std_ulogic_vector(signed(a)-signed(b));
+
       when ALU_AND =>
         report "exec ALU_AND";
       when ALU_OR =>

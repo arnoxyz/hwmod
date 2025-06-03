@@ -103,8 +103,26 @@ begin
             assert z = '-' report "ALU_SRA z not '-', " & "z= " & to_string(z);
         when ALU_ADD =>
           report "(sim) check ALU_ADD";
+            assert signed(r) = to_signed(input_a + input_b, DATA_WIDTH) 
+            report "ALU_ADD is not correct " & 
+                  "a = " & to_string(to_signed(input_a, DATA_WIDTH)) &
+                  "b = " & to_string(to_signed(input_b, DATA_WIDTH)) &
+                  "a+b = " & to_string(to_signed(input_a+input_b, DATA_WIDTH)) &
+                  "result: " & to_string(signed(r));
+
+            assert z = '-' report "ALU_ADD  z not '-', " & "z= " & to_string(z);
+
         when ALU_SUB =>
           report "(sim) check ALU_SUB";
+            assert signed(r) = to_signed(input_a - input_b, DATA_WIDTH) 
+            report "ALU_SUB is not correct " & 
+                  "a = " & to_string(to_signed(input_a, DATA_WIDTH)) &
+                  "b = " & to_string(to_signed(input_b, DATA_WIDTH)) &
+                  "a+b= " & to_string(to_signed(input_a-input_b, DATA_WIDTH)) &
+                  "result: " & to_string(signed(r));
+
+            assert z = '-' report "ALU_SUB  z not '-', " & "z= " & to_string(z);
+
         when ALU_AND =>
           report "(sim) check ALU_AND";
         when ALU_OR =>
@@ -132,6 +150,12 @@ begin
 
     exec(ALU_SRA, -8, 1);
     exec(ALU_SRA, 4, 2);
+
+    exec(ALU_ADD, 4, 2);
+    exec(ALU_ADD, 2, 4);
+
+    exec(ALU_SUB, 2, 2);
+    exec(ALU_SUB, 4, 1);
     report "(sim) done";
 		wait;
 	end process;
