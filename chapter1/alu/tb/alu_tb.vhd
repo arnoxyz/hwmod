@@ -105,10 +105,10 @@ begin
           report "(sim) check ALU_ADD";
             assert signed(r) = to_signed(input_a + input_b, DATA_WIDTH) 
             report "ALU_ADD is not correct " & 
-                  "a = " & to_string(to_signed(input_a, DATA_WIDTH)) &
-                  "b = " & to_string(to_signed(input_b, DATA_WIDTH)) &
-                  "a+b = " & to_string(to_signed(input_a+input_b, DATA_WIDTH)) &
-                  "result: " & to_string(signed(r));
+                  " a= " & to_string(to_signed(input_a, DATA_WIDTH)) &
+                  " b= " & to_string(to_signed(input_b, DATA_WIDTH)) &
+                  " a+b= " & to_string(to_signed(input_a+input_b, DATA_WIDTH)) &
+                  " result=" & to_string(signed(r));
 
             assert z = '-' report "ALU_ADD  z not '-', " & "z= " & to_string(z);
 
@@ -116,10 +116,10 @@ begin
           report "(sim) check ALU_SUB";
             assert signed(r) = to_signed(input_a - input_b, DATA_WIDTH) 
             report "ALU_SUB is not correct " & 
-                  "a = " & to_string(to_signed(input_a, DATA_WIDTH)) &
-                  "b = " & to_string(to_signed(input_b, DATA_WIDTH)) &
-                  "a+b= " & to_string(to_signed(input_a-input_b, DATA_WIDTH)) &
-                  "result: " & to_string(signed(r));
+                  " a=" & to_string(to_signed(input_a, DATA_WIDTH)) &
+                  " b=" & to_string(to_signed(input_b, DATA_WIDTH)) &
+                  " a-b=" & to_string(to_signed(input_a-input_b, DATA_WIDTH)) &
+                  " result=" & to_string(signed(r));
 
             -- assert z if A=B to '1' else '0' 
             if (to_signed(input_a - input_b, DATA_WIDTH) = 0) then 
@@ -132,23 +132,38 @@ begin
           report "(sim) check ALU_AND";
             assert signed(r) = (to_signed(input_a, DATA_WIDTH) and to_signed(input_b, DATA_WIDTH))
             report "ALU_AND is not correct " & 
-                  "a = " & to_string(to_signed(input_a, DATA_WIDTH)) &
-                  "b = " & to_string(to_signed(input_b, DATA_WIDTH)) &
-                  "a and b= " & to_string(to_signed(input_a, DATA_WIDTH) and to_signed(input_b, DATA_WIDTH)) &
-                  "result: " & to_string(signed(r));
+                  " a=" & to_string(to_signed(input_a, DATA_WIDTH)) &
+                  " b=" & to_string(to_signed(input_b, DATA_WIDTH)) &
+                  " (a and b)=" & to_string(to_signed(input_a, DATA_WIDTH) and to_signed(input_b, DATA_WIDTH)) &
+                  " result=" & to_string(signed(r));
 
             assert z = '-' report "ALU_AND  z not '-', " & "z= " & to_string(z);
         when ALU_OR =>
           report "(sim) check ALU_OR";
+            assert signed(r) = (to_signed(input_a, DATA_WIDTH) or to_signed(input_b, DATA_WIDTH))
+            report "ALU_OR is not correct " & 
+                  " a=" & to_string(to_signed(input_a, DATA_WIDTH)) &
+                  " b=" & to_string(to_signed(input_b, DATA_WIDTH)) &
+                  " (a or b)=" & to_string(to_signed(input_a, DATA_WIDTH) or to_signed(input_b, DATA_WIDTH)) &
+                  " result=" & to_string(signed(r));
+
+            assert z = '-' report "ALU_AND  z not '-', " & "z= " & to_string(z);
         when ALU_XOR =>
           report "(sim) check ALU_XOR";
+            assert signed(r) = (to_signed(input_a, DATA_WIDTH) xor to_signed(input_b, DATA_WIDTH))
+            report "ALU_XOR is not correct " & 
+                  " a=" & to_string(to_signed(input_a, DATA_WIDTH)) &
+                  " b=" & to_string(to_signed(input_b, DATA_WIDTH)) &
+                  " (a xor b)=" & to_string(to_signed(input_a, DATA_WIDTH) xor to_signed(input_b, DATA_WIDTH)) &
+                  " result=" & to_string(signed(r));
+
+            assert z = '-' report "ALU_XOR  z not '-', " & "z= " & to_string(z);
         when others =>
           report "(sim) error";
       end case;
     end procedure;
 	begin
     report "(sim) start";
-    -- TODO: Test all op inputs
     -- exec(cmd, input1, input2);
     exec(ALU_NOP, 1, 2);
 
@@ -169,6 +184,15 @@ begin
 
     exec(ALU_SUB, 2, 2);
     exec(ALU_SUB, 4, 1);
+
+    exec(ALU_AND, 4, 4);
+    exec(ALU_AND, 1, 0);
+
+    exec(ALU_OR, 1, 0);
+    exec(ALU_OR, 0, 0);
+
+    exec(ALU_XOR, 1, 0);
+    exec(ALU_XOR, 1, 1);
     report "(sim) done";
 		wait;
 	end process;
