@@ -121,10 +121,23 @@ begin
                   "a+b= " & to_string(to_signed(input_a-input_b, DATA_WIDTH)) &
                   "result: " & to_string(signed(r));
 
-            assert z = '-' report "ALU_SUB  z not '-', " & "z= " & to_string(z);
+            -- assert z if A=B to '1' else '0' 
+            if (to_signed(input_a - input_b, DATA_WIDTH) = 0) then 
+              assert z = '1' report "ALU_SUB  z not '1', " & "z= " & to_string(z);
+            else 
+              assert z = '0' report "ALU_SUB  z not '0', " & "z= " & to_string(z);
+            end if;
 
         when ALU_AND =>
           report "(sim) check ALU_AND";
+            assert signed(r) = (to_signed(input_a, DATA_WIDTH) and to_signed(input_b, DATA_WIDTH))
+            report "ALU_AND is not correct " & 
+                  "a = " & to_string(to_signed(input_a, DATA_WIDTH)) &
+                  "b = " & to_string(to_signed(input_b, DATA_WIDTH)) &
+                  "a and b= " & to_string(to_signed(input_a, DATA_WIDTH) and to_signed(input_b, DATA_WIDTH)) &
+                  "result: " & to_string(signed(r));
+
+            assert z = '-' report "ALU_AND  z not '-', " & "z= " & to_string(z);
         when ALU_OR =>
           report "(sim) check ALU_OR";
         when ALU_XOR =>

@@ -68,19 +68,29 @@ begin
         r <= std_ulogic_vector(shift_right(signed(a), to_integer(unsigned(b(x-1 downto 0)))));
 
       when ALU_ADD =>
-        report "exec ALU_ADD";
+        -- report "exec ALU_ADD";
         r <= std_ulogic_vector(signed(a)+signed(b));
 
       when ALU_SUB =>
-        report "exec ALU_SUB";
+        -- report "exec ALU_SUB";
         r <= std_ulogic_vector(signed(a)-signed(b));
 
+        -- set z if A=B to '1' else '0' 
+        if ((signed(a) -  signed(b)) = 0) then 
+          z <= '1';
+        else 
+          z <= '0';
+        end if;
+
       when ALU_AND =>
-        report "exec ALU_AND";
+        -- report "exec ALU_AND";
+        r <= std_ulogic_vector(a and b);
       when ALU_OR =>
-        report "exec ALU_OR";
+        -- report "exec ALU_OR";
+        r <= std_ulogic_vector(a or b);
       when ALU_XOR =>
-        report "exec ALU_XOR";
+        -- report "exec ALU_XOR";
+        r <= std_ulogic_vector(a xor b);
       when others =>
     end case;
   end process;
