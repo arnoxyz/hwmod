@@ -38,24 +38,39 @@ begin
 		constant check_width  : natural 	:= 11 * bar_width;
 		constant stop_width   : natural 	:= 15 * bar_width; 
 
+		-- for debugging
+		procedure draw_stats(x : natural; y : natural; w : natural; h: natural) is
+		begin 
+			report("Draw stats:  " & 
+				"x=" & to_string(x_pos) & " " & 
+				"y=" & to_string(y_pos) & " " & 
+				"width="  & to_string(quiet_zone) & " " & 
+				"height=" & to_string(bar_height));
+		end procedure;
+
+		-- TODO: draw bar 
+			-- (bar-space, bar-space, bar-space)
+			-- Example
+			-- "11010000100",  -- 103 (Start Code A)
+			-- vhdldraw.fillRectangle(x_pos, y_pos, quiet_zone, bar_height);
+
 	begin
 		vhdldraw.init(window_width, window_height); 
 		vhdldraw.setColor(Black);
 
-		--vhdldraw.fillRectangle(x,y,width height);
-		report(
-			to_string(x_pos) & " " & 
-			to_string(y_pos) & " " & 
-			to_string(quiet_zone) & " " & 
-			to_string(bar_height));
-		vhdldraw.fillRectangle(x_pos, y_pos, quiet_zone, bar_height);
 
 		--(from Wikipedia)
 		--A Code 128 barcode has seven sections:
 			--Quiet zone
+			vhdldraw.fillRectangle(x_pos, y_pos, quiet_zone, bar_height);
+			draw_stats(x_pos,y_pos,quiet_zone,bar_height);
+
 			--Start symbol
-			--Encoded data
-			--Check symbol (mandatory)
+			-- TODO: add procedure that draws bars according to specification (3 bars width)
+
+			--Encoded data 
+			--Check symbol (mandatory) 
+				--TODO:-> Check digit calculation, 11 Modules per Symbol so check (SumSymbols) % 11 == 0
 			--Stop symbol
 			--Final bar (often considered part of the stop symbol)
 			--Quiet zone
