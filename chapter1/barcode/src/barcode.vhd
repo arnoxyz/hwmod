@@ -12,8 +12,8 @@ end entity;
 
 architecture arch of barcode is
 	-- Config:
-	constant ACTIVE_CODE : code128_t := CODE_A; -- Select the code that will be generated:
-	constant input_str: string := "AB"; 
+	constant ACTIVE_CODE : code128_t := CODE_B; -- Select the code that will be generated:
+	constant input_str: string := "ab"; 
 
 
 	-- Stuff I care later about: (make the drawing look nice)
@@ -39,9 +39,22 @@ begin
 		-- fill barcode_data with specific data from input_str
 		procedure fill_barcode_data is
 		begin 
-			for i in input_str'range loop
-				barcode_data(i) <= code128_table(character'pos(input_str(i)));
-			end loop;
+			--ACTIVE_CODE : code128_t := CODE_A; -- Select the code that will be generated:
+			case ACTIVE_CODE is 
+				when CODE_A =>
+					report "Code_A: Direct Mapping of ASCII 0-95";
+					--TODO: handle wrong inputs
+					for i in input_str'range loop
+						barcode_data(i) <= code128_table(character'pos(input_str(i)));
+					end loop;
+				when CODE_B =>
+					report "Code_B: Shift -32 for Mapping";
+					--TODO: handle wrong inputs
+					for i in input_str'range loop
+						barcode_data(i) <= code128_table(character'pos(input_str(i))-32);
+					end loop;
+			end case;
+
 			wait for 1 ns;
 		end procedure;
 
@@ -51,6 +64,10 @@ begin
 		constant quiet_zone   : natural 	:= 15 * bar_width;  
 		constant check_width  : natural 	:= 11 * bar_width;
 		constant stop_width   : natural 	:= 15 * bar_width; 
+
+		-- Codes
+		variable start_code : std_ulogic_vector(BARCODE_BITS - 1 downto 0);
+		variable stop_code : std_ulogic_vector(BARCODE_BITS - 1 downto 0) := code128_table(106);
 
 		-- input a barcode like 11010000100 and draws it accordingly
 		procedure draw_symbol(code : std_ulogic_vector(10 downto 0)) is
@@ -74,7 +91,6 @@ begin
 		vhdldraw.init(window_width, window_height); 
 		vhdldraw.setColor(Black);
 
-
 		--(from Wikipedia)
 		--A Code 128 barcode has seven sections:
 			--Quiet zone
@@ -82,9 +98,19 @@ begin
 			draw_stats(x_pos,y_pos,quiet_zone,bar_height);
 
 			--Start symbol
+			case ACTIVE_CODE is 
+				when CODE_A =>
+					start_code := code128_table(103);
+				when CODE_B =>
+					start_code := code128_table(104);
+				--when CODE_C =>
+					--start_code := code128_table(105);
+			end case;
+			--TODO: draw start code
 
 			--Encoded data 
 			fill_barcode_data;
+			--TODO: draw encoded data
 			for i in barcode_data'range loop
 				draw_symbol(barcode_data(i));
 			end loop;
@@ -93,8 +119,13 @@ begin
 				--TODO:-> Check digit calculation, 11 Modules per Symbol so check (SumSymbols) % 11 == 0
 
 			--Stop symbol
+			--use stop code
+			--TODO: draw stop code
 			--Final bar (often considered part of the stop symbol)
+
+
 			--Quiet zone
+			--TODO: draw quiet zone 
 
 		vhdldraw.show(input_str & "_barcode.ppm"); -- Show the resulting barcode image
 		wait;  
