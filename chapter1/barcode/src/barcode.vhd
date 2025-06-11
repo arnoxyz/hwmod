@@ -74,11 +74,7 @@ begin
 		procedure draw_symbol(code : std_ulogic_vector(10 downto 0)) is
 		begin 
 			report(to_string(code));
-			--To draw the barcode: 
-			--map values in the vector: 
-			--1s to black bars 
-			--0s to white bars. 
-			
+			--To draw the barcode: map values in the vector (1s to black bars, 0s to white bars)
 			for i in code'range loop
 				if code(i) = '1' then 
 					vhdldraw.setColor(Black);
@@ -110,25 +106,24 @@ begin
 			vhdldraw.fillRectangle(x_pos, y_pos, quiet_zone, bar_height);
 			x_pos := x_pos+quiet_zone;
 
-			--draw start code
-			draw_symbol(start_code);
+			--draw barcode (includes start, stop code)
+			for i in barcode'range loop
+				draw_symbol(barcode(i));
+			end loop;
 
-			--draw barcode
-			--for i in barcode'range loop
-				--draw_symbol(barcode_data(i));
-			--end loop;
-			--TODO: draw Stop symbol (use stop code)
-			--TODO: draw quiet zone 
-		vhdldraw.show(input_str & "_barcode.ppm"); -- Show the resulting barcode image
+			--draw Quiet zone 
+			vhdldraw.setColor(White);
+			vhdldraw.fillRectangle(x_pos, y_pos, quiet_zone, bar_height);
+			x_pos := x_pos+quiet_zone;
+
+			vhdldraw.show(input_str & "_barcode.ppm"); -- Show the resulting barcode image
 		end procedure;
 
 	begin
-
-	--1.) gen code 
-	fill_barcode;
-
-	--TODO: 2.) draw barcode
-	draw_barcode;
+		-- gen code 
+		fill_barcode;
+		-- draw barcode
+		draw_barcode;
 		wait;  
 	end process;
 end architecture;
