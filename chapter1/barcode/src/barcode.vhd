@@ -10,57 +10,45 @@ use work.vhdldraw_pkg.all;
 entity barcode is
 end entity;
 
+-- Split Task: 
+-- 1.) encode input and save it in an array 
+-- 2.) draw barcode from that array
 architecture arch of barcode is
-	-- Split Task: 
-	-- 1.) encode input and save it in an array 
-	-- 2.) draw barcode from that array
+	----------------------------------CONFIG----------------------------------------------
+	constant ACTIVE_CODE : code128_t := CODE_A; -- Select the code that will be generated:
+	constant input_str: string := "ab"; 
+	--here signals for debuging (make sim_gui)
+	signal barcode : barcode_t(1 to input_str'length+2) := (others=>(Others=>'1'));
 begin
 	barcode_maker : process
-		----------------------------------CONFIG----------------------------------------------
-		constant ACTIVE_CODE : code128_t := CODE_A; -- Select the code that will be generated:
-		constant input_str: string := "ab"; 
 		----------------------------------GEN-CODE----------------------------------------------
-		variable barcode_data : barcode_t(1 to input_str'length) := (others=>(others=>'1')); 
-		-- Codes
 		variable start_code : std_ulogic_vector(BARCODE_BITS - 1 downto 0);
 		variable stop_code : std_ulogic_vector(BARCODE_BITS - 1 downto 0) := code128_table(106);
-		-- fill barcode_data with specific data from input_str
-		procedure fill_barcode_data is
-		begin 
-			--Select the code that will be generated:
-			case ACTIVE_CODE is 
-				when CODE_A =>
-					report "Gen Code_A";
-					--TODO: handle wrong inputs
-					for i in input_str'range loop
-						--Direct Mapping of ASCII 0-95";
-						barcode_data(i) := code128_table(character'pos(input_str(i)));
-					end loop;
-				when CODE_B =>
-					report "Gen Code_B";
-					--TODO: handle wrong inputs
-					for i in input_str'range loop
-						--Shift ASCII Code: -32 for Mapping
-						barcode_data(i) := code128_table(character'pos(input_str(i))-32);
-					end loop;
-			end case;
-		end procedure;
 		procedure fill_barcode is 
 		begin 
-			--Quiet zone
-
-			--Draw start code
-			--Start symbol
 			case ACTIVE_CODE is 
 				when CODE_A =>
 					start_code := code128_table(103);
 				when CODE_B =>
 					start_code := code128_table(104);
-				--when CODE_C =>
-					--start_code := code128_table(105);
 			end case;
-			--Encoded data 
-			fill_barcode_data;
+
+			-- BARCODE [START-SYMBOL [DATA] STOP-SYMBOL]
+			barcode(1) <= start_code;
+			case ACTIVE_CODE is 
+				when CODE_A =>
+					report "Gen Code_A"; --Direct Mapping of ASCII 0-95";
+					for i in input_str'range loop
+						barcode(i+1) <= code128_table(character'pos(input_str(i)));
+					end loop;
+				when CODE_B =>
+					report "Gen Code_B"; --Shift ASCII Code: -32 for Mapping
+					for i in input_str'range loop
+						barcode(i+1) <= code128_table(character'pos(input_str(i))-32);
+					end loop;
+			end case;
+			barcode(input_str'length+2) <= stop_code;
+			wait for 1 ns;
 		end procedure;
 		----------------------------------DRAWING----------------------------------------------
 		-- Stuff I care later about: (make the drawing look nice)
@@ -111,7 +99,9 @@ begin
 		end procedure;
 	begin
 
-	--TODO: 1.) gen code 
+	--1.) gen code 
+	fill_barcode;
+
 	--TODO: 2.) draw barcode
 		wait;  
 	end process;
