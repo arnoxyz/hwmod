@@ -105,14 +105,16 @@ begin
 		begin 
 			vhdldraw.init(window_width, window_height); 
 
-			--TODO: draw Quiet zone
-				--draw_stats(x_pos,y_pos,quiet_zone,bar_height);
+			--draw Quiet zone
+			vhdldraw.setColor(White);
+			vhdldraw.fillRectangle(x_pos, y_pos, quiet_zone, bar_height);
+			x_pos := x_pos+quiet_zone;
 
 			--draw start code
 			draw_symbol(start_code);
 
-			--TODO: draw encoded data
-			--for i in barcode_data'range loop
+			--draw barcode
+			--for i in barcode'range loop
 				--draw_symbol(barcode_data(i));
 			--end loop;
 			--TODO: draw Stop symbol (use stop code)
