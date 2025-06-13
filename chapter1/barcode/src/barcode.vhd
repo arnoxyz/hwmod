@@ -16,7 +16,7 @@ end entity;
 architecture arch of barcode is
 	----------------------------------CONFIG----------------------------------------------
 	constant ACTIVE_CODE : code128_t := CODE_A; -- Select the code that will be generated:
-	constant input_str: string := "ab"; 
+	constant input_str: string := "abababab"; 
 	--here signals for debuging (make sim_gui)
 	signal barcode : barcode_t(1 to input_str'length+2) := (others=>(Others=>'1'));
 begin
@@ -52,24 +52,22 @@ begin
 		end procedure;
 		----------------------------------DRAWING----------------------------------------------
 		-- Stuff I care later about: (make the drawing look nice)
-		-- TODO: adjust windows_width -> determine based on input string, 400 ist just a placeholder
-		-- Width: qiet_zone + start_symbol + 2*symbol_width*stringLength + check_width + stop_width
-		-- TODO: adjust windows_height -> Calculate based on window width
-		-- draw Window
-		variable window_width  : natural := 400; 
-		variable window_height : natural := 400;          
 		constant bar_width : natural := 2; -- defined in wiki (modulo)
-		variable bar_height : natural := window_height-20; 
-		-- basic drawing stuff init
-		variable vhdldraw : vhdldraw_t;
-		variable y_pos : natural := 10;
-		variable x_pos : natural := 0; 
 		-- widths of different bar-zones:
 		constant start_symbol : natural 	:= 11 * bar_width; 
 		constant symbol_width : natural 	:= 11 * bar_width; 
 		constant quiet_zone   : natural 	:= 15 * bar_width;  
 		constant check_width  : natural 	:= 11 * bar_width;
 		constant stop_width   : natural 	:= 15 * bar_width; 
+		-- draw Window
+		variable window_width  : natural := input_str'length*symbol_width;
+		variable window_height : natural := window_width;          
+		variable bar_height : natural := window_height-20; 
+		-- 
+		-- basic drawing stuff init
+		variable vhdldraw : vhdldraw_t;
+		variable y_pos : natural := 10;
+		variable x_pos : natural := 0; 
 		-- input a barcode like 11010000100 and draws it accordingly
 		procedure draw_symbol(code : std_ulogic_vector(10 downto 0)) is
 		begin 
@@ -124,6 +122,8 @@ begin
 		fill_barcode;
 		-- draw barcode
 		draw_barcode;
+
+		report to_string(window_width);
 		wait;  
 	end process;
 end architecture;
