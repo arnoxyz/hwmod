@@ -52,18 +52,18 @@ begin
 		end procedure;
 		----------------------------------DRAWING----------------------------------------------
 		-- Stuff I care later about: (make the drawing look nice)
-		-- TODO: adjust drawing window size: Initialize drawing window (having width / 10 as top and bottom margin looks nice,  / 10 works as bar height)
 		-- TODO: adjust windows_width -> determine based on input string, 400 ist just a placeholder
+		-- Width: qiet_zone + start_symbol + 2*symbol_width*stringLength + check_width + stop_width
 		-- TODO: adjust windows_height -> Calculate based on window width
-		-- basic drawing stuff init
-		variable vhdldraw : vhdldraw_t;
-		variable y_pos : natural := 0;
-		variable x_pos : natural := 0; 
 		-- draw Window
 		variable window_width  : natural := 400; 
 		variable window_height : natural := 400;          
 		constant bar_width : natural := 2; -- defined in wiki (modulo)
-		variable bar_height : natural := window_height;           
+		variable bar_height : natural := window_height-20; 
+		-- basic drawing stuff init
+		variable vhdldraw : vhdldraw_t;
+		variable y_pos : natural := 10;
+		variable x_pos : natural := 0; 
 		-- widths of different bar-zones:
 		constant start_symbol : natural 	:= 11 * bar_width; 
 		constant symbol_width : natural 	:= 11 * bar_width; 
