@@ -16,14 +16,18 @@ end entity;
 architecture arch of barcode is
 	----------------------------------CONFIG----------------------------------------------
 	constant ACTIVE_CODE : code128_t := CODE_A; -- Select the code that will be generated:
-	constant input_str: string := "abababab"; 
+	constant input_str: string := "ab"; 
 	--here signals for debuging (make sim_gui)
-	signal barcode : barcode_t(1 to input_str'length+2) := (others=>(Others=>'1'));
+	signal barcode : barcode_t(1 to input_str'length+3) := (others=>(Others=>'1'));
 begin
 	barcode_maker : process
 		----------------------------------GEN-CODE----------------------------------------------
+		constant start_code_A_value : integer := 103;
+		constant start_code_B_value : integer := 104;
+		variable check_symbol_value : integer := 0;
+		constant stop_value : integer := 106;
 		variable start_code : std_ulogic_vector(BARCODE_BITS - 1 downto 0);
-		variable stop_code : std_ulogic_vector(BARCODE_BITS - 1 downto 0) := code128_table(106);
+		variable stop_code : std_ulogic_vector(BARCODE_BITS - 1 downto 0) := code128_table(stop_value);
 		procedure fill_barcode is 
 		begin 
 			case ACTIVE_CODE is 
@@ -47,8 +51,28 @@ begin
 						barcode(i+1) <= code128_table(character'pos(input_str(i))-32);
 					end loop;
 			end case;
-			barcode(input_str'length+2) <= stop_code;
+			barcode(input_str'length+2) <= code128_table(check_symbol_value);
+			barcode(input_str'length+3) <= stop_code;
 			wait for 1 ns;
+		end procedure;
+
+
+		procedure calc_checksum is 
+			variable sym_sum : integer;
+		begin 
+			case ACTIVE_CODE is 
+				when CODE_A =>
+					sym_sum := start_code_A_value + stop_value;
+					for i in input_str'range loop
+						sym_sum := sym_sum + character'pos(input_str(i));
+					end loop;
+				when CODE_B =>
+					sym_sum := start_code_B_value + stop_value;
+					for i in input_str'range loop
+						sym_sum := sym_sum + character'pos(input_str(i))-32;
+					end loop;
+			end case;
+			check_symbol_value := sym_sum mod 103;
 		end procedure;
 		----------------------------------DRAWING----------------------------------------------
 		-- Stuff I care later about: (make the drawing look nice)
@@ -60,7 +84,7 @@ begin
 		constant check_width  : natural 	:= 11 * bar_width;
 		constant stop_width   : natural 	:= 15 * bar_width; 
 		-- draw Window
-		variable window_width  : natural := input_str'length*symbol_width;
+		variable window_width  : natural := input_str'length*symbol_width+2*quiet_zone;
 		variable window_height : natural := window_width;          
 		variable bar_height : natural := window_height-20; 
 		-- 
@@ -120,6 +144,8 @@ begin
 	begin
 		-- gen code 
 		fill_barcode;
+		-- the checksum
+		calc_checksum;
 		-- draw barcode
 		draw_barcode;
 
