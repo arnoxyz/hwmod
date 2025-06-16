@@ -16,7 +16,7 @@ end entity;
 architecture arch of barcode is
 	----------------------------------CONFIG----------------------------------------------
 	constant ACTIVE_CODE : code128_t := CODE_A; -- Select the code that will be generated:
-	constant input_str: string := "ab"; 
+	constant input_str: string := "HW-MOD 2024"; 
 	--here signals for debuging (make sim_gui)
 	signal barcode : barcode_t(1 to input_str'length+3) := (others=>(Others=>'1'));
 begin
@@ -95,7 +95,7 @@ begin
 		-- input a barcode like 11010000100 and draws it accordingly
 		procedure draw_symbol(code : std_ulogic_vector(10 downto 0)) is
 		begin 
-			report(to_string(code));
+			-- report(to_string(code));
 			--To draw the barcode: map values in the vector (1s to black bars, 0s to white bars)
 			for i in code'range loop
 				if code(i) = '1' then 
@@ -107,15 +107,6 @@ begin
 				x_pos := x_pos+1;
 			end loop;
 
-		end procedure;
-		-- for debugging
-		procedure draw_stats(x : natural; y : natural; w : natural; h: natural) is
-		begin 
-			report("Draw stats:  " & 
-				"x=" & to_string(x_pos) & " " & 
-				"y=" & to_string(y_pos) & " " & 
-				"width="  & to_string(quiet_zone) & " " & 
-				"height=" & to_string(bar_height));
 		end procedure;
 
 		-- iterate through barcode array and draw every symbol (code that is saved in that array)
@@ -141,15 +132,20 @@ begin
 			vhdldraw.show(input_str & "_barcode.ppm"); -- Show the resulting barcode image
 		end procedure;
 
-	begin
-		-- gen code 
-		fill_barcode;
-		-- the checksum
-		calc_checksum;
-		-- draw barcode
-		draw_barcode;
+		-- whole barcode generating 
+		procedure gen_barcode is 
+		begin 
+			-- the checksum
+			calc_checksum;
+			-- gen code 
+			fill_barcode;
+			-- draw barcode
+			draw_barcode;
+		end procedure;
 
-		report to_string(window_width);
+	begin
+
+		gen_barcode;
 		wait;  
 	end process;
 end architecture;
