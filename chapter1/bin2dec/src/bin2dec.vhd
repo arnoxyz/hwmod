@@ -14,3 +14,11 @@ entity bin2dec is
 end entity;
 
 -- put your architecture here
+architecture beh of bin2dec is
+begin
+  main : process is
+  begin
+    report "Hello world!";
+    wait;
+  end process;
+end architecture;
