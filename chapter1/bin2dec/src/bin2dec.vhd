@@ -16,9 +16,17 @@ end entity;
 -- put your architecture here
 architecture beh of bin2dec is
 begin
-  main : process is
+  main : process(bin_in) is
+    variable int_local : integer := 0;
   begin
-    report "Hello world!";
-    wait;
+    for i in bin_in'range loop
+      if bin_in(i) = '1' then
+        int_local := int_local + 2**(i);
+      end if;
+    end loop;
+    dec_out <= int_local;
+
+    -- dummy values for now
+    bcd_out <= (others=>'0');
   end process;
 end architecture;
