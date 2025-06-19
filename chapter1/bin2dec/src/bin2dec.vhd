@@ -64,10 +64,9 @@ begin
           -- upper bound, lower bound
           report "upper bound: from" & to_string((i*4)-1) & " lower bound to:" & to_string((i-1)*4);
           --digit2bcd(digit : integer) return std_ulogic_vector is 
-          --bcd_out((i*4)-1 downto (i-1)*4) <= digit2bcd(current_digit);
+          bcd_out((i*4)-1 downto (i-1)*4) <= digit2bcd(current_digit);
         end if;
 
     end loop;
-    bcd_out <= (others=>'0');
   end process;
 end architecture;
