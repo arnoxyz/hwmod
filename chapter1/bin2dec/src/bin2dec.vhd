@@ -20,26 +20,25 @@ begin
     variable int_local : integer := 0;
     variable current_digit: integer := 0;
 
-
-    -- Procedure to convert integer digit to 4-bit BCD
-    procedure dec2bcd(
-        variable digit : in integer; 
-        signal bcd   : out std_logic_vector(3 downto 0)) is 
+    function digit2bcd(digit : integer) return std_ulogic_vector is 
+      variable bcd : std_ulogic_vector(3 downto 0);
     begin
       case digit is
-          when 0 => bcd <= "0000";
-          when 1 => bcd <= "0001";
-          when 2 => bcd <= "0010";
-          when 3 => bcd <= "0011";
-          when 4 => bcd <= "0100";
-          when 5 => bcd <= "0101";
-          when 6 => bcd <= "0110";
-          when 7 => bcd <= "0111";
-          when 8 => bcd <= "1000";
-          when 9 => bcd <= "1001";
-          when others => bcd <= "XXXX";  -- invalid digit
+          when 0 => bcd := "0000";
+          when 1 => bcd := "0001";
+          when 2 => bcd := "0010";
+          when 3 => bcd := "0011";
+          when 4 => bcd := "0100";
+          when 5 => bcd := "0101";
+          when 6 => bcd := "0110";
+          when 7 => bcd := "0111";
+          when 8 => bcd := "1000";
+          when 9 => bcd := "1001";
+          when others => bcd := "XXXX";  -- invalid digit
       end case;
-    end procedure;
+
+      return bcd;
+    end function;
 
   begin
     -- convert bin_in into integer for dec_out
@@ -53,16 +52,21 @@ begin
     -- decode the dec_out to bcd format
     -- report to_string(log10c(int_local));
     for i in log10c(int_local) downto 0  loop
+        -- get current_digit
         if i/=0 then 
-          -- split int_local in all: 219 -> /100 gets 2, /10 = 1 ...
           current_digit := int_local/(10**(i-1)) mod 10;
-          report to_string(current_digit);
-          -- add procedure: decoder of bcd format 
         else 
           current_digit := int_local mod 10;
-          eport to_string(current_digit);
-
         end if;
+
+        -- decode and output current_digit in bcd format
+        if i/=0 then 
+          -- upper bound, lower bound
+          report "upper bound: from" & to_string((i*4)-1) & " lower bound to:" & to_string((i-1)*4);
+          --digit2bcd(digit : integer) return std_ulogic_vector is 
+          --bcd_out((i*4)-1 downto (i-1)*4) <= digit2bcd(current_digit);
+        end if;
+
     end loop;
     bcd_out <= (others=>'0');
   end process;
