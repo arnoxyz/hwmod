@@ -14,7 +14,7 @@ architecture tb of bin2dec_tb is
 
   signal bin_in : std_ulogic_vector(WIDTH-1 downto 0) := (others=>'0');
   signal dec_out : integer;
-  signal bcd_out : std_ulogic_vector(11 downto 0);
+  signal bcd_out : std_ulogic_vector((log10c((2**WIDTH))*4)-1 downto 0);
 begin
 
 	stimuli : process
@@ -33,4 +33,3 @@ begin
       bcd_out => bcd_out
     );
 end architecture;
-

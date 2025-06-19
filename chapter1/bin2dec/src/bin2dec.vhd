@@ -50,7 +50,6 @@ begin
     dec_out <= int_local;
 
     -- decode the dec_out to bcd format
-    -- report to_string(log10c(int_local));
     for i in log10c(int_local) downto 0  loop
         -- get current_digit
         if i/=0 then 
@@ -61,12 +60,8 @@ begin
 
         -- decode and output current_digit in bcd format
         if i/=0 then 
-          -- upper bound, lower bound
-          report "upper bound: from" & to_string((i*4)-1) & " lower bound to:" & to_string((i-1)*4);
-          --digit2bcd(digit : integer) return std_ulogic_vector is 
           bcd_out((i*4)-1 downto (i-1)*4) <= digit2bcd(current_digit);
         end if;
-
     end loop;
   end process;
 end architecture;
