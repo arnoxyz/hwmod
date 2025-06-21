@@ -41,6 +41,8 @@ begin
     end function;
 
   begin
+		bcd_out <= (others=>'0');
+
     -- convert bin_in into integer for dec_out
     for i in bin_in'range loop
       if bin_in(i) = '1' then
@@ -61,7 +63,12 @@ begin
         -- decode and output current_digit in bcd format
         if i/=0 then 
           bcd_out((i*4)-1 downto (i-1)*4) <= digit2bcd(current_digit);
+        else
+          bcd_out(3 downto 0) <= digit2bcd(current_digit);
         end if;
     end loop;
+
+    int_local := 0;
+
   end process;
 end architecture;

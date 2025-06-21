@@ -20,9 +20,11 @@ begin
 	stimuli : process
 	begin
 		-- apply your stimulus here
-    bin_in <= "11011011";
-    wait for 1 ns;
-		report to_string(bin_in) & " is decimal: " & to_string(dec_out) & " is BCD: " & to_string(bcd_out);
+    for i in 0 to 2**WIDTH-1 loop
+      bin_in <= std_ulogic_vector(to_unsigned(i, WIDTH)); --"11011011";
+      wait for 1 ns;
+      report to_string(bin_in) & " is decimal: " & to_string(dec_out) & " is BCD: " & to_string(bcd_out);
+    end loop;
 		wait;
 	end process;
 
