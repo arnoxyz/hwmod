@@ -30,10 +30,21 @@ begin
       draw.fillRectangle(marging,idx+offset,(WIDTH-2*marging),bar_height);
       idx := idx+idx;
     end loop;
+    idx := 0;
 
     draw.fillRectangle(marging,height-180,(WIDTH-2*marging),bar_height);
     draw.fillRectangle(marging,height-120,(WIDTH-2*marging),bar_height);
     draw.fillRectangle(marging,height-40,(WIDTH-2*marging),bar_height);
+
+    -- draw vertical bars
+    for i in 0 to 10 loop
+      if (i mod 2) = 1 then
+        draw.setColor(gold);
+      else
+        draw.setColor(red);
+      end if;
+        draw.fillRectangle(width-i*offset,marging,bar_width,height);
+    end loop;
 
 		draw.show("creative.ppm");
 		wait;
