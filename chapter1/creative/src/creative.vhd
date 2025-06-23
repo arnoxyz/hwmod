@@ -21,6 +21,12 @@ begin
 	begin
 		draw.init(width, height);
 
+    -- blue bars
+    draw.setColor(blue);
+    draw.fillRectangle(marging,65,(WIDTH-2*marging),bar_height);
+    draw.fillRectangle(marging,width-70,(WIDTH-2*marging),bar_height);
+    draw.fillRectangle(60,marging,bar_width,height);
+
     -- draw horizontal bars
     draw.setColor(red);
     draw.fillRectangle(marging,offset-20,(WIDTH-2*marging),bar_height);
@@ -45,6 +51,9 @@ begin
       end if;
         draw.fillRectangle(width-i*offset,marging,bar_width,height);
     end loop;
+
+
+
 
 		draw.show("creative.ppm");
 		wait;
