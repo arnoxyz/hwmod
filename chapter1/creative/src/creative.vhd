@@ -17,9 +17,12 @@ begin
     constant offset : integer := 60;
 
     constant gold : color_t := create_color(255,215,0);
+    constant ghost_white : color_t := create_color(248, 248, 255);
     variable idx : integer := 30;
 	begin
 		draw.init(width, height);
+    draw.clear(ghost_white);
+
 
     -- blue bars
     draw.setColor(blue);
@@ -27,10 +30,6 @@ begin
     draw.fillRectangle(marging,width-70,(WIDTH-2*marging),bar_height);
     draw.fillRectangle(60,marging,bar_width,height);
 
-    draw.setColor(blue);
-    draw.fillRectangle(marging,width-230,(WIDTH-2*marging),bar_height);
-    draw.setColor(red);
-    draw.fillRectangle(marging,width-530,(WIDTH-2*marging),bar_height);
 
     -- draw horizontal bars
     draw.setColor(red);
@@ -40,6 +39,8 @@ begin
     while idx <= HEIGHT loop
       draw.fillRectangle(marging,idx+offset,(WIDTH-2*marging),bar_height);
       idx := idx+idx;
+
+
     end loop;
     idx := 0;
 
@@ -54,6 +55,15 @@ begin
       else
         draw.setColor(red);
       end if;
+      
+      if i = 4 then 
+        draw.setColor(red);
+        draw.fillRectangle(marging,width-230,(WIDTH-2*marging),bar_height);
+      elsif i = 3 then 
+        draw.setColor(blue);
+        draw.fillRectangle(marging,width-530,(WIDTH-2*marging),bar_height);
+      end if;
+
         draw.fillRectangle(width-i*offset,marging,bar_width,height);
     end loop;
 
