@@ -27,6 +27,11 @@ begin
     draw.fillRectangle(marging,width-70,(WIDTH-2*marging),bar_height);
     draw.fillRectangle(60,marging,bar_width,height);
 
+    draw.setColor(blue);
+    draw.fillRectangle(marging,width-230,(WIDTH-2*marging),bar_height);
+    draw.setColor(red);
+    draw.fillRectangle(marging,width-530,(WIDTH-2*marging),bar_height);
+
     -- draw horizontal bars
     draw.setColor(red);
     draw.fillRectangle(marging,offset-20,(WIDTH-2*marging),bar_height);
