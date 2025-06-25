@@ -7,33 +7,26 @@ architecture arch of ouchi is
 begin
 	process is
 		constant window_size : natural := 800;
-		constant width : natural := 32;
-		constant height : natural := 8;
 		variable draw : vhdldraw_t;
 
     constant rect_width : natural := 32;
     constant rect_height : natural := 8;
     variable rect_x,rect_y : natural := 0;
 
-		-- you might want to add some auxiliary subprograms or constants / variables in here
+    procedure draw_rectangle_line(y : natural) is
+      variable idx : natural := 0;
+    begin
+      draw.setColor(Black);
+      while idx < window_size loop
+        draw.fillRectangle(idx,y,rect_width,rect_height);
+        idx := idx+(2*rect_width);
+      end loop;
+    end procedure;
+
 	begin
+
 		draw.init(window_size);
-		-- draw the illusion here
-
-    draw.setColor(Black);
-    draw.fillRectangle(rect_x,rect_y,rect_width,rect_height);
-
-    draw.setColor(White);
-    rect_x := rect_x + rect_width;
-    draw.fillRectangle(rect_x,rect_y,rect_width,rect_height);
-
-    draw.setColor(Black);
-    rect_x := rect_x + rect_width;
-    draw.fillRectangle(rect_x,rect_y,rect_width,rect_height);
-
-
-    report "Hello World!";
-
+    draw_rectangle_line(0);
 		draw.show("ouchi.ppm");
 		wait;
 	end process;
