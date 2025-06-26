@@ -16,24 +16,34 @@ begin
     constant rect_height : natural := 8;
     variable rect_x,rect_y : natural := 0;
 
-    procedure draw_rectangle_line(y : natural) is
+    procedure draw_rectangle_line(line : natural) is
       variable idx : natural := 0;
     begin
-      draw.setColor(Black);
+      draw.setColor(Red);
+      if (line mod 2) = 1 then
+        draw.setColor(Green);
+        idx := idx+(1*rect_width);
+      end if;
+
+      rect_y := rect_y + rect_height;
+
       while idx < window_width loop
-        draw.fillRectangle(idx,y,rect_width,rect_height);
+        rect_x := idx;
+        draw.fillRectangle(rect_x,rect_y,rect_width,rect_height);
         idx := idx+(2*rect_width);
       end loop;
+
+      rect_x := 0;
     end procedure;
 
-    variable idx : integer := 0;
 	begin
-
 		draw.init(window_width, window_height);
 
-    while idx < window_height loop
+    -- draw full background
+    rect_x := 0;
+    rect_y := 0;
+    for idx in 0 to (window_height/rect_height) loop
       draw_rectangle_line(idx);
-      idx := idx+rect_height;
     end loop;
 
 		draw.show("ouchi.ppm");
