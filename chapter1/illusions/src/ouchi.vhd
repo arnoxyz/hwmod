@@ -21,7 +21,8 @@ begin
 
     constant rect_center_width : natural := 8;
     constant rect_center_height : natural := 32;
-    variable rect_center_x,rect_center_y : natural := 0;
+    variable rect_center_x : natural := (window_width/2)-window_center_width/2;
+    variable rect_center_y : natural := (window_height/2)-window_center_height/2;
 
     procedure draw_rectangle_line(line : natural) is
       variable idx : natural := 0;
@@ -32,7 +33,6 @@ begin
         idx := idx+(1*rect_width);
       end if;
 
-      rect_y := rect_y + rect_height;
 
       while idx < window_width loop
         rect_x := idx;
@@ -40,7 +40,28 @@ begin
         idx := idx+(2*rect_width);
       end loop;
 
+      rect_y := rect_y + rect_height;
       rect_x := 0;
+    end procedure;
+
+    procedure draw_rectangle_line_center(line : natural) is
+      variable idx : natural := 0;
+      constant offset : natural := (window_width/2)-window_center_width/2;
+    begin
+      draw.setColor(Blue);
+      if (line mod 2) = 1 then
+        draw.setColor(Yellow);
+        idx := idx+(1*rect_center_width);
+      end if;
+
+      while idx < window_center_width loop
+        rect_center_x := offset + idx;
+        draw.fillRectangle(rect_center_x,rect_center_y,rect_center_width,rect_center_height);
+        idx := idx+(2*rect_center_width);
+      end loop;
+
+      rect_center_y := rect_center_y + rect_center_height;
+      rect_center_x := (window_width/2)-window_center_width/2;
     end procedure;
 
 	begin
@@ -55,12 +76,12 @@ begin
 
     -- draw rectangle in the middle
     draw.setColor(White);
-    draw.fillRectangle(
-      (window_width/2)-window_center_width/2,(window_height/2)-window_center_height/2,
-      window_center_width,window_center_height);
+    draw.fillRectangle(rect_center_x,rect_center_y, window_center_width,window_center_height);
+
+    -- draw rectangle line in the middle
+    draw_rectangle_line_center(0);
 
 		draw.show("ouchi.ppm");
 		wait;
 	end process;
-
 end architecture;
