@@ -16,6 +16,13 @@ begin
     constant rect_height : natural := 8;
     variable rect_x,rect_y : natural := 0;
 
+    constant window_center_width : natural := 200;
+    constant window_center_height : natural := 224;
+
+    constant rect_center_width : natural := 8;
+    constant rect_center_height : natural := 32;
+    variable rect_center_x,rect_center_y : natural := 0;
+
     procedure draw_rectangle_line(line : natural) is
       variable idx : natural := 0;
     begin
@@ -45,6 +52,12 @@ begin
     for idx in 0 to (window_height/rect_height) loop
       draw_rectangle_line(idx);
     end loop;
+
+    -- draw rectangle in the middle
+    draw.setColor(White);
+    draw.fillRectangle(
+      (window_width/2)-window_center_width/2,(window_height/2)-window_center_height/2,
+      window_center_width,window_center_height);
 
 		draw.show("ouchi.ppm");
 		wait;
