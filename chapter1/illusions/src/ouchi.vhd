@@ -27,12 +27,10 @@ begin
     procedure draw_rectangle_line(line : natural) is
       variable idx : natural := 0;
     begin
-      draw.setColor(Red);
+      draw.setColor(Black);
       if (line mod 2) = 1 then
-        draw.setColor(Green);
         idx := idx+(1*rect_width);
       end if;
-
 
       while idx < window_width loop
         rect_x := idx;
@@ -48,9 +46,8 @@ begin
       variable idx : natural := 0;
       constant offset : natural := (window_width/2)-window_center_width/2;
     begin
-      draw.setColor(Blue);
+      draw.setColor(Black);
       if (line mod 2) = 1 then
-        draw.setColor(Yellow);
         idx := idx+(1*rect_center_width);
       end if;
 
@@ -68,16 +65,12 @@ begin
 		draw.init(window_width, window_height);
 
     -- draw full background
-    rect_x := 0;
-    rect_y := 0;
-    for idx in 0 to (window_height/rect_height) loop
+    for idx in 0 to (window_height/rect_height)-1 loop
       draw_rectangle_line(idx);
     end loop;
-
     -- draw rectangle in the middle
     draw.setColor(White);
     draw.fillRectangle(rect_center_x,rect_center_y, window_center_width,window_center_height);
-
     -- draw rectangle line in the middle
     for idx in 0 to (window_center_height/rect_center_height)-1 loop
       draw_rectangle_line_center(idx);
