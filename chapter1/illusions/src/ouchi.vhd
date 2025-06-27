@@ -79,7 +79,9 @@ begin
     draw.fillRectangle(rect_center_x,rect_center_y, window_center_width,window_center_height);
 
     -- draw rectangle line in the middle
-    draw_rectangle_line_center(0);
+    for idx in 0 to (window_center_height/rect_center_height)-1 loop
+      draw_rectangle_line_center(idx);
+    end loop;
 
 		draw.show("ouchi.ppm");
 		wait;
