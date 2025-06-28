@@ -7,7 +7,7 @@ end entity;
 architecture arch of illusions is
 begin
 	ouchi : entity work.ouchi;
+	concentric : entity work.concentric;
 	--checkerboard : entity work.checkerboard;
-	--concentric : entity work.concentric;
 	--squarecircle : entity work.squarecircle;
 end architecture;
