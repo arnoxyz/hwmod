@@ -13,6 +13,8 @@ begin
     variable x_pos : natural := 0;
     variable y_pos : natural := 0;
     constant SYMBOL_SIZE : natural := 60;
+    constant Offset_x : natural := 60;
+    constant Offset_y : natural := 60;
 
     -- draws the symbol (circles, black diamond outline) at the (x,y) position
     procedure draw_symbol(x : natural; y : natural) is 
@@ -47,11 +49,15 @@ begin
 	begin
 		draw.init(window_width, window_height);
 
-    x_pos := x_pos + SYMBOL_SIZE;
-    y_pos := y_pos + SYMBOL_SIZE;
-    draw_symbol(x_pos, y_pos);
-
-    --draw_symbol(window_width/2, window_height/2);
+    for j in 0 to 4 loop
+      y_pos := Offset_y + j*(2*SYMBOL_SIZE);
+      -- draw line
+      for i in 0 to 7 loop
+        x_pos := Offset_x + i*(2*SYMBOL_SIZE);
+        draw_symbol(x_pos, y_pos);
+      end loop;
+      x_pos := 0;
+    end loop;
 
 		draw.show("concentric.ppm");
 		wait;
