@@ -10,6 +10,11 @@ begin
 		constant window_height : natural := 480;
 		variable draw : vhdldraw_t;
 
+    variable x_pos : natural := 0;
+    variable y_pos : natural := 0;
+    constant SYMBOL_SIZE : natural := 60;
+
+    -- draws the symbol (circles, black diamond outline) at the (x,y) position
     procedure draw_symbol(x : natural; y : natural) is 
       constant COLOR_INIT : natural := 220;
       constant COLOR_CHANGE : natural := 40;
@@ -42,7 +47,11 @@ begin
 	begin
 		draw.init(window_width, window_height);
 
-    draw_symbol(window_width/2, window_height/2);
+    x_pos := x_pos + SYMBOL_SIZE;
+    y_pos := y_pos + SYMBOL_SIZE;
+    draw_symbol(x_pos, y_pos);
+
+    --draw_symbol(window_width/2, window_height/2);
 
 		draw.show("concentric.ppm");
 		wait;
