@@ -23,9 +23,12 @@ begin
 
       constant SIZE_CHANGE : natural := 10;
       constant CIRCLE_SIZE : natural := 60;
-
       constant SHIFT: natural := CIRCLE_SIZE;
+      constant LINE_WIDTH_CIRCLES: natural := 1;
+      constant LINE_WIDTH_DIAMONDS: natural := 2;
     begin 
+
+      draw.setLineWidth(LINE_WIDTH_CIRCLES);
       for i in 0 to 5 loop
         -- draw the filled circles
         draw.setColor(COLOR_INIT-COLOR_CHANGE*i, COLOR_INIT-COLOR_CHANGE*i, COLOR_INIT-COLOR_CHANGE*i);
@@ -41,6 +44,7 @@ begin
         --left_position   [x-CIRCLE_SIZE/2,y]
         --right_position  [x+CIRCLE_SIZE/2,y]
 
+      draw.setLineWidth(LINE_WIDTH_DIAMONDS);
       draw.drawLine(x,y-SHIFT,x-SHIFT,y); --from top position to left
       draw.drawLine(x,y-SHIFT,x+SHIFT,y); --from top position to right
       draw.drawLine(x,y+SHIFT,x-SHIFT,y); --from bottom to left
