@@ -8,6 +8,6 @@ architecture arch of illusions is
 begin
 	ouchi : entity work.ouchi;
 	concentric : entity work.concentric;
+	squarecircle : entity work.squarecircle;
 	--checkerboard : entity work.checkerboard;
-	--squarecircle : entity work.squarecircle;
 end architecture;
