@@ -21,7 +21,13 @@ begin
 		draw.init(window_size);
 		-- draw the illusion here
     draw.setLineWidth(square_line_width);
-    draw.drawSquare(square_x, square_y, square_size);
+    for j in 0 to 10 loop
+      square_y := offset + j*(space+square_size);
+      for i in 0 to 10 loop
+        draw.drawSquare(square_x + i*(space+square_size), square_y, square_size);
+      end loop;
+      square_x := 0 + offset;
+    end loop;
 
 		draw.show("squarecircle.ppm");
 		wait;
