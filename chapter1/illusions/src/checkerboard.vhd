@@ -24,15 +24,20 @@ begin
 	begin
 		draw.init(window_width, window_height);
 
-		-- draw the illusion here
-    for i in 0 to 9 loop
-      if i mod 2 = 0 then
-        draw.setColor(Blue);
-      else
-        draw.setColor(Green);
-      end if;
+    for j in 0 to rows-1 loop
+      square_y := j*square_size;
 
-      draw.fillSquare(square_x + i*square_size, square_y, square_size);
+      --draw square line
+      for i in 0 to cols-1 loop
+        if i mod 2 = 0 then
+          draw.setColor(Blue);
+        else
+          draw.setColor(Green);
+        end if;
+
+        draw.fillSquare(square_x + i*square_size, square_y, square_size);
+      end loop;
+      square_x := 0;
     end loop;
 
 
