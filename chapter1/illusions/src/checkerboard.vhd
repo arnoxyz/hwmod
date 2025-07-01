@@ -25,8 +25,15 @@ begin
 		draw.init(window_width, window_height);
 
 		-- draw the illusion here
-    draw.setColor(Blue);
-    draw.fillSquare(square_x, square_y, square_size);
+    for i in 0 to 9 loop
+      if i mod 2 = 0 then
+        draw.setColor(Blue);
+      else
+        draw.setColor(Green);
+      end if;
+
+      draw.fillSquare(square_x + i*square_size, square_y, square_size);
+    end loop;
 
 
 		draw.show("checkerboard.ppm");
