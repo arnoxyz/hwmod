@@ -10,3 +10,6 @@ All my output pictures are converted from bbp (bitmap) to jpg. (to easily upload
 # Concentric
 ## Output
 ![Output Concentric](./concentric.jpg)
+# Squarecircle
+## Output
+![Output Squarecircle](./squarecircle.jpg)
