@@ -9,5 +9,5 @@ begin
 	ouchi : entity work.ouchi;
 	concentric : entity work.concentric;
 	squarecircle : entity work.squarecircle;
-	--checkerboard : entity work.checkerboard;
+	checkerboard : entity work.checkerboard;
 end architecture;
