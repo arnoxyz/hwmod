@@ -19,7 +19,7 @@ begin
 
     -- for circle
     constant circle_size : natural := 30;
-    constant circle_line_width : natural := 4; 
+    constant circle_line_width : natural := 4;
     constant circle_offset : natural := 60;
     variable circle_x : natural := 0 + circle_offset;
     variable circle_y : natural := 0 + circle_offset;
@@ -38,7 +38,13 @@ begin
 
 		-- draw the circles grid
     draw.setLineWidth(circle_line_width);
-    draw.drawCircle(circle_x, circle_y, circle_size);
+    for j in 0 to 8 loop
+      circle_y := circle_offset + j*2*circle_size;
+      for i in 0 to 8 loop
+        draw.drawCircle(circle_x + i*2*circle_size, circle_y, circle_size);
+      end loop;
+      circle_x := 0 + circle_offset;
+    end loop;
 
 		draw.show("squarecircle.ppm");
 		wait;
