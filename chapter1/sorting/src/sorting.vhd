@@ -29,9 +29,28 @@ architecture arch of sorting is
     data(j) := tmp;
   end procedure;
 
+  procedure partition(data : inout int_arr_t; low : in integer; high : in integer; pivot : out integer) is
+    variable i, j  : integer;
+  begin
+    pivot := data(high);
+    i := low - 1;
+
+    for j in low to high - 1 loop
+        if data(j) <= pivot then
+            i := i + 1;
+            swap(data, i, j);
+        end if;
+    end loop;
+
+    swap(data, i + 1, high);
+    pivot := i + 1;
+  end procedure;
+
   procedure quicksort_imp(data : inout int_arr_t; left : integer; right : integer) is 
+    variable pivot : integer;
   begin 
-    swap(data, 1, 0);
+    --swap(data, 1, 0);
+    partition(data, 1, 0, pivot);
   end procedure;
 
 	procedure quicksort(data : inout int_arr_t) is
