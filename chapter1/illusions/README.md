@@ -4,17 +4,17 @@ All my output pictures are converted from bbp (bitmap) to jpg. (to easily upload
 
 # Ouchi
 ## Output 
-![Output Ouchi](./ouchi.jpg)
+![Output Ouchi](./img/ouchi.jpg)
 ## Alternative Coloring
-![Alternative Ouchi](./alt-ouchi.jpg)
+![Alternative Ouchi](./img/alt-ouchi.jpg)
 # Concentric
 ## Output
-![Output Concentric](./concentric.jpg)
+![Output Concentric](./img/concentric.jpg)
 # Squarecircle
 ## Output
-![Output Squarecircle](./squarecircle.jpg)
+![Output Squarecircle](./img/squarecircle.jpg)
 # Checkerboard 
 ## Chessboard
-![Output Chessboard](./chessboard.jpg)
+![Output Chessboard](./img/chessboard.jpg)
 ## Output
-![Output Checkerboard](./checkerboard.jpg)
+![Output Checkerboard](./img/checkerboard.jpg)
