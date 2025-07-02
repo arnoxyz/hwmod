@@ -12,26 +12,31 @@ architecture arch of sorting is
 
 	procedure print_array(int_arr : int_arr_t) is
 	begin
-		report "--------";
 		report "Printing Array";
-		for i in int_arr'low to int_arr'high loop
-			report "int_arr(" & to_string(i) & ") = " & to_string(int_arr(i));
+		for i in int_arr'high downto int_arr'low loop
+			--report "int_arr(" & to_string(i) & ") = " & to_string(int_arr(i));
+			report "(" & to_string(i) & ") " & to_string(int_arr(i));
 		end loop;
 		report "--------";
 	end procedure;
 
--- implement one of the following two procedures
-	procedure mergesort(data : inout int_arr_t) is
-	begin
-	end procedure;
 
+  procedure swap(data : inout int_arr_t; i : integer; j : integer) is
+    variable tmp : integer;
+  begin
+    tmp := data(i);
+    data(i) := data(j);
+    data(j) := tmp;
+  end procedure;
+
+  procedure quicksort_imp(data : inout int_arr_t; left : integer; right : integer) is 
+  begin 
+    swap(data, 1, 0);
+  end procedure;
 
 	procedure quicksort(data : inout int_arr_t) is
 	begin
-    --init quicksort
-		for i in data'low to data'high loop
-			report to_string(data(i));
-		end loop;
+    quicksort_imp(data, data'low, data'high);
 	end procedure;
 
 	procedure sort(data : inout int_arr_t) is
@@ -75,11 +80,12 @@ architecture arch of sorting is
 begin
 
 	main : process is
-		variable arr : int_arr_t(3 downto 0) := (1,2,3,4);
+		variable arr : int_arr_t(1 downto 0) := (3,4);
 	begin
+		print_array(arr);
+    report "Sorting Array now...";
 		sort(arr);
 		print_array(arr);
-
 		wait;
 	end process;
 end architecture;
