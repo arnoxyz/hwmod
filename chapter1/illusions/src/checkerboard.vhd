@@ -78,6 +78,18 @@ begin
       draw.fillRectangle(rect_x, rect_y, rect_width, rect_height);
     end procedure;
 
+    procedure draw_vertical_rectangle(x : natural; y : natural) is
+     constant rect_width  : natural := 20;
+     constant rect_height : natural := 4;
+     constant offset : natural := square_size;
+
+      variable rect_x : natural := x + offset-(rect_width/2);
+      variable rect_y : natural := y + offset-(rect_height/2);
+
+    begin
+      draw.fillRectangle(rect_x, rect_y, rect_width, rect_height);
+    end procedure;
+
 
 	begin
     --draw_chessboard;
@@ -89,7 +101,7 @@ begin
       if (i mod 2) = 0 then
         draw_horizontal_rectangle(square_size*i,0);
       else
-        --draw_vertical_rectangle(square_size*i,0);
+        draw_vertical_rectangle(square_size*i,0);
       end if;
     end loop;
 
