@@ -96,13 +96,16 @@ begin
 
     draw_background;
 
-    for i in 0 to cols-2 loop
-      draw.setColor(Black);
-      if (i mod 2) = 0 then
-        draw_horizontal_rectangle(square_size*i,0);
-      else
-        draw_vertical_rectangle(square_size*i,0);
-      end if;
+    for j in 0 to rows-2 loop
+      for i in 0 to cols-2 loop
+        draw.setColor(Black);
+        if (i mod 2) = 0 then
+          draw_horizontal_rectangle(square_size*i,square_size*j);
+        else
+          draw_vertical_rectangle(square_size*i,square_size*j);
+        end if;
+      end loop;
+
     end loop;
 
 		draw.show("checkerboard.ppm");
