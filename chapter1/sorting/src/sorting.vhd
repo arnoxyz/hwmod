@@ -10,30 +10,34 @@ end entity;
 architecture arch of sorting is
 	type int_arr_t is array(integer range<>) of integer;
 
-	-- You can use this for debugging
 	procedure print_array(int_arr : int_arr_t) is
 	begin
+		report "--------";
+		report "Printing Array";
 		for i in int_arr'low to int_arr'high loop
-			report to_string(int_arr(i));
+			report "int_arr(" & to_string(i) & ") = " & to_string(int_arr(i));
 		end loop;
+		report "--------";
 	end procedure;
 
 -- implement one of the following two procedures
 	procedure mergesort(data : inout int_arr_t) is
 	begin
-	 -- add your implementaion here. Note that you can add further subprograms as you please and we recommend you to do so
 	end procedure;
+
 
 	procedure quicksort(data : inout int_arr_t) is
 	begin
-	 -- add your implementaion here. Note that you can add further subprograms as you please and we recommend you to do so
+    --init quicksort
+		for i in data'low to data'high loop
+			report to_string(data(i));
+		end loop;
 	end procedure;
 
 	procedure sort(data : inout int_arr_t) is
 	begin
-		-- uncomment the one you implemented
+		quicksort(data);
 		-- mergesort(data);
-		-- quicksort(data);
 	end procedure;
 
 	procedure draw_array(arr : int_arr_t; nr : inout integer) is
@@ -46,14 +50,12 @@ architecture arch of sorting is
 	-- don't forget to call draw.show
 	end procedure;
 
-begin
-
-	main : process is
+  procedure test_cases is
 		variable arr0 : int_arr_t(-10 downto -19) := (10, 9, 8, 7, 6, 5, 4, 3, 2, 1);
 		variable arr1 : int_arr_t(-5 to 5) := (-12, 45, 78, -23, 56, 89, 34, 67, 91, -15, -42);
 		variable arr2 : int_arr_t(5 downto 0) := (-10, -11, -12, -13, -17, -22);
 		variable cnt : natural := 0;
-	begin
+  begin
 		sort(arr0);
 		print_array(arr0);
 		report "###";
@@ -68,6 +70,15 @@ begin
 		print_array(arr2);
 		report "###";
 		draw_array(arr2, cnt);
+  end procedure;
+
+begin
+
+	main : process is
+		variable arr : int_arr_t(3 downto 0) := (1,2,3,4);
+	begin
+		sort(arr);
+		print_array(arr);
 
 		wait;
 	end process;
