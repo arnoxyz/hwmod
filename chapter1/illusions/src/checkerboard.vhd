@@ -99,10 +99,19 @@ begin
     for j in 0 to rows-2 loop
       for i in 0 to cols-2 loop
         draw.setColor(Black);
-        if (i mod 2) = 0 then
-          draw_horizontal_rectangle(square_size*i,square_size*j);
+
+        if (j mod 2) = 0 then
+          if (i mod 2) = 0 then
+            draw_horizontal_rectangle(square_size*i,square_size*j);
+          else
+            draw_vertical_rectangle(square_size*i,square_size*j);
+          end if;
         else
-          draw_vertical_rectangle(square_size*i,square_size*j);
+          if (i mod 2) = 0 then
+            draw_vertical_rectangle(square_size*i,square_size*j);
+          else
+            draw_horizontal_rectangle(square_size*i,square_size*j);
+          end if;
         end if;
       end loop;
 
