@@ -75,7 +75,6 @@ begin
       variable rect_y : natural := y + offset-(rect_height/2);
 
     begin
-      draw.setColor(Black);
       draw.fillRectangle(rect_x, rect_y, rect_width, rect_height);
     end procedure;
 
@@ -84,7 +83,15 @@ begin
     --draw_chessboard;
 
     draw_background;
-    draw_horizontal_rectangle(0,0);
+
+    for i in 0 to cols-2 loop
+      draw.setColor(Black);
+      if (i mod 2) = 0 then
+        draw_horizontal_rectangle(square_size*i,0);
+      else
+        --draw_vertical_rectangle(square_size*i,0);
+      end if;
+    end loop;
 
 		draw.show("checkerboard.ppm");
 		wait;
