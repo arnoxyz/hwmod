@@ -20,7 +20,6 @@ architecture arch of sorting is
 		report "--------";
 	end procedure;
 
-
   procedure swap(data : inout int_arr_t; i : integer; j : integer) is
     variable tmp : integer;
   begin
@@ -46,16 +45,24 @@ architecture arch of sorting is
     pivot := i + 1;
   end procedure;
 
-  procedure quicksort_imp(data : inout int_arr_t; left : integer; right : integer) is 
+  procedure quicksort_helper(data : inout int_arr_t; left : integer; right : integer) is
     variable pivot : integer;
   begin 
+    -- for testing
     --swap(data, 1, 0);
-    partition(data, 1, 0, pivot);
+    --partition(data, 1, 0, pivot);
+
+    -- recursive quicksort
+    if left < right then
+        partition(data, left, right, pivot);
+        quicksort_helper(data, left, pivot - 1);
+        quicksort_helper(data, pivot + 1, right);
+    end if;
   end procedure;
 
 	procedure quicksort(data : inout int_arr_t) is
 	begin
-    quicksort_imp(data, data'low, data'high);
+    quicksort_helper(data, data'low, data'high);
 	end procedure;
 
 	procedure sort(data : inout int_arr_t) is
