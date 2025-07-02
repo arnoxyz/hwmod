@@ -78,40 +78,39 @@ architecture arch of sorting is
 		variable bar_width : natural := width / arr'length;
 	begin
 		draw.init(width, height);
-	-- don't forget to call draw.show
+    draw.show("sorted" & to_string(nr) & ".ppm");
+    nr := nr + 1;
 	end procedure;
 
   procedure test_cases is
 		variable arr0 : int_arr_t(-10 downto -19) := (10, 9, 8, 7, 6, 5, 4, 3, 2, 1);
 		variable arr1 : int_arr_t(-5 to 5) := (-12, 45, 78, -23, 56, 89, 34, 67, 91, -15, -42);
 		variable arr2 : int_arr_t(5 downto 0) := (-10, -11, -12, -13, -17, -22);
-		variable cnt : natural := 0;
+    variable output_number : natural := 0; -- for naming exported drawing files
   begin
 		sort(arr0);
 		print_array(arr0);
-		report "###";
-		draw_array(arr0, cnt);
+		draw_array(arr0, output_number);
 
 		sort(arr1);
 		print_array(arr1);
-		report "###";
-		draw_array(arr1, cnt);
+		draw_array(arr1, output_number);
 
 		sort(arr2);
 		print_array(arr2);
-		report "###";
-		draw_array(arr2, cnt);
+		draw_array(arr2, output_number);
   end procedure;
 
 begin
 
 	main : process is
-		variable arr : int_arr_t(1 downto 0) := (3,4);
+		variable sorted_arr : int_arr_t(5 downto 0) := (5,4,3,2,1,0);
+    variable output_number : natural := 0;
 	begin
-		print_array(arr);
-    report "Sorting Array now...";
-		sort(arr);
-		print_array(arr);
+    --test_cases;
+
+    -- draw only positive bars (for now)
+    draw_array(sorted_arr, output_number);
 		wait;
 	end process;
 end architecture;
