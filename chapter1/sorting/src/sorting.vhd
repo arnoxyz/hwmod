@@ -73,11 +73,34 @@ architecture arch of sorting is
 
 	procedure draw_array(arr : int_arr_t; nr : inout integer) is
 		variable draw : vhdldraw_t;
-		constant width : natural := 400;
-		constant height : natural := 300;
-		variable bar_width : natural := width / arr'length;
+		constant window_width : natural := 400;
+		constant window_height : natural := 300;
+
+		variable bar_width : natural := window_width / arr'length;
+		variable bar_height : natural := 0;
+    variable bar_x : natural := 0;
+    variable bar_y : natural := window_height;
+
+    constant offset : natural := 30;
+    constant scaled_range : integer := window_height - (2*offset);
 	begin
-		draw.init(width, height);
+		draw.init(window_width, window_height);
+
+		for i in arr'low to arr'high loop
+			report "(" & to_string(i) & ") " & to_string(arr(i));
+      report to_string(integer(real(arr(i))/real(arr(arr'high)) * real(scaled_range)));
+
+      bar_height := integer(real(arr(i))/real(arr(arr'high)) * real(scaled_range)) + offset; 
+      bar_y := window_height - bar_height;
+
+      --draw positive bars
+      draw.setColor(Red);
+      draw.fillRectangle(bar_x + bar_width*i, bar_y, bar_width, bar_height);
+      draw.setLineWidth(1);
+      draw.setColor(Black);
+      draw.drawRectangle(bar_x + bar_width*i, bar_y, bar_width, bar_height);
+		end loop;
+
     draw.show("sorted" & to_string(nr) & ".ppm");
     nr := nr + 1;
 	end procedure;
