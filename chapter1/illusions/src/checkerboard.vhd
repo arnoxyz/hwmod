@@ -23,19 +23,20 @@ begin
 
 	begin
 		draw.init(window_width, window_height);
+    draw.setColor(Green);
+    draw.fillRectangle(0,0, window_width, window_height);
 
     for j in 0 to rows-1 loop
       square_y := j*square_size;
 
       --draw square line
+      draw.setColor(Blue);
       for i in 0 to cols-1 loop
-        if i mod 2 = 0 then
-          draw.setColor(Blue);
-        else
-          draw.setColor(Green);
+        if j mod 2 = 1 then
+          square_x := square_size;
         end if;
+        draw.fillSquare(square_x + i*2*square_size, square_y, square_size);
 
-        draw.fillSquare(square_x + i*square_size, square_y, square_size);
       end loop;
       square_x := 0;
     end loop;
