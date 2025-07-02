@@ -42,7 +42,7 @@ begin
         end loop;
         square_x := 0;
       end loop;
-      draw.show("chessboad.ppm");
+      draw.show("chessboard.ppm");
     end procedure;
 
     procedure draw_background is
@@ -96,7 +96,7 @@ begin
 
     draw_background;
 
-    -- draw full board with black rectangles
+    -- draw full board with white rectangles
     for j in 0 to rows-2 loop
       for i in 0 to cols-2 loop
         draw.setColor(White);

@@ -13,3 +13,8 @@ All my output pictures are converted from bbp (bitmap) to jpg. (to easily upload
 # Squarecircle
 ## Output
 ![Output Squarecircle](./squarecircle.jpg)
+# Checkerboard 
+## Chessboard
+![Output Chessboard](./chessboard.jpg)
+## Output
+![Output Checkerboard](./checkerboard.jpg)
