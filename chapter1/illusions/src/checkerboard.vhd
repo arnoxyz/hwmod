@@ -20,29 +20,59 @@ begin
     variable square_x : natural := 0;
     variable square_y : natural := 0;
 
+    procedure draw_chessboard is
+      constant cols : natural := 8;
+      constant rows : natural := 8;
+      constant window_width : natural := cols*size;
+      constant window_height : natural := rows*size;
+    begin
+      draw.init(window_width, window_height);
+      draw.setColor(Black);
+      draw.fillRectangle(0,0, window_width, window_height);
+
+      for j in 0 to rows-1 loop
+        square_y := j*square_size;
+
+        draw.setColor(White);
+        for i in 0 to cols-1 loop
+          if j mod 2 = 1 then
+            square_x := square_size;
+          end if;
+          draw.fillSquare(square_x + i*2*square_size, square_y, square_size);
+        end loop;
+        square_x := 0;
+      end loop;
+      draw.show("chessboad.ppm");
+    end procedure;
+
+    procedure draw_background is
+    begin
+		  draw.init(window_width, window_height);
+      draw.setColor(Green);
+      draw.fillRectangle(0,0, window_width, window_height);
+
+      for j in 0 to rows-1 loop
+        square_y := j*square_size;
+
+        --draw square line
+        draw.setColor(Blue);
+        for i in 0 to cols-1 loop
+          if j mod 2 = 1 then
+            square_x := square_size;
+          end if;
+          draw.fillSquare(square_x + i*2*square_size, square_y, square_size);
+        end loop;
+        square_x := 0;
+      end loop;
+		  draw.show("checkerboard.ppm");
+    end procedure;
+
 
 	begin
-		draw.init(window_width, window_height);
-    draw.setColor(Green);
-    draw.fillRectangle(0,0, window_width, window_height);
+    --draw_chessboard;
 
-    for j in 0 to rows-1 loop
-      square_y := j*square_size;
+    draw_background;
 
-      --draw square line
-      draw.setColor(Blue);
-      for i in 0 to cols-1 loop
-        if j mod 2 = 1 then
-          square_x := square_size;
-        end if;
-        draw.fillSquare(square_x + i*2*square_size, square_y, square_size);
-
-      end loop;
-      square_x := 0;
-    end loop;
-
-
-		draw.show("checkerboard.ppm");
 		wait;
 	end process;
 
