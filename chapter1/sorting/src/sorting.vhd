@@ -114,7 +114,7 @@ architecture arch of sorting is
     variable bar_x : natural := 0;
     variable bar_y : natural := 0;
     constant offset : natural := 30;
-    constant scaled_range : integer := window_height - (2*offset);
+    constant scaled_range : integer := window_height;
 	begin
 		draw.init(window_width, window_height);
 
@@ -125,12 +125,16 @@ architecture arch of sorting is
 			report "(" & to_string(i) & ") " & to_string(arr(i));
 
       -- scale bar
-      bar_height := abs(arr(i)) * 25;
+      --bar_height := abs(arr(i)) * 25;
+      bar_height := integer(real(abs(arr(i)))/real(abs(arr(arr'high)))) * (window_height/arr'length);
+      report to_string(bar_height);
+
+      bar_y := 0;
 
       -- draw bar
       draw.setColor(Blue);
       draw.fillRectangle(bar_x + bar_width*i, bar_y, bar_width, bar_height);
-      draw.setLineWidth(1);
+      draw.setLineWidth(0);
       draw.setColor(Black);
       draw.drawRectangle(bar_x + bar_width*i, bar_y, bar_width, bar_height);
     end loop;
