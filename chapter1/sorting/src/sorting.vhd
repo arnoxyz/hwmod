@@ -105,6 +105,39 @@ architecture arch of sorting is
     nr := nr + 1;
 	end procedure;
 
+	procedure draw_only_neg_bars(arr : int_arr_t; nr : inout integer) is
+		variable draw : vhdldraw_t;
+		constant window_width : natural := 400;
+		constant window_height : natural := 300;
+		variable bar_width : natural := window_width / arr'length;
+		variable bar_height : natural := 0;
+    variable bar_x : natural := 0;
+    variable bar_y : natural := 0;
+    constant offset : natural := 30;
+    constant scaled_range : integer := window_height - (2*offset);
+	begin
+		draw.init(window_width, window_height);
+
+		report to_string(arr(arr'low));
+
+		for i in arr'low to arr'high loop
+      -- for debugging
+			report "(" & to_string(i) & ") " & to_string(arr(i));
+
+      -- scale bar
+      bar_height := abs(arr(i)) * 25;
+
+      -- draw bar
+      draw.setColor(Blue);
+      draw.fillRectangle(bar_x + bar_width*i, bar_y, bar_width, bar_height);
+      draw.setLineWidth(1);
+      draw.setColor(Black);
+      draw.drawRectangle(bar_x + bar_width*i, bar_y, bar_width, bar_height);
+    end loop;
+
+    draw.show("sorted" & to_string(nr) & ".ppm");
+    nr := nr + 1;
+	end procedure;
 
 
 	procedure draw_array(arr : int_arr_t; nr : inout integer) is
@@ -121,7 +154,9 @@ architecture arch of sorting is
     constant scaled_range : integer := window_height - (2*offset);
 	begin
     --draw positive bars
-    draw_only_pos_bars(arr, nr);
+    --draw_only_pos_bars(arr, nr);
+
+    draw_only_neg_bars(arr, nr);
 
 	end procedure;
 
@@ -149,12 +184,16 @@ begin
 	main : process is
 		variable sorted_arr_pos : int_arr_t(3 downto 0) := (5,4,3,2);
 		variable sorted_arr_neg : int_arr_t(3 downto 0) := (-1,-2,-3,-4);
+		variable sorted_arr_mixed : int_arr_t(-5 to 5) := (91,89,78,67,56,45,34,-12,-15,-23,-42);
     variable output_number : natural := 0;
 	begin
     --test_cases;
 
     -- draw only positive bars
-    draw_array(sorted_arr_pos, output_number);
+    -- draw_array(sorted_arr_pos, output_number);
+
+    -- draw only negative bars
+    draw_array(sorted_arr_neg, output_number);
 		wait;
 	end process;
 end architecture;
