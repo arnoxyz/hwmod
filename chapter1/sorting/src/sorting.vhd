@@ -133,8 +133,49 @@ architecture arch of sorting is
     nr := nr + 1;
 	end procedure;
 
+	procedure draw_mixed_bars(arr : int_arr_t; nr : inout integer) is
+		variable draw : vhdldraw_t;
+		constant window_width : natural := 400;
+		constant window_height : natural := 300;
 
-	procedure draw_array(arr : int_arr_t; nr : inout integer) is
+		variable bar_width : natural := window_width / arr'length;
+		variable bar_height : integer := 0;
+    variable bar_x : integer := 0;
+    variable bar_y : integer  := 0;
+
+    constant high_val : integer := arr(arr'high);
+    constant low_val : integer := arr(arr'low);
+    constant val_range : integer := high_val - low_val;
+	begin
+		draw.init(window_width, window_height);
+
+		for i in arr'low to arr'high loop
+        bar_x := integer(bar_width) * (i - arr'low);
+
+        -- scale bar
+        bar_height := integer((real(abs(arr(i))) / real(val_range)) * real(window_height));
+
+        if arr(i) >= 0 then
+            bar_y := zero_line - bar_height;
+            draw.setColor(Blue);
+        else
+            bar_y := zero_line;
+            draw.setColor(Red);
+        end if;
+
+        -- draw bar
+        draw.fillRectangle(bar_x, bar_y, bar_width, bar_height);
+        draw.setLineWidth(1);
+        draw.setColor(Black);
+        draw.drawRectangle(bar_x, bar_y, bar_width, bar_height);
+   end loop;
+
+    draw.show("sorted" & to_string(nr) & ".ppm");
+    nr := nr + 1;
+	end procedure;
+
+
+  procedure draw_array(arr : int_arr_t; nr : inout integer) is
 		variable draw : vhdldraw_t;
 		constant window_width : natural := 400;
 		constant window_height : natural := 300;
@@ -159,6 +200,7 @@ architecture arch of sorting is
       draw_only_neg_bars(arr, nr);
     else
       report "draw mixed";
+	    draw_mixed_bars(arr, nr);
     end if;
 
 	end procedure;
@@ -193,10 +235,10 @@ begin
     --test_cases;
 
     -- draw only positive bars
-    draw_array(sorted_arr_pos, output_number);
+    --draw_array(sorted_arr_pos, output_number);
 
     -- draw only negative bars
-    draw_array(sorted_arr_neg, output_number);
+    --draw_array(sorted_arr_neg, output_number);
 
     -- draw mixed bars
     draw_array(sorted_arr_mixed, output_number);
