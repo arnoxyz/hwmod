@@ -87,10 +87,11 @@ architecture arch of sorting is
 		for i in arr'low to arr'high loop
       -- for debugging
 			report "(" & to_string(i) & ") " & to_string(arr(i));
-      report to_string(integer(real(arr(i))/real(arr(arr'high)) * real(scaled_range)));
+      report to_string(integer(real(arr(i))/real(arr(arr'high))) * (window_height/arr'length));
 
       -- scale bar
-      bar_height := integer(real(arr(i))/real(arr(arr'high)) * real(scaled_range)) + offset; 
+      --bar_height := integer(real(arr(i))/real(arr(arr'high)) * real(scaled_range)) + offset;
+      bar_height := integer(real(arr(i))/real(arr(arr'high))) * (window_height/arr'length);
       bar_y := window_height - bar_height;
 
       -- draw bar
@@ -128,7 +129,6 @@ architecture arch of sorting is
       --bar_height := abs(arr(i)) * 25;
       bar_height := integer(real(abs(arr(i)))/real(abs(arr(arr'high)))) * (window_height/arr'length);
       report to_string(bar_height);
-
       bar_y := 0;
 
       -- draw bar
@@ -156,11 +156,20 @@ architecture arch of sorting is
 
     constant offset : natural := 30;
     constant scaled_range : integer := window_height - (2*offset);
-	begin
-    --draw positive bars
-    --draw_only_pos_bars(arr, nr);
 
-    draw_only_neg_bars(arr, nr);
+    constant high_val : integer := arr(arr'high);
+    constant low_val : integer := arr(arr'low);
+	begin
+
+    if high_val > 0 and low_val > 0 then
+      report "drawing only pos bars";
+      draw_only_pos_bars(arr, nr);
+    elsif high_val < 0 and low_val < 0 then
+      report "drawing only neg bars";
+      draw_only_neg_bars(arr, nr);
+    else
+      report "draw mixed";
+    end if;
 
 	end procedure;
 
@@ -194,10 +203,13 @@ begin
     --test_cases;
 
     -- draw only positive bars
-    -- draw_array(sorted_arr_pos, output_number);
+    draw_array(sorted_arr_pos, output_number);
 
     -- draw only negative bars
     draw_array(sorted_arr_neg, output_number);
+
+    -- draw mixed bars
+    draw_array(sorted_arr_mixed, output_number);
 		wait;
 	end process;
 end architecture;
