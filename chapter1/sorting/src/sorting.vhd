@@ -85,13 +85,9 @@ architecture arch of sorting is
 		draw.init(window_width, window_height);
 
 		for i in arr'low to arr'high loop
-      -- for debugging
-			report "(" & to_string(i) & ") " & to_string(arr(i));
-      report to_string(integer(real(arr(i))/real(arr(arr'high))) * (window_height/arr'length));
-
       -- scale bar
-      --bar_height := integer(real(arr(i))/real(arr(arr'high)) * real(scaled_range)) + offset;
-      bar_height := integer(real(arr(i))/real(arr(arr'high))) * (window_height/arr'length);
+      bar_height := integer(real(arr(i))/real(arr(arr'high)) * real(window_height/arr'length));
+      report to_string(bar_height);
       bar_y := window_height - bar_height;
 
       -- draw bar
@@ -119,14 +115,8 @@ architecture arch of sorting is
 	begin
 		draw.init(window_width, window_height);
 
-		report to_string(arr(arr'low));
-
 		for i in arr'low to arr'high loop
-      -- for debugging
-			report "(" & to_string(i) & ") " & to_string(arr(i));
-
       -- scale bar
-      --bar_height := abs(arr(i)) * 25;
       bar_height := integer(real(abs(arr(i)))/real(abs(arr(arr'high)))) * (window_height/arr'length);
       report to_string(bar_height);
       bar_y := 0;
