@@ -71,69 +71,7 @@ architecture arch of sorting is
 		-- mergesort(data);
 	end procedure;
 
-	procedure draw_only_pos_bars(arr : int_arr_t; nr : inout integer) is
-		variable draw : vhdldraw_t;
-		constant window_width : natural := 400;
-		constant window_height : natural := 300;
-		variable bar_width : natural := window_width / arr'length;
-		variable bar_height : natural := 0;
-    variable bar_x : natural := 0;
-    variable bar_y : natural := window_height;
-    constant offset : natural := 30;
-    constant scaled_range : integer := window_height - (2*offset);
-	begin
-		draw.init(window_width, window_height);
-
-		for i in arr'low to arr'high loop
-      -- scale bar
-      bar_height := integer(real(arr(i))/real(arr(arr'high)) * real(window_height/arr'length));
-      report to_string(bar_height);
-      bar_y := window_height - bar_height;
-
-      -- draw bar
-      draw.setColor(Red);
-      draw.fillRectangle(bar_x + bar_width*i, bar_y, bar_width, bar_height);
-      draw.setLineWidth(1);
-      draw.setColor(Black);
-      draw.drawRectangle(bar_x + bar_width*i, bar_y, bar_width, bar_height);
-    end loop;
-
-    draw.show("sorted" & to_string(nr) & ".ppm");
-    nr := nr + 1;
-	end procedure;
-
-	procedure draw_only_neg_bars(arr : int_arr_t; nr : inout integer) is
-		variable draw : vhdldraw_t;
-		constant window_width : natural := 400;
-		constant window_height : natural := 300;
-		variable bar_width : natural := window_width / arr'length;
-		variable bar_height : natural := 0;
-    variable bar_x : natural := 0;
-    variable bar_y : natural := 0;
-    constant offset : natural := 30;
-    constant scaled_range : integer := window_height;
-	begin
-		draw.init(window_width, window_height);
-
-		for i in arr'low to arr'high loop
-      -- scale bar
-      bar_height := integer(real(abs(arr(i)))/real(abs(arr(arr'high)))) * (window_height/arr'length);
-      report to_string(bar_height);
-      bar_y := 0;
-
-      -- draw bar
-      draw.setColor(Blue);
-      draw.fillRectangle(bar_x + bar_width*i, bar_y, bar_width, bar_height);
-      draw.setLineWidth(0);
-      draw.setColor(Black);
-      draw.drawRectangle(bar_x + bar_width*i, bar_y, bar_width, bar_height);
-    end loop;
-
-    draw.show("sorted" & to_string(nr) & ".ppm");
-    nr := nr + 1;
-	end procedure;
-
-	procedure draw_mixed_bars(arr : int_arr_t; nr : inout integer) is
+  procedure draw_array(arr : int_arr_t; nr : inout integer) is
 		variable draw : vhdldraw_t;
 		constant window_width : natural := 400;
 		constant window_height : natural := 300;
@@ -146,6 +84,7 @@ architecture arch of sorting is
     constant high_val : integer := arr(arr'high);
     constant low_val : integer := arr(arr'low);
     constant val_range : integer := high_val - low_val;
+    constant zero_line : integer := integer((real(high_val) / real(val_range)) * real(window_height));
 	begin
 		draw.init(window_width, window_height);
 
@@ -157,10 +96,10 @@ architecture arch of sorting is
 
         if arr(i) >= 0 then
             bar_y := zero_line - bar_height;
-            draw.setColor(Blue);
+            draw.setColor(Red);
         else
             bar_y := zero_line;
-            draw.setColor(Red);
+            draw.setColor(Blue);
         end if;
 
         -- draw bar
@@ -172,37 +111,6 @@ architecture arch of sorting is
 
     draw.show("sorted" & to_string(nr) & ".ppm");
     nr := nr + 1;
-	end procedure;
-
-
-  procedure draw_array(arr : int_arr_t; nr : inout integer) is
-		variable draw : vhdldraw_t;
-		constant window_width : natural := 400;
-		constant window_height : natural := 300;
-
-		variable bar_width : natural := window_width / arr'length;
-		variable bar_height : natural := 0;
-    variable bar_x : natural := 0;
-    variable bar_y : natural := window_height;
-
-    constant offset : natural := 30;
-    constant scaled_range : integer := window_height - (2*offset);
-
-    constant high_val : integer := arr(arr'high);
-    constant low_val : integer := arr(arr'low);
-	begin
-
-    if high_val > 0 and low_val > 0 then
-      report "drawing only pos bars";
-      draw_only_pos_bars(arr, nr);
-    elsif high_val < 0 and low_val < 0 then
-      report "drawing only neg bars";
-      draw_only_neg_bars(arr, nr);
-    else
-      report "draw mixed";
-	    draw_mixed_bars(arr, nr);
-    end if;
-
 	end procedure;
 
   procedure test_cases is
@@ -227,21 +135,8 @@ architecture arch of sorting is
 begin
 
 	main : process is
-		variable sorted_arr_pos : int_arr_t(3 downto 0) := (5,4,3,2);
-		variable sorted_arr_neg : int_arr_t(3 downto 0) := (-1,-2,-3,-4);
-		variable sorted_arr_mixed : int_arr_t(-5 to 5) := (91,89,78,67,56,45,34,-12,-15,-23,-42);
-    variable output_number : natural := 0;
 	begin
-    --test_cases;
-
-    -- draw only positive bars
-    --draw_array(sorted_arr_pos, output_number);
-
-    -- draw only negative bars
-    --draw_array(sorted_arr_neg, output_number);
-
-    -- draw mixed bars
-    draw_array(sorted_arr_mixed, output_number);
+    test_cases;
 		wait;
 	end process;
 end architecture;
