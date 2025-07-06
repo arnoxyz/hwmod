@@ -85,14 +85,16 @@ architecture arch of sorting is
     constant low_val : integer := arr(arr'low);
     constant val_range : integer := high_val - low_val;
     constant zero_line : integer := integer((real(high_val) / real(val_range)) * real(window_height));
+    constant offset : integer := 15;
 	begin
 		draw.init(window_width, window_height);
+
 
 		for i in arr'low to arr'high loop
         bar_x := integer(bar_width) * (i - arr'low);
 
         -- scale bar
-        bar_height := integer((real(abs(arr(i))) / real(val_range)) * real(window_height));
+        bar_height := integer((real((real(abs(arr(i))) / real(val_range)) * real(window_height - 2*offset))) + real(offset));
 
         if arr(i) >= 0 then
             bar_y := zero_line - bar_height;
