@@ -21,11 +21,19 @@ begin
 
 		procedure write(addr : integer; data : word_t) is
 		begin
-			-- Implement your write procedure that writes "data" to the address "addr"
+      -- Implementing Write Cycle 1
+      report "write: Data=" & to_hstring(data) & " to Addr=" & to_string(addr);
 		end procedure;
 
+    -- read
 		variable read_data : word_t;
+    -- write
 		constant testdata : std_ulogic_vector := x"BADC0DEDC0DEBA5E";
+		constant testdata0 : std_ulogic_vector := x"BADC";
+		constant testdata1 : std_ulogic_vector := x"0DED";
+		constant testdata2 : std_ulogic_vector := x"C0DE";
+		constant testdata3 : std_ulogic_vector := x"BA5E";
+
 	begin
 		-- Initialization
 		A <= (others => '0');
@@ -34,12 +42,22 @@ begin
 		OE_N <= '1';
 		IO <= (others => 'Z');
 		-- This enables reading and writing of both bytes -> you can always keep this low
+    -- meaning that we always write/read the whole 16 bit data word
 		LB_N <= '0';
 		UB_N <= '0';
 		wait for 20 ns;
 
-		-- write to and read from memory
+		-- write
+		write(0, testdata0);
+		--write(1, testdata1);
+		--write(2, testdata2);
+		--write(3, testdata3);
 
+    -- read
+		--read(0, read_data);
+		--read(1, read_data);
+		--read(2, read_data);
+		--read(3, read_data);
 		wait;
 	end process;
 

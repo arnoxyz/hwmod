@@ -1,8 +1,8 @@
 # SRAM
-Write a testbench for a provided SRAM. 
+Write a testbench for a provided SRAM.
 ## Exercise Details
-The testbench should implement one read and one write cycle. To test the implementation write the sequence x"BADC0DEDC0DEBA5E" to the sram addresses 0 to 3. Then read them out using the read cycles. So it should: 
-### Write 
+The testbench should implement one read and one write cycle. To test the implementation write the sequence x"BADC0DEDC0DEBA5E" to the sram addresses 0 to 3. Then read them out using the read cycles. So it should:
+### Write
 The SRAM has 16 bit long data words so, 2 Byte meaning 4 hex values (x"1234")
 ```
 write to address 0 the values x"BADC"
@@ -32,14 +32,34 @@ Word Datatype as defined in the provided package. Is a 16 Bit Logic Vector.
 ```
 subtype word_t is std_logic_vector(15 downto 0);
 ```
-## Testbench 
+## Testbench
 Testing the read and write cycles from the sram.
 ### Reading from the SRAM
-Get data from the sram. 
+Get data from the sram.
 #### Read Cycle 1
 #### Read Cycle 2
 ### Writing to the SRAM
-Write data into the sram. 
+Write data into the sram.
+#### Shortcuts Overview
+Shortcuts Overview
+```
+-- Write times
+TWC   : time := 10 ns;  --
+TSCE  : time := 8 ns;   --
+TAW   : time := 8 ns;   --
+THA   : time := 0 ns;   --
+TSA   : time := 0 ns;   --
+TPWB  : time := 8 ns;   --
+TPWE1 : time := 8 ns;   --
+TPWE2 : time := 10 ns;  --
+TSD   : time := 6 ns;   --
+THD   : time := 0 ns;   --
+THZWE : time := 5 ns;   --
+TLZWE : time := 2 ns;   --
+```
 #### Write Cycle 1
+CE Controlled. So the CE signal is the primary used signal to controll this write cycle.
+The OE signal can be high or low. (Does not matter)
+
 #### Write Cycle 2
 #### Write Cycle 3
