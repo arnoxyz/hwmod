@@ -23,12 +23,26 @@ begin
 		begin
       -- Implementing Write Cycle 1
       report "write: Data=" & to_hstring(data) & " to Addr=" & to_string(addr);
+
+      OE_N <= '1'; -- high or low (just set it to high (deacivated) for the whole write cycle)
+      -- set address
+      CE_N <= '1';
+      WE_N <= '1';
+      A <= std_ulogic_vector(to_unsigned(addr, A'length));
+      wait for TSA; -- TSA (setup address)
+
+      CE_N <= '0';
+      WE_N <= '0';
+      wait for THZWE;
+
+      IO <= data;
 		end procedure;
 
     -- read
 		variable read_data : word_t;
     -- write
 		constant testdata : std_ulogic_vector := x"BADC0DEDC0DEBA5E";
+
 		constant testdata0 : std_ulogic_vector := x"BADC";
 		constant testdata1 : std_ulogic_vector := x"0DED";
 		constant testdata2 : std_ulogic_vector := x"C0DE";

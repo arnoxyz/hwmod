@@ -41,25 +41,47 @@ Get data from the sram.
 ### Writing to the SRAM
 Write data into the sram.
 #### Shortcuts Overview
-Shortcuts Overview
+Overview of the shortcuts for the write timing, (defined in the package)
 ```
--- Write times
-TWC   : time := 10 ns;  --
-TSCE  : time := 8 ns;   --
-TAW   : time := 8 ns;   --
-THA   : time := 0 ns;   --
-TSA   : time := 0 ns;   --
-TPWB  : time := 8 ns;   --
-TPWE1 : time := 8 ns;   --
-TPWE2 : time := 10 ns;  --
-TSD   : time := 6 ns;   --
-THD   : time := 0 ns;   --
-THZWE : time := 5 ns;   --
-TLZWE : time := 2 ns;   --
+-- Write Time Constraints (T=Time)
+TWC   : time := 10 ns;  -- Write Cycle Time (total duration of one write cycle)
+TSCE  : time := 8 ns;   -- Chip Enable Active Duration
+TAW   : time := 8 ns;   -- (After Write) Address must be valid for this time
+THA   : time := 0 ns;   -- (Hold After) Address must be valid after write
+TSA   : time := 0 ns;   -- (Setup Address)
+TPWB  : time := 8 ns;   -- (Write Pulse Width)
+TPWE1 : time := 8 ns;   -- (Write Enalbe) Method 1
+TPWE2 : time := 10 ns;  -- (Write Enalbe) Method 2 (longer hold)
+TSD   : time := 6 ns;   -- (Setup Time Data) Data must be stable before WE
+THD   : time := 0 ns;   -- (Hold Time Data) Data must be valid after WE
+THZWE : time := 5 ns;   -- (output disable, To High-Z) Bus goes to high-Z after Write
+TLZWE : time := 2 ns;   -- (output enalbe, To Low-Z) Output enabled after WE
+```
+With the time values above and the [datasheet](https://www.issi.com/WW/pdf/61WV102416ALL.pdf) the testbench can now be written using:
+```
+statements
+wait for [TIME];
 ```
 #### Write Cycle 1
 CE Controlled. So the CE signal is the primary used signal to controll this write cycle.
-The OE signal can be high or low. (Does not matter)
+The OE signal can be high or low. (Does not matter). Goal is to set all signals according to the datasheet.
+This means setting all these values:
+```
+Datasheet Name <-> Testbench Name
+    ADDRESS    <-> A
+    CE         <-> CE_N
+    WE         <-> WE_N
+    D_Out      <-> IO
+    D_In       <-> IO
+```
+So the statements in the Testbench look like this:
+```
+A <=
+CE_N <=
+WE_N <=
+IO <=
+wait for [TIME];
+```
 
 #### Write Cycle 2
 #### Write Cycle 3
