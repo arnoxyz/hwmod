@@ -36,7 +36,36 @@ subtype word_t is std_logic_vector(15 downto 0);
 Testing the read and write cycles from the sram.
 ### Reading from the SRAM
 Get data from the sram.
+#### Shortcuts Overview
+Overview of the shortcuts for the read timing, (defined in the package)
+```
+-- Read Time Constraints (T=Time)
+TRC : time := 10 ns;    -- total time for one Read Cycle
+TAA : time := 10 ns;    -- Address Access Time
+TOHA  : time := 2.5 ns; -- Output Hold from Address
+TACE : time := 10 ns;   -- Chip Enable low to data valid
+TDOE : time := 6.5 ns;  -- Output Enable low to data valid
+THZOE : time := 4 ns;   -- (HZ = High-Z) Output Enable high to data bus becomes high-Z
+TLZOE : time := 0 ns;   -- (LZ = Low-Z) Output Enable low to data bus drives output
+THZCE : time := 4 ns;   -- Same but with Chip Enable
+TLZCE : time := 3 ns;   -- Same but with Chip Enalbe
+TBA : time := 6.5 ns;   -- Byte Enalbe to ata Valid (upper lower bytes)
+THZB : time := 3 ns;    -- Byte Enalbe high to high-Z
+TLZB : time := 0 ns;    -- Byte Enalbe low to data driving starts
+TPU : time := 0 ns;     -- Power Up time (in sim usually 0 ns)
+```
+
 #### Read Cycle 1
+Address Controlled, meaning the read cylce 1 is purely controlled/triggered by the address change. So CE and OE are set to VIL (VIL = Voltage Input Low). So CE and OE are set to low (always active because of the low active behavior of CE and OE)
+```
+CE_N <= '0'; --enable chip
+OE_N <= '0'; --enable otuput
+WE_N <= '1'; --disable write
+
+A <=
+IO <=
+wait for [TIME];
+```
 #### Read Cycle 2
 ### Writing to the SRAM
 Write data into the sram.
@@ -82,6 +111,5 @@ WE_N <=
 IO <=
 wait for [TIME];
 ```
-
 #### Write Cycle 2
 #### Write Cycle 3

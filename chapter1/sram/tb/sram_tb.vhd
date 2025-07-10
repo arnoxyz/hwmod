@@ -27,6 +27,15 @@ begin
 		procedure read(addr : integer; variable data : out word_t) is
 		begin
 			-- Implement your read procedure that reads from address "addr" and writes the read data into "data"
+      report "read: Data=" & to_hstring(data) & " from Addr=" & to_string(addr);
+      OE_N <= '0';
+      CE_N <= '0';
+      WE_N <= '1';
+
+      -- set address
+      A <= std_ulogic_vector(to_unsigned(addr, A'length));
+      wait for TSA;
+
 		end procedure;
 
 		procedure write(addr : integer; data : word_t) is
@@ -87,7 +96,7 @@ begin
 		--write(3, testdata3);
 
     -- read
-		--read(0, read_data);
+		read(0, read_data);
 		--read(1, read_data);
 		--read(2, read_data);
 		--read(3, read_data);
