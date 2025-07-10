@@ -11,9 +11,19 @@ architecture tb of sram_tb is
 	signal A : addr_t;
 	signal IO : word_t;
 	signal CE_N, OE_N, WE_N, LB_N, UB_N : std_ulogic := '1';
+
+  function max(x, y : time) return time is
+  begin
+    if x < y then
+      return y;
+    end if;
+    return x;
+  end function;
+
 begin
 
 	stimulus : process is
+
 		procedure read(addr : integer; variable data : out word_t) is
 		begin
 			-- Implement your read procedure that reads from address "addr" and writes the read data into "data"
@@ -36,6 +46,15 @@ begin
       wait for THZWE;
 
       IO <= data;
+      wait for max(TSCE, TPWE2) - THZWE;
+
+
+      CE_N <= '1';
+      WE_N <= '1';
+      wait for THD;
+
+      IO <= (others => 'Z');
+      wait for max(TLZWE, THZCE);
 		end procedure;
 
     -- read
