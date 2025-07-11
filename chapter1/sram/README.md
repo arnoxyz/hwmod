@@ -130,4 +130,31 @@ To fix the error I just set the LB_N, UB_N to '0' for the whole write duration. 
 the write call and deleted the LB_N, UB_N in my write procedure. This fixed the error as seen in Modelsim.
 ![Write Error Fix](./img/write_error_fixed.png)
 
+#### Read Error
+The reading operation got data, but the data was wrong.
+![Read Error Modelsim](./img/read_timing_error.png)
 
+#### Fix Read Error
+I could not find the error, but it worked fine when I just invoked every read operation a second time
+so I knew it was a timing error. There was to little time that the right data got fetched.
+```
+read(0, read_data0)
+read(0, read_data0)
+read(1, read_data1)
+read(1, read_data1)
+read(2, read_data2)
+read(2, read_data2)
+read(3, read_data3)
+read(3, read_data3)
+```
+I just hard coded some extra time in the read operation. Now it worked fine so I looked into the package.
+TRC and TAA both are set to 10 so the wait for (10-10)/2 is set to wait for 0 ns. So there was no waiting and only on
+the second call the wait for TAA got triggered again and waited for 10 ns.
+```
+wait for TAA;
+wait for (TRC-TAA)/2 + 2 ns;
+data := IO;
+wait for (TRC-TAA)/2;
+```
+So finally it works and I can sleep in peace again.
+![Read Error Fixed Modelsim](./img/read_error_fixed.png)

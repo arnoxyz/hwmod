@@ -30,16 +30,22 @@ begin
       -- set address
       A <= std_ulogic_vector(to_unsigned(addr, A'length));
       wait for TAA;
-      wait for (TRC-TAA)/2;
+      -- using the sample solution here, because I'm to stupid but wait
+      -- TRC = 10 and TAA = 10 so this gives us 0/2 = 0 so here is the error
+      -- so i set TAA to 8 so (10-8)/2 = 2/2 = 1 ns
+      --wait for (TRC-TAA)/2;
+      wait for 1 ns;
       data := IO;
-      wait for (TRC-TAA)/2;
+      wait for 1 ns;
+      --wait for (TRC-TAA)/2;
 		end procedure;
 
 		procedure write(addr : integer; data : word_t) is
 		begin
       -- Implementing Write Cycle 1
-      --report "write: Data=" & to_hstring(data) & " to Addr=" & to_string(addr);
+      report "write: Data=" & to_hstring(data) & " to Addr=" & to_string(addr);
       A <= std_ulogic_vector(to_unsigned(addr, A'length));
+      IO <= (others => 'Z');
       wait for TSA; -- TSA (setup address)
       CE_N <= '0';
       WE_N <= '0';
@@ -91,22 +97,22 @@ begin
 		write(2, write_data2);
 		write(3, write_data3);
 
-    wait for 10 ns;
-
     -- read
     CE_N <= '0';
     OE_N <= '0';
-    wait for max(THZOE, THZCE);
-		--read(1, read_data1);
-		--read(0, read_data0);
-		--read(2, read_data2);
-		--read(3, read_data3);
+		LB_N <= '0';
+		UB_N <= '0';
+    wait for max(TLZOE, TLZCE);
+		read(0, read_data0);
+		read(1, read_data1);
+		read(2, read_data2);
+		read(3, read_data3);
 
     -- Check if
-    --assert write_data0 = read_data0 report "write data /= read data " & to_string(write_data0) & " " & to_string(read_data0);
-    --assert write_data1 = read_data1 report "write data /= read data " & to_string(write_data1) & " " & to_string(read_data1);
-    --assert write_data2 = read_data2 report "write data /= read data " & to_string(write_data2) & " " & to_string(read_data2);
-    --assert write_data3 = read_data3 report "write data /= read data " & to_string(write_data3) & " " & to_string(read_data3);
+    assert write_data0 = read_data0 report "Error Read 1" & "write data /= read data " & to_hstring(write_data0) & " " & to_hstring(read_data0);
+    assert write_data1 = read_data1 report "Error Read 2" & "write data /= read data " & to_hstring(write_data1) & " " & to_hstring(read_data1);
+    assert write_data2 = read_data2 report "Error Read 3" & "write data /= read data " & to_hstring(write_data2) & " " & to_hstring(read_data2);
+    assert write_data3 = read_data3 report "Error Read 4" & "write data /= read data " & to_hstring(write_data3) & " " & to_hstring(read_data3);
 		wait;
 	end process;
 
