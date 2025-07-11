@@ -113,3 +113,21 @@ wait for [TIME];
 ```
 #### Write Cycle 2
 #### Write Cycle 3
+
+
+### Debugging using Modelsim
+#### Write Error
+The first write was ok so there had to be a bug in my write procedure.
+![Write Error Modelsim](./img/write_error.png)
+
+#### Fix Write Error
+Cause of Error: setting LB and UB on the first write but not resetting them. So they stayed inactive.
+```
+LB_N <= '1';
+UB_N <= '1';
+```
+To fix the error I just set the LB_N, UB_N to '0' for the whole write duration. So before
+the write call and deleted the LB_N, UB_N in my write procedure. This fixed the error as seen in Modelsim.
+![Write Error Fix](./img/write_error_fixed.png)
+
+

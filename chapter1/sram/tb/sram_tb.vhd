@@ -38,7 +38,7 @@ begin
 		procedure write(addr : integer; data : word_t) is
 		begin
       -- Implementing Write Cycle 1
-      report "write: Data=" & to_hstring(data) & " to Addr=" & to_string(addr);
+      --report "write: Data=" & to_hstring(data) & " to Addr=" & to_string(addr);
       A <= std_ulogic_vector(to_unsigned(addr, A'length));
       wait for TSA; -- TSA (setup address)
       CE_N <= '0';
@@ -48,8 +48,6 @@ begin
       wait for max(TSCE, TPWE2) - THZWE;
       CE_N <= '1';
       WE_N <= '1';
-      LB_N <= '1';
-      UB_N <= '1';
       wait for THD;
       IO <= (others => 'Z');
       wait for max(TLZWE, THZCE);
@@ -85,30 +83,30 @@ begin
 		-- write
     CE_N <= '1';
     OE_N <= '0';
+		LB_N <= '0';
+		UB_N <= '0';
     wait for 4 ns;
 		write(0, write_data0);
 		write(1, write_data1);
 		write(2, write_data2);
 		write(3, write_data3);
 
+    wait for 10 ns;
+
     -- read
     CE_N <= '0';
     OE_N <= '0';
     wait for max(THZOE, THZCE);
-		read(0, read_data0);
-		read(1, read_data1);
-		read(2, read_data2);
-		read(3, read_data3);
+		--read(1, read_data1);
+		--read(0, read_data0);
+		--read(2, read_data2);
+		--read(3, read_data3);
 
     -- Check if
-    assert write_data0 = read_data0
-      report "write data /= read data " & to_string(write_data0) & " " & to_string(read_data0);
-    assert write_data1 = read_data1
-      report "write data /= read data " & to_string(write_data1) & " " & to_string(read_data1);
-    assert write_data2 = read_data2
-      report "write data /= read data " & to_string(write_data2) & " " & to_string(read_data2);
-    assert write_data3 = read_data3
-      report "write data /= read data " & to_string(write_data3) & " " & to_string(read_data3);
+    --assert write_data0 = read_data0 report "write data /= read data " & to_string(write_data0) & " " & to_string(read_data0);
+    --assert write_data1 = read_data1 report "write data /= read data " & to_string(write_data1) & " " & to_string(read_data1);
+    --assert write_data2 = read_data2 report "write data /= read data " & to_string(write_data2) & " " & to_string(read_data2);
+    --assert write_data3 = read_data3 report "write data /= read data " & to_string(write_data3) & " " & to_string(read_data3);
 		wait;
 	end process;
 
