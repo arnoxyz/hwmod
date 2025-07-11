@@ -26,55 +26,48 @@ begin
 
 		procedure read(addr : integer; variable data : out word_t) is
 		begin
-			-- Implement your read procedure that reads from address "addr" and writes the read data into "data"
-      report "read: Data=" & to_hstring(data) & " from Addr=" & to_string(addr);
-      OE_N <= '0';
-      CE_N <= '0';
-      WE_N <= '1';
-
+      report "read Data from Addr=" & to_string(addr);
       -- set address
       A <= std_ulogic_vector(to_unsigned(addr, A'length));
-      wait for TSA;
-
+      wait for TAA;
+      wait for (TRC-TAA)/2;
+      data := IO;
+      wait for (TRC-TAA)/2;
 		end procedure;
 
 		procedure write(addr : integer; data : word_t) is
 		begin
       -- Implementing Write Cycle 1
       report "write: Data=" & to_hstring(data) & " to Addr=" & to_string(addr);
-
-      OE_N <= '1'; -- high or low (just set it to high (deacivated) for the whole write cycle)
-      -- set address
-      CE_N <= '1';
-      WE_N <= '1';
       A <= std_ulogic_vector(to_unsigned(addr, A'length));
       wait for TSA; -- TSA (setup address)
-
       CE_N <= '0';
       WE_N <= '0';
       wait for THZWE;
-
       IO <= data;
       wait for max(TSCE, TPWE2) - THZWE;
-
-
       CE_N <= '1';
       WE_N <= '1';
+      LB_N <= '1';
+      UB_N <= '1';
       wait for THD;
-
       IO <= (others => 'Z');
       wait for max(TLZWE, THZCE);
 		end procedure;
 
     -- read
 		variable read_data : word_t;
+		variable read_data0 : word_t := x"0000";
+		variable read_data1 : word_t := x"0000";
+		variable read_data2 : word_t := x"0000";
+		variable read_data3 : word_t := x"0000";
     -- write
 		constant testdata : std_ulogic_vector := x"BADC0DEDC0DEBA5E";
 
-		constant testdata0 : std_ulogic_vector := x"BADC";
-		constant testdata1 : std_ulogic_vector := x"0DED";
-		constant testdata2 : std_ulogic_vector := x"C0DE";
-		constant testdata3 : std_ulogic_vector := x"BA5E";
+		constant write_data0 : std_ulogic_vector := x"BADC";
+		constant write_data1 : std_ulogic_vector := x"0DED";
+		constant write_data2 : std_ulogic_vector := x"C0DE";
+		constant write_data3 : std_ulogic_vector := x"BA5E";
 
 	begin
 		-- Initialization
@@ -90,16 +83,32 @@ begin
 		wait for 20 ns;
 
 		-- write
-		write(0, testdata0);
-		--write(1, testdata1);
-		--write(2, testdata2);
-		--write(3, testdata3);
+    CE_N <= '1';
+    OE_N <= '0';
+    wait for 4 ns;
+		write(0, write_data0);
+		write(1, write_data1);
+		write(2, write_data2);
+		write(3, write_data3);
 
     -- read
-		read(0, read_data);
-		--read(1, read_data);
-		--read(2, read_data);
-		--read(3, read_data);
+    CE_N <= '0';
+    OE_N <= '0';
+    wait for max(THZOE, THZCE);
+		read(0, read_data0);
+		read(1, read_data1);
+		read(2, read_data2);
+		read(3, read_data3);
+
+    -- Check if
+    assert write_data0 = read_data0
+      report "write data /= read data " & to_string(write_data0) & " " & to_string(read_data0);
+    assert write_data1 = read_data1
+      report "write data /= read data " & to_string(write_data1) & " " & to_string(read_data1);
+    assert write_data2 = read_data2
+      report "write data /= read data " & to_string(write_data2) & " " & to_string(read_data2);
+    assert write_data3 = read_data3
+      report "write data /= read data " & to_string(write_data3) & " " & to_string(read_data3);
 		wait;
 	end process;
 
