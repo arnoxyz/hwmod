@@ -7,8 +7,12 @@ entity adder4_tb is
 end entity;
 
 architecture tb of adder4_tb is
+  -- for testing basic gates
   signal output1, output2, output3 : std_ulogic;
   signal a,b : std_ulogic;
+
+  -- for testing halfadder
+  signal sum, carry: std_ulogic;
 
 begin
   UUT1 : and_gate
@@ -30,6 +34,14 @@ begin
     a => a,
     b => b,
     z => output3
+  );
+
+  ha : halfadder
+  port map (
+    A => a,
+    B => b,
+    Sum => sum,
+    Cout => carry
   );
 
   testing_gates : process is
@@ -59,8 +71,33 @@ begin
       report "done testing basic gates";
     end procedure;
 
+    procedure testing_ha is
+    begin
+      report "start - sim ha";
+      a <= '0';
+      b <= '0';
+      wait for 1 ns;
+      report "Input=" & to_string(a) & to_string(b) & " sum="& to_string(sum) & " carry=" & to_string(carry);
+
+      a <= '1';
+      b <= '0';
+      wait for 1 ns;
+      report "Input=" & to_string(a) & to_string(b) & " sum="& to_string(sum) & " carry=" & to_string(carry);
+
+      a <= '0';
+      b <= '1';
+      wait for 1 ns;
+      report "Input=" & to_string(a) & to_string(b) & " sum="& to_string(sum) & " carry=" & to_string(carry);
+
+      a <= '1';
+      b <= '1';
+      wait for 1 ns;
+      report "Input=" & to_string(a) & to_string(b) & " sum="& to_string(sum) & " carry=" & to_string(carry);
+    end procedure;
+
   begin
-    testing_basic_gates;
+    --testing_basic_gates;
+    testing_ha;
     wait;
   end process;
 
