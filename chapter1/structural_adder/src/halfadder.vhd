@@ -12,4 +12,21 @@ entity halfadder is
 	);
 end entity;
 
--- implement the halfadder architecture
+architecture beh of halfadder is
+begin
+  -- Sum = A XOR B
+  sum_output : xor_gate
+  port map(
+    a => a,
+    b => b,
+    z => sum
+  );
+
+  -- Carry = A AND B
+  carry_output : and_gate
+  port map(
+    a => a,
+    b => b,
+    z => cout
+  );
+end architecture;
