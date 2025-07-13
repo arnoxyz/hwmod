@@ -12,7 +12,11 @@ architecture tb of adder4_tb is
   signal a,b : std_ulogic;
 
   -- for testing halfadder
-  signal sum, carry: std_ulogic;
+  signal sum, carry : std_ulogic;
+
+  -- for testing fulladder
+  signal cin : std_ulogic;
+  signal sum_fa, carry_fa : std_ulogic;
 
 begin
   UUT1 : and_gate
@@ -42,6 +46,15 @@ begin
     B => b,
     Sum => sum,
     Cout => carry
+  );
+
+  fa : fulladder
+  port map (
+    A => a,
+    B => b,
+    cin => cin,
+    Sum => sum_fa,
+    Cout => carry_fa
   );
 
   testing_gates : process is
@@ -96,9 +109,63 @@ begin
       report "done - sim ha";
     end procedure;
 
+    procedure testing_fa is
+    begin
+      report "start - sim fa";
+      a <= '0';
+      b <= '0';
+      cin <= '0';
+      wait for 1 ns;
+      report "Input=" & to_string(a) & to_string(b) & to_string(cin) & " sum="& to_string(sum_fa) & " carry=" & to_string(carry_fa);
+
+      a <= '1';
+      b <= '0';
+      cin <= '0';
+      wait for 1 ns;
+      report "Input=" & to_string(a) & to_string(b) & to_string(cin) & " sum="& to_string(sum_fa) & " carry=" & to_string(carry_fa);
+
+      a <= '0';
+      b <= '1';
+      cin <= '0';
+      wait for 1 ns;
+      report "Input=" & to_string(a) & to_string(b) & to_string(cin) & " sum="& to_string(sum_fa) & " carry=" & to_string(carry_fa);
+
+      a <= '1';
+      b <= '1';
+      cin <= '0';
+      wait for 1 ns;
+      report "Input=" & to_string(a) & to_string(b) & to_string(cin) & " sum="& to_string(sum_fa) & " carry=" & to_string(carry_fa);
+
+      a <= '0';
+      b <= '0';
+      cin <= '1';
+      wait for 1 ns;
+      report "Input=" & to_string(a) & to_string(b) & to_string(cin) & " sum="& to_string(sum_fa) & " carry=" & to_string(carry_fa);
+
+      a <= '1';
+      b <= '0';
+      cin <= '1';
+      wait for 1 ns;
+      report "Input=" & to_string(a) & to_string(b) & to_string(cin) & " sum="& to_string(sum_fa) & " carry=" & to_string(carry_fa);
+
+      a <= '0';
+      b <= '1';
+      cin <= '1';
+      wait for 1 ns;
+      report "Input=" & to_string(a) & to_string(b) & to_string(cin) & " sum="& to_string(sum_fa) & " carry=" & to_string(carry_fa);
+
+      a <= '1';
+      b <= '1';
+      cin <= '1';
+      wait for 1 ns;
+      report "Input=" & to_string(a) & to_string(b) & to_string(cin) & " sum="& to_string(sum_fa) & " carry=" & to_string(carry_fa);
+      report "done - sim ha";
+    end procedure;
+
   begin
     --testing_basic_gates;
-    testing_ha;
+    --testing_ha;
+    testing_fa;
     wait;
   end process;
 
@@ -125,4 +192,3 @@ begin
 		wait;
 	end process;
 end architecture;
-
