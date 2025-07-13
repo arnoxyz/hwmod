@@ -93,6 +93,7 @@ begin
       b <= '1';
       wait for 1 ns;
       report "Input=" & to_string(a) & to_string(b) & " sum="& to_string(sum) & " carry=" & to_string(carry);
+      report "done - sim ha";
     end procedure;
 
   begin
