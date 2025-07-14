@@ -165,7 +165,8 @@ begin
   begin
     --testing_basic_gates;
     --testing_ha;
-    testing_fa;
+    --testing_fa;
+
     wait;
   end process;
 

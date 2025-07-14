@@ -13,4 +13,43 @@ entity adder4 is
 	);
 end entity;
 
--- implement adder4 architecture
+architecture beh of adder4 is
+  signal c1_out, c2_out, c3_out : std_ulogic := '0';
+begin
+
+  FA1 : fulladder
+  port map(
+			A    => A(0),
+			B    => B(0),
+			Cin  => Cin,
+			Sum  => S(0),
+			Cout => c1_out
+  );
+
+  FA2 : fulladder
+  port map(
+			A    => A(1),
+			B    => B(1),
+			Cin  => c1_out,
+			Sum  => S(0),
+			Cout => c2_out
+  );
+
+  FA3 : fulladder
+  port map(
+			A    => A(2),
+			B    => B(2),
+			Cin  => c2_out,
+			Sum  => S(2),
+			Cout => c3_out
+  );
+
+  FA4 : fulladder
+  port map(
+			A    => A(3),
+			B    => B(3),
+			Cin  => c3_out,
+			Sum  => S(3),
+			Cout => Cout
+  );
+end architecture;
