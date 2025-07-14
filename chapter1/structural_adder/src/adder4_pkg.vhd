@@ -10,7 +10,7 @@ package adder4_pkg is
 			Z : out std_ulogic
 		);
 	end component;
-	
+
 	component and_gate is
 		port (
 			A : in std_ulogic;
@@ -56,7 +56,7 @@ package adder4_pkg is
 			B    : in std_ulogic_vector(3 downto 0);
 			Cin  : in std_ulogic;
 
-			Sum  : out std_ulogic_vector(3 downto 0);
+			S  : out std_ulogic_vector(3 downto 0);
 			Cout : out std_ulogic
 		);
 	end component;

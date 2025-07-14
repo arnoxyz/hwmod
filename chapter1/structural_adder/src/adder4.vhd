@@ -8,7 +8,7 @@ entity adder4 is
 		B    : in std_ulogic_vector(3 downto 0);
 		Cin  : in std_ulogic;
 
-		S    : out std_ulogic_vector(3 downto 0);
+		S   : out std_ulogic_vector(3 downto 0);
 		Cout : out std_ulogic
 	);
 end entity;
@@ -31,7 +31,7 @@ begin
 			A    => A(1),
 			B    => B(1),
 			Cin  => c1_out,
-			Sum  => S(0),
+			Sum  => S(1),
 			Cout => c2_out
   );
 

@@ -18,6 +18,10 @@ architecture tb of adder4_tb is
   signal cin : std_ulogic;
   signal sum_fa, carry_fa : std_ulogic;
 
+  -- for testing 4bitadder
+  signal a_in, b_in, sum_out : std_ulogic_vector(3 downto 0);
+  signal cout_out : std_ulogic;
+
 begin
   UUT1 : and_gate
   port map(
@@ -55,6 +59,15 @@ begin
     cin => cin,
     Sum => sum_fa,
     Cout => carry_fa
+  );
+
+  inst_add4 : adder4
+  port map(
+    A => a_in,
+    B => b_in,
+    Cin => cin,
+    S => sum_out,
+    Cout => cout_out
   );
 
   testing_gates : process is
@@ -162,34 +175,24 @@ begin
       report "done - sim ha";
     end procedure;
 
-  begin
-    --testing_basic_gates;
-    --testing_ha;
-    --testing_fa;
-
-    wait;
-  end process;
-
-
-
-	-- Instantiate the unit under test (adder4)
-
-	-- Stimulus process
-	stimulus: process
-		-- implement this procedure!
+    --for testing the 4 bit adder
 		procedure test_values(value_a, value_b, value_cin : integer) is
 		begin
 			-- assert that Sum is correct
 			-- assert Cout is correct
 		end procedure;
-	begin
-		report "simulation start";
 
-		-- Apply test stimuli
-		test_values(0,0,0);
-
-		report "simulation end";
-		-- End simulation
-		wait;
-	end process;
+    procedure testing_4bitadder is
+    begin
+      report "start - sim 4bitadder";
+		  test_values(0,0,0);
+      report "done - sim 4bitadder";
+    end procedure;
+  begin
+    --testing_basic_gates;
+    --testing_ha;
+    --testing_fa;
+    testing_4bitadder;
+    wait;
+  end process;
 end architecture;
