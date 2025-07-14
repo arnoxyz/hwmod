@@ -22,28 +22,22 @@ Nothing special can be seen here, just the basic gates, for more informations th
 [and](https://de.wikipedia.org/wiki/Und-Gatter)
 [xor](https://de.wikipedia.org/wiki/Exklusiv-Oder-Gatter)
 [or](https://de.wikipedia.org/wiki/Oder-Gatter) <br>
-
-![AND Structure](./img/and.png)
 ```
 z <= a and b;
 ```
-![XOR Gate](./img/xor.png)
 ```
 z <= a xor b;
 ```
-![OR Gate](./img/or.png)
 ```
 z <= a or b;
 ```
 Can be implemented using concurrent design style each with that one liner:
 ### Halfadder using XOR and AND Gate (HA)
 [Halfadder](https://de.wikipedia.org/wiki/Halbaddierer) wikipedia page for the halfadder. There is also the implementation that I use with the and-gate for carr output, xor gate for the sum. <br>
-![HA Structure](./img/ha.png)
 ### Fulladder using two Halfadders and one OR Gate (FA)
 [Fulladder](https://de.wikipedia.org/wiki/Volladdierer) wikipedia page for the halfadder. There is also the implementation that I use with the and-gate for carr output, xor gate for the sum.
 Wikipedia page for the fulladder. There is also the implementation that I use with two ha and one or gate. <br>
-![FA Structure](./img/fa.png)
 ### 4 Bit Adder using 4 FA
 [4BitAdder](https://de.wikipedia.org/wiki/Carry-Ripple-Addierer)
 the same for the final component. In this wikipedia article there can also be a implementation found using 4 FA. <br>
-![4Bit Ripple Carry Structure](./img/4bitrc.png)
+![4Bit Ripple Carry Structure](./img/4bitrc.jpeg)
