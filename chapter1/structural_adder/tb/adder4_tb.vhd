@@ -177,17 +177,36 @@ begin
 
     --for testing the 4 bit adder
 		procedure test_values(value_a, value_b, value_cin : integer) is
+      variable local_calc : std_ulogic_vector(4 downto 0 ) := (others => '0');
+      variable local_sum : std_ulogic_vector(3 downto 0 ) := (others => '0');
+      variable local_cout  : std_ulogic := '0';
 		begin
-			-- assert that Sum is correct
-			-- assert Cout is correct
+      -- set inputs
+      --a_in <= ;
+      --b_in <= ;
+      --cin <= ;
+
+      --local sum and cout (expected results to check the actuall results of the design)
+      local_calc := std_ulogic_vector(to_unsigned(value_a + value_b + value_cin, 5));
+      local_sum := local_calc(3 downto 0);
+      local_cout := local_calc(4);
+      wait for 1 ns;
+
+      -- check outputs
+      --report to_string(sum_out);
+      --report to_string(cout_out);
+			-- assert that Sum is correct (sum_out)
+			-- assert Cout is correct (cout_out)
 		end procedure;
 
     procedure testing_4bitadder is
     begin
       report "start - sim 4bitadder";
-		  test_values(0,0,0);
+		  test_values(1,0,0);
       report "done - sim 4bitadder";
     end procedure;
+
+
   begin
     --testing_basic_gates;
     --testing_ha;
