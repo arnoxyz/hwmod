@@ -41,3 +41,55 @@ Wikipedia page for the fulladder. There is also the implementation that I use wi
 [4BitAdder](https://de.wikipedia.org/wiki/Carry-Ripple-Addierer)
 the same for the final component. In this wikipedia article there can also be a implementation found using 4 FA. <br>
 ![4Bit Ripple Carry Structure](./img/4bitrc.jpeg)
+## Testing
+The gates, ha and fa don't have much inputs so every input can be tested just by using this structure in the testbench.
+```
+-- Set values on Input of the UUT
+a <= '0';
+b <= '0';
+wait for 1 ns;
+-- Check the Outputs of the UUT
+report "Input=" & to_string(a) & to_string(b) & " and="& to_string(output1) & " xor=" & to_string(output2) &" or=" & to_string(output3);
+```
+Here for example the complete testing procedure of all basic gates in my testbench. (Note: that assertions can also be inserted for even faster testing, but in that small case I ommited them and just checked with my eyes on modelsim and the console output.)
+```
+testing_gates : process is
+  procedure testing_basic_gates is
+  begin
+    report "start - sim basic gates";
+    a <= '0';
+    b <= '0';
+    wait for 1 ns;
+    report "Input=" & to_string(a) & to_string(b) & " and="& to_string(output1) & " xor=" & to_string(output2) &" or=" & to_string(output3);
+
+    a <= '1';
+    b <= '0';
+    wait for 1 ns;
+    report "Input=" & to_string(a) & to_string(b) & " and="& to_string(output1) & " xor=" & to_string(output2) &" or=" & to_string(output3);
+
+    a <= '0';
+    b <= '1';
+    wait for 1 ns;
+    report "Input=" & to_string(a) & to_string(b) & " and="& to_string(output1) & " xor=" & to_string(output2) &" or=" & to_string(output3);
+
+    a <= '1';
+    b <= '1';
+    wait for 1 ns;
+    report "Input=" & to_string(a) & to_string(b) & " and="& to_string(output1) & " xor=" & to_string(output2) &" or=" & to_string(output3);
+
+    report "done testing basic gates";
+  end procedure;
+```
+## Exhaustive Testing
+To test the final implementation of the 4Bit adder all inputs of the component were tested in the testbench. This method is called exhaustive testing and can be done easy in simulation with just three for loops for all integer inputs (a,b,cin). This is a reasion why simulation is so effective in comparison to implementing the design and testing it by hand on the fpga board. Just imagine testing it by setting the inputs by hand on the fpga board, trying all combinations and checking then the results, even on that 4 bit adder this would take much time. A modern pc internal represents numbers in 64 bit or 32 bit, so in this case testing by hand is not effective on the real hw, but can be easily done in the simulation. Here now the result waveform in modelsim. <br>
+![Modelsim](./img/exhaustive_testing.png)
+### Assertion-based testing
+To check all the outputs automatically, assertions where used. When the actual output is different of the calculated result the assertion gets triggered and prints out the report.
+```
+-- <... calc expected result of the component ...>
+
+-- <... check with actuall results ...>
+assert sum_out = local_sum report "sum is wrong: " & to_string(sum_out) & " /= " & to_string(local_sum);
+assert cout_out = local_cout report "cout is wrong: " & to_string(cout_out) & " /= " & to_string(local_cout);
+```
+
