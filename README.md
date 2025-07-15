@@ -7,3 +7,4 @@
 ### Illusions
 ### Sorting
 ### SRAM
+### Structural_Adder

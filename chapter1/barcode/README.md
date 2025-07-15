@@ -12,3 +12,10 @@ The checksum must be calculated by just summing up all the symbols and start/end
 By calculating this check symbol and adding the number, you can easily check the barcode for errors. If you get a barcode just summ up all the values and mod the result with 103. If the solution is not 0 something went wrong. 
 ## Draw/Display Barcode
 Now the whole barcode is saved and decoded in an array with each symbol represented as 11 bit wide std logic vector with values '0' and '1'. Drawing is now easy by just drawing black bars when '1' and white bars when '0' is in the respected vector position. The width of each bar is set to 2. So each symbol got a width of 2 (bar width)  times 11 (bit vector). The quite zone before and after the bar can be set to 15 times 2 (bar widt) or any width big enough to gurantee that the barcode is not disrupted when scanned. 
+### Examples:
+Just two simple examples of code_a (can represent uppercase letters and numbers) and code_b (can also represent lowercase letters).
+They both look somewhat similare because they represent a similare input "HW-MOD 2024" and "hw-mod 2024"
+#### Code A
+![Barcode Example Code_A](./img/sample_code_a.png)
+#### Code B
+![Barcode Example Code_B](./img/sample_code_b.png)
