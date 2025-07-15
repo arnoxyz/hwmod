@@ -182,9 +182,9 @@ begin
       variable local_cout  : std_ulogic := '0';
 		begin
       -- set inputs
-      --a_in <= ;
-      --b_in <= ;
-      --cin <= ;
+      a_in <= std_ulogic_vector(to_unsigned(value_a, 4));
+      b_in <= std_ulogic_vector(to_unsigned(value_b, 4));
+      cin <= std_ulogic(to_unsigned(value_cin, 1)(0));
 
       --local sum and cout (expected results to check the actuall results of the design)
       local_calc := std_ulogic_vector(to_unsigned(value_a + value_b + value_cin, 5));
@@ -193,16 +193,22 @@ begin
       wait for 1 ns;
 
       -- check outputs
-      --report to_string(sum_out);
-      --report to_string(cout_out);
-			-- assert that Sum is correct (sum_out)
-			-- assert Cout is correct (cout_out)
+      assert sum_out = local_sum report "sum is wrong: " & to_string(sum_out) & " /= " & to_string(local_sum);
+      assert cout_out = local_cout report "cout is wrong: " & to_string(cout_out) & " /= " & to_string(local_cout);
+
+      -- for debugging and some manuall input checks
+      report "sum_out is " & to_string(to_integer(unsigned(sum_out)));
+      report "cout is " & to_string(cout_out);
 		end procedure;
 
     procedure testing_4bitadder is
     begin
       report "start - sim 4bitadder";
-		  test_values(1,0,0);
+      --some basic checks before exhaustive testing
+      -- 4 bit so 2^4-1 is the max value = 16-1 = 15
+		  test_values(15,1,0); --overflow, sum should be 0 and cout should be 1
+		  test_values(14,1,0); --max value so sum should be 15 and cout should stay 0
+		  test_values(14,1,1); --max value so sum should be 15 and cout should be 1
       report "done - sim 4bitadder";
     end procedure;
 
