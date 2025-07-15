@@ -197,8 +197,8 @@ begin
       assert cout_out = local_cout report "cout is wrong: " & to_string(cout_out) & " /= " & to_string(local_cout);
 
       -- for debugging and some manuall input checks
-      report "sum_out is " & to_string(to_integer(unsigned(sum_out)));
-      report "cout is " & to_string(cout_out);
+      -- report "sum_out is " & to_string(to_integer(unsigned(sum_out)));
+      -- report "cout is " & to_string(cout_out);
 		end procedure;
 
     procedure testing_4bitadder is
@@ -206,9 +206,19 @@ begin
       report "start - sim 4bitadder";
       --some basic checks before exhaustive testing
       -- 4 bit so 2^4-1 is the max value = 16-1 = 15
-		  test_values(15,1,0); --overflow, sum should be 0 and cout should be 1
-		  test_values(14,1,0); --max value so sum should be 15 and cout should stay 0
-		  test_values(14,1,1); --max value so sum should be 15 and cout should be 1
+		  -- test_values(15,1,0); --overflow, sum should be 0 and cout should be 1
+		  -- test_values(14,1,0); --max value so sum should be 15 and cout should stay 0
+		  --test_values(14,1,1); --max value so sum should be 15 and cout should be 1
+
+
+      -- exhaustive testing (all inputs)
+      for idx_a in 0 to 2**4-1 loop
+        for idx_b in 0 to 2**4-1 loop
+          for idx_c in 0 to 1 loop
+            test_values(idx_a, idx_b, idx_c);
+          end loop;
+        end loop;
+      end loop;
       report "done - sim 4bitadder";
     end procedure;
 
