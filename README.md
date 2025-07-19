@@ -1,5 +1,5 @@
 # Hardware Modeling - HWMOD
-## chapter1
+## Chapter1
 ### ALU
 ### Barcode
 ### Bin2Dec
@@ -8,3 +8,5 @@
 ### Sorting
 ### SRAM
 ### Structural_Adder
+## Chapter2
+### Project_setup
