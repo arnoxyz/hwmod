@@ -26,12 +26,15 @@ architecture bench of generic_adder_tb is
   end component;
 begin
 
+  -- testing for N=4
   stimulus : process is
   begin
     report "start sim";
     A <= "0001";
     B <= "0001";
     wait for 1 ns;
+    A <= "0101";
+    B <= "0101";
     report to_string(S);
     report "end sim";
     wait;
