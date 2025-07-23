@@ -35,7 +35,11 @@ architecture beh of generic_adder is
     );
   end component;
 
-  signal c : std_ulogic_vector(adders_cnt-2 downto 0);
+  signal c : std_ulogic_vector(adders_cnt-1 downto 0);
+  --1 adder needs 0
+  --2 adders need 1
+  --3 adders need 2
+  --4 adders need 3
 
 begin
 
@@ -51,7 +55,7 @@ begin
   end generate;
 
   gen_more_4adders : if adders_cnt > 1 generate
-    gen_4adders_loop : for i in 0 to adders_cnt generate
+    gen_4adders_loop : for i in 0 to adders_cnt-1 generate
       gen_first_adder : if i = 0 generate
         adder4_inst : adder4
           port map(
@@ -63,7 +67,7 @@ begin
           );
       end generate;
 
-      gen_middle_adders : if ((i > 0) and (i < adders_cnt-1))  generate
+      gen_middle_adders : if ((i > 0) and (i < adders_cnt-2))  generate
         adder4_inst : adder4
           port map(
             A => A(i*4+3 downto i*4+0),
@@ -74,7 +78,7 @@ begin
           );
       end generate;
 
-      gen_last_adder : if i = adders_cnt generate
+      gen_last_adder : if i = adders_cnt-1 generate
       adder4_inst : adder4
           port map(
             A => A(i*4+3 downto i*4+0),
