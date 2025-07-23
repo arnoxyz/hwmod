@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 architecture top_arch_generic_adder of top is
-  constant N : positive := 12;
+  constant N : positive := 8;
 
   component generic_adder is
     generic (
@@ -24,9 +24,9 @@ begin
       N => N
     )
     port map (
-      A    => switches(11 downto 0),
-      B    => switches(11 downto 0),
-      S    => ledr(11 downto 0),
+      A    => switches(N-1 downto 0),
+      B    => switches(2*N-1 downto N),
+      S    => ledr(N-1 downto 0),
       Cout => ledg(0)
     );
 end architecture;
