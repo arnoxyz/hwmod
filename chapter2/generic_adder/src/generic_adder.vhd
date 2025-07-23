@@ -3,7 +3,7 @@ use ieee.std_logic_1164.all;
 
 entity generic_adder is
 	generic (
-		N : positive := 12 --4
+		N : positive := 4
 	);
 	port (
 		A    : in std_ulogic_vector(N-1 downto 0);
@@ -17,7 +17,7 @@ end entity;
 
 
 architecture beh of generic_adder is
-  constant adders_cnt : positive := 12/4; -- 12/4 = 3
+  constant adders_cnt : positive := N/4;
 
   component adder4 is
     port (
@@ -54,8 +54,21 @@ architecture beh of generic_adder is
   */
 
   signal c1, c2 : std_ulogic;
+  signal c : std_ulogic_vector(adders_cnt-2 downto 0);
 begin
 
+  gen_4adder : if adders_cnt=1 generate
+    adder4_inst : adder4
+      port map(
+        A => A(3 downto 0),
+        B => B(3 downto 0),
+        Cin => '0',
+        S  => S(3 downto 0),
+        Cout  => Cout
+      );
+  end generate;
+
+/*
 adder4_inst_1 : adder4
 	port map(
 		A => A(3 downto 0),
@@ -82,4 +95,5 @@ adder4_inst_3 : adder4
 		S  => S(11 downto 8),
 		Cout  => Cout
 	);
+*/
 end architecture;
