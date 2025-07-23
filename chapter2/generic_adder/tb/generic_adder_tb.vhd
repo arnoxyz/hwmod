@@ -9,13 +9,13 @@ entity generic_adder_tb is
 end entity;
 
 architecture bench of generic_adder_tb is
-  constant N : positive := 4;
+  constant N : positive := 12;
 	signal A,B,S : std_ulogic_vector(N-1 downto 0);
   signal cout  : std_ulogic;
 
   component generic_adder is
     generic (
-      N : positive := 4
+      N : positive := 12
     );
     port (
       A    : in std_ulogic_vector(N-1 downto 0);
@@ -30,12 +30,6 @@ begin
   stimulus : process is
   begin
     report "start sim";
-    A <= "0001";
-    B <= "0001";
-    wait for 1 ns;
-    A <= "0101";
-    B <= "0101";
-    report to_string(S);
     report "end sim";
     wait;
   end process;
