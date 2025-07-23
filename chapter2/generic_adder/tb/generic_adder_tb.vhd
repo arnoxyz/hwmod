@@ -30,6 +30,21 @@ begin
   stimulus : process is
   begin
     report "start sim";
+
+    --check sum working
+    A <= x"001";
+    B <= x"001";
+    wait for 1 ns;
+    report to_string(S);
+    report to_string(cout);
+
+    --check cout working
+    A <= x"FFF";
+    B <= x"001";
+    wait for 1 ns;
+    report to_string(S);
+    report to_string(cout);
+
     report "end sim";
     wait;
   end process;
