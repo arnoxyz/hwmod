@@ -26,23 +26,22 @@ architecture bench of generic_adder_tb is
   end component;
 begin
 
-  -- testing for N=4
+
   stimulus : process is
   begin
     report "start sim";
+    if TESTMODE = "exhaustive" then
+      --TODO: write exhaustive test-case
+      --Instantiate an 8-bit adder and create a stimulus process that exhaustively tests whether it correctly calculates all possible A * B possible additions.
+      --Do not forget to also check the correct value of the Cout signal.
+      report "EXHAUSTIVE!";
 
-    A <= x"10";
-    B <= x"00";
-    wait for 1 ns;
-    report to_string(S);
-    report to_string(cout);
-
-    --check cout working
-    A <= x"F0";
-    B <= x"01";
-    wait for 1 ns;
-    report to_string(S);
-    report to_string(cout);
+    elsif TESTMODE = "fibonacci" then
+      --TODO: write fibonacci test-case
+      report "Fibonacci!";
+      -- Instantiate a 32-bit adder and use it to calculate the fibonacci sequence starting by adding 0 and 1.
+      -- Stop when the carry out bit is high and report the last calculated number as well as the number of steps it took to get there.
+    end if;
 
     report "end sim";
     wait;
@@ -59,4 +58,7 @@ generic_adder_inst : generic_adder
 		S    => S,
 		Cout => cout
 	);
+
+
+
 end architecture;
