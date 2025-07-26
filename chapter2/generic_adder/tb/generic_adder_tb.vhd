@@ -9,9 +9,14 @@ entity generic_adder_tb is
 end entity;
 
 architecture bench of generic_adder_tb is
-  constant N : positive := 8;
-	signal A,B,S : std_ulogic_vector(N-1 downto 0);
-  signal cout  : std_ulogic;
+  constant N_ex : positive := 8;
+	signal A_ex , B_ex , S_ex : std_ulogic_vector(N_ex-1 downto 0);
+  signal cout_ex: std_ulogic;
+
+  constant N_fibo : positive := 32;
+	signal A_fibo, B_fibo, S_fibo : std_ulogic_vector(N_fibo-1 downto 0);
+  signal cout_fibo  : std_ulogic;
+
 
   component generic_adder is
     generic (
@@ -48,16 +53,31 @@ begin
   end process;
 
 
-generic_adder_inst : generic_adder
-	generic map (
-		N => N
-	)
-	port map (
-		A    => A,
-		B    => B,
-		S    => S,
-		Cout => cout
-	);
+gen_fibo : if TESTMODE = "fibonacci" generate
+  generic_adder_inst : generic_adder
+    generic map (
+      N => N_fibo
+    )
+    port map (
+      A    => A_fibo,
+      B    => B_fibo,
+      S    => S_fibo,
+      Cout => cout_fibo
+    );
+end generate;
+
+gen_ex : if TESTMODE = "exhaustive" generate
+  generic_adder_inst : generic_adder
+    generic map (
+      N => N_ex
+    )
+    port map (
+      A    => A_ex,
+      B    => B_ex,
+      S    => S_ex,
+      Cout => cout_ex
+    );
+end generate;
 
 
 
