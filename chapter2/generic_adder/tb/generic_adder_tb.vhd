@@ -53,22 +53,21 @@ begin
       assert cout_ex = local_cout report "cout is wrong: " & to_string(cout_ex) & " /= " & to_string(local_cout);
 
       -- for debugging and some manuall input checks
-      report "sum_out is " & to_string(to_integer(unsigned(sum_ex)));
-      report "cout is " & to_string(cout_ex);
+      --report "sum_out is " & to_string(to_integer(unsigned(sum_ex)));
+      --report "cout is " & to_string(cout_ex);
 		end procedure;
 
 
   begin
     report "start sim";
     if TESTMODE = "exhaustive" then
-      --TODO: write exhaustive test-case
-      --Instantiate an 8-bit adder and create a stimulus process that exhaustively tests whether it correctly calculates all possible A * B possible additions.
-      --Do not forget to also check the correct value of the Cout signal.
+      --exhaustively tests whether it correctly calculates all possible A * B possible additions.
       report "EXHAUSTIVE!";
-      exhaustive_test(10,10);
-
-
-
+      for i in 0 to 2**8-1 loop
+        for j in 0 to 2**8-1 loop
+          exhaustive_test(i,j);
+        end loop;
+      end loop;
 
     elsif TESTMODE = "fibonacci" then
       --TODO: write fibonacci test-case
