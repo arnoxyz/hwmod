@@ -10,7 +10,7 @@ end entity;
 
 architecture bench of generic_adder_tb is
   constant N_ex : positive := 8;
-	signal A_ex , B_ex , S_ex : std_ulogic_vector(N_ex-1 downto 0);
+	signal A_ex , B_ex , Sum_ex : std_ulogic_vector(N_ex-1 downto 0);
   signal cout_ex: std_ulogic;
 
   constant N_fibo : positive := 32;
@@ -33,6 +33,31 @@ begin
 
 
   stimulus : process is
+		procedure exhaustive_test(value_a, value_b : integer) is
+      variable local_calc : std_ulogic_vector(8 downto 0 ) := (others => '0');
+      variable local_sum : std_ulogic_vector(7 downto 0 ) := (others => '0');
+      variable local_cout  : std_ulogic := '0';
+		begin
+      -- set inputs
+      a_ex <= std_ulogic_vector(to_unsigned(value_a, 8));
+      b_ex <= std_ulogic_vector(to_unsigned(value_b, 8));
+
+      --local sum and cout (expected results to check the actuall results of the design)
+      local_calc := std_ulogic_vector(to_unsigned(value_a + value_b, 9));
+      local_sum := local_calc(7 downto 0);
+      local_cout := local_calc(8);
+      wait for 1 ns;
+
+      -- check outputs
+      assert sum_ex = local_sum report "sum is wrong: " & to_string(sum_ex) & " /= " & to_string(local_sum);
+      assert cout_ex = local_cout report "cout is wrong: " & to_string(cout_ex) & " /= " & to_string(local_cout);
+
+      -- for debugging and some manuall input checks
+      report "sum_out is " & to_string(to_integer(unsigned(sum_ex)));
+      report "cout is " & to_string(cout_ex);
+		end procedure;
+
+
   begin
     report "start sim";
     if TESTMODE = "exhaustive" then
@@ -40,6 +65,10 @@ begin
       --Instantiate an 8-bit adder and create a stimulus process that exhaustively tests whether it correctly calculates all possible A * B possible additions.
       --Do not forget to also check the correct value of the Cout signal.
       report "EXHAUSTIVE!";
+      exhaustive_test(10,10);
+
+
+
 
     elsif TESTMODE = "fibonacci" then
       --TODO: write fibonacci test-case
@@ -74,7 +103,7 @@ gen_ex : if TESTMODE = "exhaustive" generate
     port map (
       A    => A_ex,
       B    => B_ex,
-      S    => S_ex,
+      S    => Sum_ex,
       Cout => cout_ex
     );
 end generate;
