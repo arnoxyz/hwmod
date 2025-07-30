@@ -8,7 +8,7 @@ VHDL_FILES =\
 	top_arch.vhd
 
 TB=generic_adder_tb
-WAVE_FILE=
+WAVE_FILE=wave.do
 
 sim_exhaustive: VSIM_USER_ARGS=-GTESTMODE=exhaustive
 sim_exhaustive: sim

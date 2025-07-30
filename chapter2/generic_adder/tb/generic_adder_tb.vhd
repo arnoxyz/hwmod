@@ -59,10 +59,8 @@ begin
 
 		procedure fibo_test is
       constant N : integer := N_fibo;
-
       variable a_in : integer := 0;
       variable b_in : integer := 1;
-
 	    variable prev_sum : std_ulogic_vector(N_fibo-1 downto 0) := (others=>'0');
 		begin
       -- Fib Sequence is: {0 1 1 2 3 5 8 13 and so on... }
@@ -89,14 +87,20 @@ begin
 
       -- Third Iteration: a=sum2 (actual output = sum2) , b=sum1 (prev_sum), => sum3=3
       -- N-Iteration: a=sum_n (actual output = sum_n on sum_fibo output) , b=sum_n-1 (prev_sum), => sum_n+1
-      for i in 0 to 100 loop
+      for i in 0 to 50 loop
         a_in := to_integer(unsigned(sum_fibo));
         b_in := to_integer(unsigned(prev_sum));
         a_fibo <= std_ulogic_vector(to_unsigned(a_in, N));
         b_fibo <= std_ulogic_vector(to_unsigned(b_in, N));
         prev_sum := sum_fibo;
         wait for 1 ns;
-        report to_string(to_integer(unsigned(sum_fibo))) & ", ";
+        --report to_string(to_integer(unsigned(sum_fibo))) & ", ";
+        report to_string(cout_fibo);
+
+        if cout_fibo = '1' then
+          report "Overflow";
+          exit;
+        end if;
       end loop;
 		end procedure;
 
