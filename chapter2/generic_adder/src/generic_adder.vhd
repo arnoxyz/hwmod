@@ -67,24 +67,24 @@ begin
           );
       end generate;
 
-      gen_middle_adders : if ((i > 0) and (i < adders_cnt-2))  generate
+      gen_middle_adders : if ((i > 0) and (i < adders_cnt))  generate
         adder4_inst : adder4
           port map(
-            A => A(i*4+3 downto i*4+0),
-            B => B(i*4+3 downto i*4+0),
+            A => A(i*4+3 downto i*4),
+            B => B(i*4+3 downto i*4),
             Cin => c(i-1),
-            S  => S(i*4+3 downto i*4+0),
+            S  => S(i*4+3 downto i*4),
             Cout  => c(i)
           );
       end generate;
 
-      gen_last_adder : if i = adders_cnt-1 generate
+      gen_last_adder : if i = adders_cnt generate
       adder4_inst : adder4
           port map(
-            A => A(i*4+3 downto i*4+0),
-            B => B(i*4+3 downto i*4+0),
+            A => A(i*4+3 downto i*4),
+            B => B(i*4+3 downto i*4),
             Cin => c(i-1),
-            S  => S(i*4+3 downto i*4+0),
+            S  => S(i*4+3 downto i*4),
             Cout  => Cout
           );
       end generate;
