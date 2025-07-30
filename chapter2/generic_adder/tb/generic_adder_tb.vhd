@@ -60,25 +60,20 @@ begin
 		procedure fibo_test is
       constant N : integer := N_fibo;
 
-      variable local_sum : std_ulogic_vector(N-1 downto 0 ) := (others => '0');
-      variable a_in : integer := 1;
-      variable b_in : integer := 0;
+      variable a_in : integer := 0;
+      variable b_in : integer := 1;
 		begin
-      -- set first: a=1, b=0
+      -- Fib Sequence is: {0 1 1 2 3 5 8 13 and so on... }
+
+      -- First Iteration:
+      -- set first: a=0, b=1
       a_fibo <= std_ulogic_vector(to_unsigned(a_in, N));
       b_fibo <= std_ulogic_vector(to_unsigned(b_in, N));
-
-      --local sum
-      local_sum := std_ulogic_vector(to_unsigned(a_in + b_in, N));
       wait for 1 ns;
 
-      -- check outputs
-      --assert sum_fibo  = local_sum report "sum is wrong: " & to_string(sum_fibo) & " /= " & to_string(local_sum);
-      --assert cout_fibo = local_cout report "cout is wrong: " & to_string(cout_fibo) & " /= " & to_string(local_cout);
-
-      -- for debugging and some manuall input checks
-      report "sum_out is " & to_string(to_integer(unsigned(sum_fibo)));
-      report "cout is " & to_string(cout_fibo);
+      report "FIBO Sequence is : { ";
+      report to_string(to_integer(unsigned(a_fibo))) & ", ";
+      report to_string(to_integer(unsigned(b_fibo))) & ", ";
 		end procedure;
 
 
