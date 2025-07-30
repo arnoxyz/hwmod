@@ -14,7 +14,7 @@ architecture bench of generic_adder_tb is
   signal cout_ex: std_ulogic;
 
   constant N_fibo : positive := 32;
-	signal A_fibo, B_fibo, S_fibo : std_ulogic_vector(N_fibo-1 downto 0);
+	signal A_fibo, B_fibo, Sum_fibo : std_ulogic_vector(N_fibo-1 downto 0);
   signal cout_fibo  : std_ulogic;
 
 
@@ -57,6 +57,30 @@ begin
       --report "cout is " & to_string(cout_ex);
 		end procedure;
 
+		procedure fibo_test is
+      constant N : integer := N_fibo;
+
+      variable local_sum : std_ulogic_vector(N-1 downto 0 ) := (others => '0');
+      variable a_in : integer := 1;
+      variable b_in : integer := 0;
+		begin
+      -- set first: a=1, b=0
+      a_fibo <= std_ulogic_vector(to_unsigned(a_in, N));
+      b_fibo <= std_ulogic_vector(to_unsigned(b_in, N));
+
+      --local sum
+      local_sum := std_ulogic_vector(to_unsigned(a_in + b_in, N));
+      wait for 1 ns;
+
+      -- check outputs
+      --assert sum_fibo  = local_sum report "sum is wrong: " & to_string(sum_fibo) & " /= " & to_string(local_sum);
+      --assert cout_fibo = local_cout report "cout is wrong: " & to_string(cout_fibo) & " /= " & to_string(local_cout);
+
+      -- for debugging and some manuall input checks
+      report "sum_out is " & to_string(to_integer(unsigned(sum_fibo)));
+      report "cout is " & to_string(cout_fibo);
+		end procedure;
+
 
   begin
     report "start sim";
@@ -74,6 +98,7 @@ begin
       report "Fibonacci!";
       -- Instantiate a 32-bit adder and use it to calculate the fibonacci sequence starting by adding 0 and 1.
       -- Stop when the carry out bit is high and report the last calculated number as well as the number of steps it took to get there.
+		  fibo_test;
     end if;
 
     report "end sim";
@@ -89,7 +114,7 @@ gen_fibo : if TESTMODE = "fibonacci" generate
     port map (
       A    => A_fibo,
       B    => B_fibo,
-      S    => S_fibo,
+      S    => Sum_fibo,
       Cout => cout_fibo
     );
 end generate;
