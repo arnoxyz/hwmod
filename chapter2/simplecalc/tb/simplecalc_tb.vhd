@@ -7,17 +7,17 @@ end entity;
 
 architecture bench of simplecalc_tb is
     -- for clk gen
-    constant clk_period : time := 2 ns;
+    constant clk_period : time := 1 ns;
     signal clk_stop    : std_ulogic := '0';
 
     constant DATA_WIDTH : natural := 8;
     --in
     signal clk    : std_ulogic;
-    signal res_n  : std_ulogic;
-    signal operand_data_in : std_ulogic_vector(DATA_WIDTH-1 downto 0);
-    signal store_operand1  : std_ulogic;
-    signal store_operand2  : std_ulogic;
-    signal sub : std_ulogic;
+    signal res_n  : std_ulogic := '0';
+    signal operand_data_in : std_ulogic_vector(DATA_WIDTH-1 downto 0) := (others=>'0');
+    signal store_operand1  : std_ulogic := '1';
+    signal store_operand2  : std_ulogic := '1';
+    signal sub : std_ulogic := '0';
     --out
     signal operand1 : std_ulogic_vector(DATA_WIDTH-1 downto 0);
     signal operand2 : std_ulogic_vector(DATA_WIDTH-1 downto 0);
@@ -63,8 +63,45 @@ begin
 	begin
 		report "simulation start";
 		-- Apply test stimuli
+    res_n <= '0';
 		wait for 10 ns;
-		--assert 1 = 0 report "Test x failed" severity error;
+    res_n <= '1';
+    wait until rising_edge(clk);
+    sub <= '0';
+    store_operand1 <= '0';
+    operand_data_in <= (0 => '1', others=>'0');
+		wait for 2*clk_period;
+    store_operand2 <= '0';
+    operand_data_in <= (0 => '1', others=>'0');
+    report "operation 1";
+		wait for 2*clk_period;
+    store_operand1 <= '1';
+    store_operand2 <= '1';
+
+    --add 1+1 = 2
+    assert unsigned(result) = (unsigned(operand1)+unsigned(operand2));
+    sub <= '1';
+    report "operation 2";
+		wait for 2*clk_period;
+    --sub 1-1 = 0
+    assert unsigned(result) = (unsigned(operand1)-unsigned(operand2));
+
+		wait for 2*clk_period;
+    sub <= '0';
+    store_operand1 <= '0';
+    operand_data_in <= (0 => '1', 1 => '1', others=>'0');
+    report "operation 3";
+		wait for 2*clk_period;
+    --add 1+3 = 4
+    assert unsigned(result) = (unsigned(operand1)+unsigned(operand2));
+
+    sub <= '1';
+    store_operand2 <= '0';
+    operand_data_in <= (0 => '1', 1 => '1', others=>'0');
+    report "operation 4";
+		wait for 10 ns;
+    --sub 3-3 = 0
+    assert unsigned(result) = (unsigned(operand1)-unsigned(operand2));
 
 		report "simulation end";
 		-- End simulation
