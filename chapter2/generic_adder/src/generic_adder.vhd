@@ -12,6 +12,9 @@ entity generic_adder is
 		S    : out std_ulogic_vector(N-1 downto 0);
 		Cout : out std_ulogic
 	);
+
+  begin
+    assert (N mod 4 = 0) report "Generic N must be a multiple of 4 (e.g., 4,8,12,...)." severity failure;
 end entity;
 
 
