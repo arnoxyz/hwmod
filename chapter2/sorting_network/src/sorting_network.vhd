@@ -26,6 +26,11 @@ architecture beh of sorting_network is
   signal data_line3 : std_ulogic_vector(DATA_WIDTH-1 downto 0);
   signal data_line4 : std_ulogic_vector(DATA_WIDTH-1 downto 0);
 
+  signal data_line1_stage1 : std_ulogic_vector(DATA_WIDTH-1 downto 0);
+  signal data_line2_stage1 : std_ulogic_vector(DATA_WIDTH-1 downto 0);
+  signal data_line3_stage1 : std_ulogic_vector(DATA_WIDTH-1 downto 0);
+  signal data_line4_stage1 : std_ulogic_vector(DATA_WIDTH-1 downto 0);
+
   signal data_in : std_ulogic_vector(DATA_WIDTH*4-1 downto 0);
 begin
   sync : process(clk, res_n) is
@@ -36,9 +41,14 @@ begin
       data_line2 <= (others=>'0');
       data_line3 <= (others=>'0');
       data_line4 <= (others=>'0');
+      --stage 1 (3 stages = 3 layers)
+      data_line1_stage1 <= (others=>'0');
+      data_line2_stage1 <= (others=>'0');
+      data_line3_stage1 <= (others=>'0');
+      data_line4_stage1 <= (others=>'0');
+      --stage 2
+      --stage 3
     elsif rising_edge(clk) then
-      --set registers
-
       --sample data
       if start = '1' then
         data_in <= unsorted_data;
@@ -46,7 +56,28 @@ begin
         data_line2 <= unsorted_data(DATA_WIDTH*2-1 downto DATA_WIDTH);
         data_line3 <= unsorted_data(DATA_WIDTH*3-1 downto DATA_WIDTH*2);
         data_line4 <= unsorted_data(DATA_WIDTH*4-1 downto DATA_WIDTH*3);
+
+        --stage1: compare 1 with 3 and 2 with 4
+        if unsigned(data_line1) > unsigned(data_line3) then
+          --swap data
+          data_line1_stage1 <= data_line3;
+          data_line3_stage1 <= data_line1;
+        else
+          data_line1_stage1 <= data_line1;
+          data_line3_stage1 <= data_line3;
+        end if;
+
+        if unsigned(data_line2) > unsigned(data_line4) then
+          --swap data
+          data_line2_stage1 <= data_line2;
+          data_line4_stage1 <= data_line4;
+        else
+          data_line2_stage1 <= data_line2;
+          data_line4_stage1 <= data_line4;
+        end if;
       end if;
+
+
     end if;
   end process;
   sorted_data <= data_in;
