@@ -34,12 +34,9 @@ begin
     start <= '1';
     wait for 10*clk_period;
     res_n <= '1';
-    wait for 2*clk_period;
-    wait for 2*clk_period;
-
-    wait for 10*clk_period;
-    --TODO:
-    --wait until done = '1';
+    wait until done = '1';
+    unsorted_data <= x"0F00F0F1_0FFF0010_FF00F100_0F0F1F0F";
+    wait until done = '1';
 
     clk_stop <= '1';
     report "end sim";
