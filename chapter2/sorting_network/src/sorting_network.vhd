@@ -31,12 +31,19 @@ architecture beh of sorting_network is
   signal data_line3_stage1 : std_ulogic_vector(DATA_WIDTH-1 downto 0);
   signal data_line4_stage1 : std_ulogic_vector(DATA_WIDTH-1 downto 0);
 
-  signal data_in : std_ulogic_vector(DATA_WIDTH*4-1 downto 0);
+  signal data_line1_stage2 : std_ulogic_vector(DATA_WIDTH-1 downto 0);
+  signal data_line2_stage2 : std_ulogic_vector(DATA_WIDTH-1 downto 0);
+  signal data_line3_stage2 : std_ulogic_vector(DATA_WIDTH-1 downto 0);
+  signal data_line4_stage2 : std_ulogic_vector(DATA_WIDTH-1 downto 0);
+
+  signal data_line1_stage3 : std_ulogic_vector(DATA_WIDTH-1 downto 0);
+  signal data_line2_stage3 : std_ulogic_vector(DATA_WIDTH-1 downto 0);
+  signal data_line3_stage3 : std_ulogic_vector(DATA_WIDTH-1 downto 0);
+  signal data_line4_stage3 : std_ulogic_vector(DATA_WIDTH-1 downto 0);
 begin
   sync : process(clk, res_n) is
   begin
     if res_n = '0' then
-      data_in <= (others=>'0');
       data_line1 <= (others=>'0');
       data_line2 <= (others=>'0');
       data_line3 <= (others=>'0');
@@ -47,11 +54,19 @@ begin
       data_line3_stage1 <= (others=>'0');
       data_line4_stage1 <= (others=>'0');
       --stage 2
+      data_line1_stage2 <= (others=>'0');
+      data_line2_stage2 <= (others=>'0');
+      data_line3_stage2 <= (others=>'0');
+      data_line4_stage2 <= (others=>'0');
       --stage 3
+      data_line1_stage3 <= (others=>'0');
+      data_line2_stage3 <= (others=>'0');
+      data_line3_stage3 <= (others=>'0');
+      data_line4_stage3 <= (others=>'0');
+
     elsif rising_edge(clk) then
       --sample data
       if start = '1' then
-        data_in <= unsorted_data;
         data_line1 <= unsorted_data(DATA_WIDTH-1 downto 0);
         data_line2 <= unsorted_data(DATA_WIDTH*2-1 downto DATA_WIDTH);
         data_line3 <= unsorted_data(DATA_WIDTH*3-1 downto DATA_WIDTH*2);
@@ -77,8 +92,43 @@ begin
         end if;
       end if;
 
+        --stage2: compare 1 with 2 and 3 with 4
+        if unsigned(data_line1_stage1) > unsigned(data_line2_stage1) then
+          --swap data
+          data_line1_stage2 <= data_line2_stage1;
+          data_line2_stage2 <= data_line1_stage1;
+        else
+          data_line1_stage2 <= data_line1_stage1;
+          data_line2_stage2 <= data_line2_stage1;
+        end if;
 
+        if unsigned(data_line3_stage1) > unsigned(data_line4_stage1) then
+          --swap data
+          data_line3_stage2 <= data_line4_stage1;
+          data_line4_stage2 <= data_line3_stage1;
+        else
+          data_line3_stage2 <= data_line3_stage1;
+          data_line4_stage2 <= data_line4_stage1;
+        end if;
+
+        --stage3: compare 2 with 3
+        if unsigned(data_line2_stage2) > unsigned(data_line3_stage2) then
+          --swap data
+          data_line2_stage3 <= data_line3_stage2;
+          data_line3_stage3 <= data_line2_stage2;
+        else
+          data_line2_stage3 <= data_line2_stage2;
+          data_line3_stage3 <= data_line3_stage2;
+        end if;
+
+          data_line1_stage3 <= data_line1_stage2;
+          data_line4_stage3 <= data_line4_stage2;
+
+        --output data
+        sorted_data(DATA_WIDTH-1 downto 0) <= data_line4_stage3;
+        sorted_data(DATA_WIDTH*2-1 downto DATA_WIDTH) <= data_line3_stage3;
+        sorted_data(DATA_WIDTH*3-1 downto DATA_WIDTH*2) <= data_line2_stage3;
+        sorted_data(DATA_WIDTH*4-1 downto DATA_WIDTH*3) <= data_line1_stage3;
     end if;
   end process;
-  sorted_data <= data_in;
 end architecture;

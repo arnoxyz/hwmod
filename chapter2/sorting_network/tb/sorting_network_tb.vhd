@@ -31,12 +31,11 @@ begin
     -- set values:
     --32 bit = in hex => x"FFFF_FFFF" per line
     res_n <= '0';
+    start <= '1';
     wait for 10*clk_period;
     res_n <= '1';
     wait for 2*clk_period;
-    start <= '1';
     wait for 2*clk_period;
-    start <= '0';
 
     wait for 10*clk_period;
     --TODO:
