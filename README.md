@@ -9,6 +9,7 @@
 ### SRAM
 ### Structural_Adder
 ## Chapter2
-### Project_setup
+### Project_Setup
 ### Generic_Adder
 ### Simplecalc
+### Sorting_Network
