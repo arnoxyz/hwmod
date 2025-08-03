@@ -40,6 +40,7 @@ architecture beh of sorting_network is
   signal data_line2_stage3 : std_ulogic_vector(DATA_WIDTH-1 downto 0);
   signal data_line3_stage3 : std_ulogic_vector(DATA_WIDTH-1 downto 0);
   signal data_line4_stage3 : std_ulogic_vector(DATA_WIDTH-1 downto 0);
+
 begin
   sync : process(clk, res_n) is
   begin
@@ -72,6 +73,15 @@ begin
         data_line3 <= unsorted_data(DATA_WIDTH*3-1 downto DATA_WIDTH*2);
         data_line4 <= unsorted_data(DATA_WIDTH*4-1 downto DATA_WIDTH*3);
 
+        --implemented sorting networK: Sorting network for 4 inputs, 5 CEs, 3 layers:
+        --input lines 1,2,3,4
+          --stage1 compare
+          --[(1,3),(2,4)]
+          --stage2 compare
+          --[(1,2),(3,4)]
+          --stage3 compare
+          --[(2,3)]
+
         --stage1: compare 1 with 3 and 2 with 4
         if unsigned(data_line1) > unsigned(data_line3) then
           --swap data
@@ -84,8 +94,8 @@ begin
 
         if unsigned(data_line2) > unsigned(data_line4) then
           --swap data
-          data_line2_stage1 <= data_line2;
-          data_line4_stage1 <= data_line4;
+          data_line2_stage1 <= data_line4;
+          data_line4_stage1 <= data_line2;
         else
           data_line2_stage1 <= data_line2;
           data_line4_stage1 <= data_line4;
@@ -125,10 +135,10 @@ begin
           data_line4_stage3 <= data_line4_stage2;
 
         --output data
-        sorted_data(DATA_WIDTH-1 downto 0) <= data_line4_stage3;
-        sorted_data(DATA_WIDTH*2-1 downto DATA_WIDTH) <= data_line3_stage3;
-        sorted_data(DATA_WIDTH*3-1 downto DATA_WIDTH*2) <= data_line2_stage3;
-        sorted_data(DATA_WIDTH*4-1 downto DATA_WIDTH*3) <= data_line1_stage3;
+        sorted_data(DATA_WIDTH-1 downto 0) <= data_line1_stage3;
+        sorted_data(DATA_WIDTH*2-1 downto DATA_WIDTH) <= data_line2_stage3;
+        sorted_data(DATA_WIDTH*3-1 downto DATA_WIDTH*2) <= data_line3_stage3;
+        sorted_data(DATA_WIDTH*4-1 downto DATA_WIDTH*3) <= data_line4_stage3;
     end if;
   end process;
 end architecture;

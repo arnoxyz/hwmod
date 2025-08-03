@@ -27,7 +27,7 @@ begin
   stimulus : process is
   begin
     report "start sim";
-    unsorted_data <= x"00000F01_000F0010_0FF0000F_F000F110";
+    unsorted_data <= x"00000001_00000010_00000100_00001000";
     -- set values:
     --32 bit = in hex => x"FFFF_FFFF" per line
     res_n <= '0';
