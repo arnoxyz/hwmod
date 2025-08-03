@@ -27,10 +27,20 @@ begin
   stimulus : process is
   begin
     report "start sim";
+    unsorted_data <= x"00000F01_000F0010_0FF0000F_F000F110";
+    -- set values:
+    --32 bit = in hex => x"FFFF_FFFF" per line
     res_n <= '0';
     wait for 10*clk_period;
     res_n <= '1';
     wait for 2*clk_period;
+    start <= '1';
+    wait for 2*clk_period;
+    start <= '0';
+
+    wait for 10*clk_period;
+    --TODO:
+    --wait until done = '1';
 
     clk_stop <= '1';
     report "end sim";

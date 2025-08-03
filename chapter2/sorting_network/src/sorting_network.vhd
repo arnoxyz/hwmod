@@ -21,16 +21,32 @@ entity sorting_network is
 end entity;
 
 architecture beh of sorting_network is
+  signal data_line1 : std_ulogic_vector(DATA_WIDTH-1 downto 0);
+  signal data_line2 : std_ulogic_vector(DATA_WIDTH-1 downto 0);
+  signal data_line3 : std_ulogic_vector(DATA_WIDTH-1 downto 0);
+  signal data_line4 : std_ulogic_vector(DATA_WIDTH-1 downto 0);
+
   signal data_in : std_ulogic_vector(DATA_WIDTH*4-1 downto 0);
 begin
   sync : process(clk, res_n) is
   begin
     if res_n = '0' then
-      --reset registers
       data_in <= (others=>'0');
+      data_line1 <= (others=>'0');
+      data_line2 <= (others=>'0');
+      data_line3 <= (others=>'0');
+      data_line4 <= (others=>'0');
     elsif rising_edge(clk) then
       --set registers
-      data_in <= unsorted_data;
+
+      --sample data
+      if start = '1' then
+        data_in <= unsorted_data;
+        data_line1 <= unsorted_data(DATA_WIDTH-1 downto 0);
+        data_line2 <= unsorted_data(DATA_WIDTH*2-1 downto DATA_WIDTH);
+        data_line3 <= unsorted_data(DATA_WIDTH*3-1 downto DATA_WIDTH*2);
+        data_line4 <= unsorted_data(DATA_WIDTH*4-1 downto DATA_WIDTH*3);
+      end if;
     end if;
   end process;
   sorted_data <= data_in;
