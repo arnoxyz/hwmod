@@ -41,6 +41,8 @@ architecture beh of sorting_network is
   signal data_line3_stage3 : std_ulogic_vector(DATA_WIDTH-1 downto 0);
   signal data_line4_stage3 : std_ulogic_vector(DATA_WIDTH-1 downto 0);
 
+  signal count : unsigned(3 downto 0);
+  signal count_next : unsigned(3 downto 0);
 begin
   sync : process(clk, res_n) is
   begin
@@ -64,6 +66,8 @@ begin
       data_line2_stage3 <= (others=>'0');
       data_line3_stage3 <= (others=>'0');
       data_line4_stage3 <= (others=>'0');
+
+      count <= (others=>'0');
 
     elsif rising_edge(clk) then
       --sample data
@@ -139,6 +143,20 @@ begin
         sorted_data(DATA_WIDTH*2-1 downto DATA_WIDTH) <= data_line2_stage3;
         sorted_data(DATA_WIDTH*3-1 downto DATA_WIDTH*2) <= data_line3_stage3;
         sorted_data(DATA_WIDTH*4-1 downto DATA_WIDTH*3) <= data_line4_stage3;
+
+        count <= count_next;
+    end if;
+  end process;
+
+  comb : process(all) is
+  begin
+    -- count cc for the done signal
+    if to_integer(count) >= 5 then
+      done  <= '1';
+      count_next <= (others=>'0');
+    else
+      done  <= '0';
+      count_next <= count + 1;
     end if;
   end process;
 end architecture;
