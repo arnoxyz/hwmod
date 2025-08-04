@@ -16,15 +16,30 @@ entity lfsr is
 end entity;
 
 architecture arch of lfsr is
-  signal seed_reg : std_ulogic_vector(LFSR_WIDTH-1 downto 0);
+  signal x : std_ulogic_vector(LFSR_WIDTH-1 downto 0);
+
 begin
   sync : process(clk, res_n) is
   begin
     if res_n = '0' then
-      seed_reg <= (others=>'0');
+      -- apply seed to the regs (init values)
+      x(0) <= seed(0);
+      x(1) <= seed(1);
+      x(2) <= seed(2);
+      x(3) <= seed(3);
+
     elsif rising_edge(clk) then
       if load_seed_n = '0' then
-        seed_reg <= seed;
+        x <= seed;
+      end if;
+
+      --using load_seed_n as shift enable signal
+      if load_seed_n = '1' then
+			  x(0) <= x(3) xor x(2);
+				x(1) <= x(0);
+				x(2) <= x(1);
+				x(3) <= x(2);
+		    prdata <= x(3);
       end if;
     end if;
   end process;
