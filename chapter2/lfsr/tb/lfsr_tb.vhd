@@ -16,12 +16,14 @@ architecture tb of lfsr_tb is
 	constant MAX_POLY_16 : std_ulogic_vector(15 downto 0) := "1101000000001000";
 	constant POLY_16     : std_ulogic_vector(15 downto 0) := "1101001100001000";
 
+
   --generics
-	constant POLYNOMIAL : std_ulogic_vector := "0011";
+	constant POLYNOMIAL : std_ulogic_vector := MAX_POLy_16;
 	constant LFSR_WIDTH : integer := POLYNOMIAL'LENGTH;
   --in
 	signal load_seed_n  : std_ulogic := '1';
 	signal seed : std_ulogic_vector(LFSR_WIDTH-1 downto 0) := (others => '0');
+	constant seed_val : std_ulogic_vector(LFSR_WIDTH-1 downto 0) := (0 => '1', others => '0');
   --out
 	signal prdata : std_ulogic;
 begin
@@ -33,13 +35,13 @@ begin
     wait for 2 * clk_period;
     res_n <= '1';
     load_seed_n <= '0';
-    seed <= "0101";
+    seed <= seed_val;
     wait for 2 * clk_period;
     res_n <= '0';
     load_seed_n <= '1';
     wait for clk_period;
     res_n <= '1';
-    wait for 10 * clk_period;
+    wait until prdata = '1';
 
     clk_stop <= '1';
 		wait;
