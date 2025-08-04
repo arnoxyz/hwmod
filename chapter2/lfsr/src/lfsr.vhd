@@ -22,24 +22,28 @@ begin
   sync : process(clk, res_n) is
   begin
     if res_n = '0' then
-      -- apply seed to the regs (init values)
-      x(0) <= seed(0);
-      x(1) <= seed(1);
-      x(2) <= seed(2);
-      x(3) <= seed(3);
-
+      x <= seed;
     elsif rising_edge(clk) then
+
       if load_seed_n = '0' then
         x <= seed;
       end if;
 
-      --using load_seed_n as shift enable signal
       if load_seed_n = '1' then
-			  x(0) <= x(3) xor x(2);
-				x(1) <= x(0);
-				x(2) <= x(1);
-				x(3) <= x(2);
-		    prdata <= x(3);
+        --shift register
+
+        for idx in 0 to 3 loop
+          if idx = 0 then
+            --start
+			      x(idx) <= x(3) xor x(2); --TODO: set polynomial like here "0011";
+          elsif idx = 3 then
+            --end
+		        prdata <= x(idx);
+            x(idx) <= x(idx-1);
+          else
+            x(idx) <= x(idx-1);
+          end if;
+        end loop;
       end if;
     end if;
   end process;

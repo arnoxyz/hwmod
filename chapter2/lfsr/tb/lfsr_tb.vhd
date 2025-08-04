@@ -17,7 +17,7 @@ architecture tb of lfsr_tb is
 	constant POLY_16     : std_ulogic_vector(15 downto 0) := "1101001100001000";
 
   --generics
-	constant POLYNOMIAL : std_ulogic_vector := "1000";
+	constant POLYNOMIAL : std_ulogic_vector := "0011";
 	constant LFSR_WIDTH : integer := POLYNOMIAL'LENGTH;
   --in
 	signal load_seed_n  : std_ulogic := '1';
