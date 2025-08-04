@@ -6,6 +6,9 @@ entity lfsr_tb is
 end entity;
 
 architecture tb of lfsr_tb is
+  --clk gen
+  constant clk_period : time := 2 ns; --50Mhz => 20ns but for sim i just take 2 ns for now
+  signal clk_stop : std_ulogic := '0';
 	signal clk, res_n : std_ulogic := '0';
 
 	constant MAX_POLY_8  : std_ulogic_vector(7 downto 0)  := "10111000";
@@ -13,21 +16,30 @@ architecture tb of lfsr_tb is
 	constant MAX_POLY_16 : std_ulogic_vector(15 downto 0) := "1101000000001000";
 	constant POLY_16     : std_ulogic_vector(15 downto 0) := "1101001100001000";
 
-	-- Change as required
+  --generics
 	constant POLYNOMIAL : std_ulogic_vector := MAX_POLY_16;
 	constant LFSR_WIDTH : integer := POLYNOMIAL'LENGTH;
-
-	signal load_seed_n, en : std_ulogic;
-	signal seed, seq     : std_ulogic_vector(LFSR_WIDTH-1 downto 0) := (others => '0');
+  --in
+	signal load_seed_n  : std_ulogic := '1';
+	signal seed : std_ulogic_vector(LFSR_WIDTH-1 downto 0) := (others => '0');
+  --out
 	signal prdata : std_ulogic;
 begin
 
 	stimulus : process is
 	begin
+    report "start sim";
+    res_n <= '0';
+    wait for 2 * clk_period;
+    res_n <= '1';
+    load_seed_n <= '0';
+    wait for 2 * clk_period;
+    load_seed_n <= '1';
+    wait for 10 * clk_period;
 
-		-- Reset your module and apply stimuli
-
+    clk_stop <= '1';
 		wait;
+    report "sim done";
 	end process;
 
 	uut : entity work.lfsr
@@ -45,7 +57,13 @@ begin
 
 	clk_gen : process is
 	begin
-		-- generate a 50MHz clock signal
-	end process;
+    clk <= '0';
+    wait for clk_period / 2;
+    clk <= '1';
+    wait for clk_period / 2;
 
+    if clk_stop = '1' then
+      wait;
+    end if;
+	end process;
 end architecture;
