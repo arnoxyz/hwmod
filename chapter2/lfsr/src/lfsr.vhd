@@ -20,6 +20,7 @@ architecture arch of lfsr is
 
 begin
   sync : process(clk, res_n) is
+    variable feedback : std_ulogic := '0';
   begin
     if res_n = '0' then
       x <= seed;
@@ -31,12 +32,16 @@ begin
 
       if load_seed_n = '1' then
         --shift register
-
-        for idx in 0 to 3 loop
+        for idx in 0 to LFSR_WIDTH-1 loop
           if idx = 0 then
             --start
-			      x(idx) <= x(3) xor x(2); --TODO: set polynomial like here "0011";
-          elsif idx = 3 then
+            for idy in 0 to LFSR_WIDTH-1 loop
+              if polynomial(idy) = '1' then
+                feedback := feedback xor x(idy);
+              end if;
+            end loop;
+			      x(idx) <= feedback;
+          elsif idx = LFSR_WIDTH-1 then
             --end
 		        prdata <= x(idx);
             x(idx) <= x(idx-1);
