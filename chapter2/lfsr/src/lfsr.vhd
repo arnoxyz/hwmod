@@ -22,15 +22,19 @@ begin
   sync : process(clk, res_n) is
     variable feedback : std_ulogic := '0';
   begin
+
     if res_n = '0' then
       x <= seed;
     elsif rising_edge(clk) then
+      --set default val
+      prdata <= '0';
 
       if load_seed_n = '0' then
         x <= seed;
       end if;
 
       if load_seed_n = '1' then
+
         --shift register
         for idx in 0 to LFSR_WIDTH-1 loop
           if idx = 0 then
