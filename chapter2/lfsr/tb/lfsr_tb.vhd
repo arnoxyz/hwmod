@@ -28,26 +28,32 @@ architecture tb of lfsr_tb is
   --in
 	signal load_seed_n  : std_ulogic := '1';
 	signal seed : std_ulogic_vector(LFSR_WIDTH-1 downto 0) := (others => '0');
-	constant seed_val : std_ulogic_vector(LFSR_WIDTH-1 downto 0) := (0 => '1', others => '0');
   --out
 	signal prdata : std_ulogic;
 begin
 
 	stimulus : process is
+    procedure set_seed(seed_val : integer) is
+      begin
+        --reset
+        res_n <= '0';
+        wait for 2 * clk_period;
+        --set seed
+        res_n <= '1';
+        load_seed_n <= '0';
+        seed <= std_ulogic_vector(to_unsigned(seed_val, LFSR_WIDTH));
+        --start design by resetting again
+        wait for 2 * clk_period;
+        res_n <= '0';
+        load_seed_n <= '1';
+        wait for clk_period;
+        res_n <= '1';
+    end procedure;
 	begin
     report "start sim";
-    res_n <= '0';
-    wait for 2 * clk_period;
-    res_n <= '1';
-    load_seed_n <= '0';
-    seed <= seed_val;
-    wait for 2 * clk_period;
-    res_n <= '0';
-    load_seed_n <= '1';
-    wait for clk_period;
-    res_n <= '1';
-    --wait until prdata = '1';
-    wait for 100*clk_period;
+    set_seed(100);
+    wait until to_unsigned(100, LFSR_WIDTH) = unsigned(shift_reg);
+    report "found";
 
     clk_stop <= '1';
 		wait;
