@@ -39,14 +39,12 @@ begin
         --start
         for idy in LFSR_WIDTH-1 downto 0 loop
           if polynomial(idy) = '1' then
-            report "index is " & to_string(idy);
-            report "value in x(idy) is " & to_string(x(idy));
             feedback := feedback xor x(idy);
-            report "feedback is " &to_string(feedback);
           end if;
         end loop;
 
-        report to_string(x(3)) & " xor " & to_string(x(2)) & " is " & to_string(feedback);
+        --report to_string(x(3)) & " xor " & to_string(x(2)) & " is " & to_string(feedback);
+        assert (x(2) xor x(3)) = feedback report "ERROR in feedback logic";
         x(0) <= feedback;
         feedback := '0';
 

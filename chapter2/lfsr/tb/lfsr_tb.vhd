@@ -60,8 +60,8 @@ begin
       --wait to see the start value again then start counting until the register got the start value again
       wait until to_unsigned(seed_val, LFSR_WIDTH) = unsigned(shift_reg);
       start_count <= '1';
-      --wait until to_unsigned(seed_val, LFSR_WIDTH) = unsigned(shift_reg);
-      wait for 20*clk_period;
+      wait until to_unsigned(seed_val, LFSR_WIDTH) = unsigned(shift_reg);
+      --wait for 20*clk_period;
       start_count <= '0';
 
       report "seed: " & to_string(seed_val) & ", " & "period: " & to_string(to_integer(counter));
@@ -71,10 +71,9 @@ begin
 	begin
     report "start sim";
 
-    --for idx in 1 to 255 loop
-    --test(idx);
-    --end loop;
-    test(1);
+    for idx in 1 to (2**LFSR_WIDTH-1)-1 loop
+      test(idx);
+    end loop;
 
     clk_stop <= '1';
 		wait;
