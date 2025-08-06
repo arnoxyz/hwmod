@@ -34,25 +34,29 @@ begin
       end if;
 
       if load_seed_n = '1' then
-
         --shift register
-        for idx in 0 to LFSR_WIDTH-1 loop
-          if idx = 0 then
-            --start
-            for idy in 0 to LFSR_WIDTH-1 loop
-              if polynomial(idy) = '1' then
-                feedback := feedback xor x(idy);
-              end if;
-            end loop;
-			      x(idx) <= feedback;
-          elsif idx = LFSR_WIDTH-1 then
-            --end
-		        prdata <= x(idx);
-            x(idx) <= x(idx-1);
-          else
-            x(idx) <= x(idx-1);
+
+        --start
+        for idy in LFSR_WIDTH-1 downto 0 loop
+          if polynomial(idy) = '1' then
+            report "index is " & to_string(idy);
+            report "value in x(idy) is " & to_string(x(idy));
+            feedback := feedback xor x(idy);
+            report "feedback is " &to_string(feedback);
           end if;
         end loop;
+
+        report to_string(x(3)) & " xor " & to_string(x(2)) & " is " & to_string(feedback);
+        x(0) <= feedback;
+        feedback := '0';
+
+        --shifting outputs
+        for idx in 1 to LFSR_WIDTH-1 loop
+            x(idx) <= x(idx-1);
+        end loop;
+
+        --output
+		    prdata <= x(LFSR_WIDTH-1);
       end if;
     end if;
   end process;
