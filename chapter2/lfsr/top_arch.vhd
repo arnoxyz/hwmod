@@ -24,5 +24,14 @@ begin
 	);
 
 	-- set ledr(0) to prdata when keys(2) pressed
-
+  sync : process(clk, res_n) is
+  begin
+    if res_n = '0' then
+      ledr(0) <= '0';
+    elsif rising_edge(clk) then
+      if keys(2) = '0' then
+        ledr(0) <= prdata;
+      end if;
+    end if;
+  end process;
 end architecture;
