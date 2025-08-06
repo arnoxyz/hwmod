@@ -42,10 +42,6 @@ begin
             feedback := feedback xor x(idy);
           end if;
         end loop;
-
-        --report to_string(x(3)) & " xor " & to_string(x(2)) & " is " & to_string(feedback);
-        assert (x(7) xor x(5) xor x(2)) = feedback report "ERROR in feedback logic";
-	      --POLY_8 "10100100"; meaning x(7) xor x(5) xor x(2)
         x(0) <= feedback;
         feedback := '0';
 

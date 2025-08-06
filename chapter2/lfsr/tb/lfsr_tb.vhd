@@ -11,11 +11,14 @@ architecture tb of lfsr_tb is
 	constant POLY_8      : std_ulogic_vector(7 downto 0)  := "10100100";
 	constant MAX_POLY_16 : std_ulogic_vector(15 downto 0) := "1101000000001000";
 	constant POLY_16     : std_ulogic_vector(15 downto 0) := "1101001100001000";
-
   constant POLY_4 : std_ulogic_vector(3 downto 0) := "1100"; --same as in demo2
 
+  --for testcases just set this here:
+	constant POLYNOMIAL : std_ulogic_vector := POLY_16;
+  constant start_seed : integer := 343;
+  constant end_seed : integer := 379;
+
   --generics
-	constant POLYNOMIAL : std_ulogic_vector := POLY_8;
 	constant LFSR_WIDTH : integer := POLYNOMIAL'LENGTH;
 
   -- local shift reg to save output data (prdata)
@@ -63,7 +66,6 @@ begin
       wait until to_unsigned(seed_val, LFSR_WIDTH) = unsigned(shift_reg);
       start_count <= '1';
       wait until to_unsigned(seed_val, LFSR_WIDTH) = unsigned(shift_reg);
-      --wait for 20*clk_period;
       start_count <= '0';
 
       report "seed: " & to_string(seed_val) & ", " & "period: " & to_string(to_integer(counter));
@@ -73,7 +75,8 @@ begin
 	begin
     report "start sim";
 
-    for idx in 1 to (2**LFSR_WIDTH-1)-1 loop
+    --for idx in 1 to (2**LFSR_WIDTH-1)-1 loop --auto test whole range
+    for idx in start_seed to end_seed loop
       test(idx);
     end loop;
 

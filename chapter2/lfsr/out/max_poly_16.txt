@@ -1,0 +1,46 @@
+../../lib/math/src/math_pkg.vhd ../../lib/util/src/util_pkg.vhd src/lfsr.vhd tb/lfsr_tb.vhd ../../lib/top/src/top.vhd top_arch.vhd
+compiling ../../lib/math/src/math_pkg.vhd
+compiling ../../lib/util/src/util_pkg.vhd
+compiling src/lfsr.vhd
+compiling tb/lfsr_tb.vhd
+compiling ../../lib/top/src/top.vhd
+compiling top_arch.vhd
+ghdl elab-run --std=08 -frelaxed --ieee=synopsys -P=vendor_libs lfsr_tb
+tb/lfsr_tb.vhd:73:5:@0ms:(report note): start sim
+tb/lfsr_tb.vhd:68:7:@131113ns:(report note): seed: 343, period: 65535
+tb/lfsr_tb.vhd:68:7:@262225ns:(report note): seed: 344, period: 65535
+tb/lfsr_tb.vhd:68:7:@393337ns:(report note): seed: 345, period: 65535
+tb/lfsr_tb.vhd:68:7:@524449ns:(report note): seed: 346, period: 65535
+tb/lfsr_tb.vhd:68:7:@655561ns:(report note): seed: 347, period: 65535
+tb/lfsr_tb.vhd:68:7:@786673ns:(report note): seed: 348, period: 65535
+tb/lfsr_tb.vhd:68:7:@917785ns:(report note): seed: 349, period: 65535
+tb/lfsr_tb.vhd:68:7:@1048897ns:(report note): seed: 350, period: 65535
+tb/lfsr_tb.vhd:68:7:@1180009ns:(report note): seed: 351, period: 65535
+tb/lfsr_tb.vhd:68:7:@1311121ns:(report note): seed: 352, period: 65535
+tb/lfsr_tb.vhd:68:7:@1442233ns:(report note): seed: 353, period: 65535
+tb/lfsr_tb.vhd:68:7:@1573345ns:(report note): seed: 354, period: 65535
+tb/lfsr_tb.vhd:68:7:@1704457ns:(report note): seed: 355, period: 65535
+tb/lfsr_tb.vhd:68:7:@1835569ns:(report note): seed: 356, period: 65535
+tb/lfsr_tb.vhd:68:7:@1966681ns:(report note): seed: 357, period: 65535
+tb/lfsr_tb.vhd:68:7:@2097793ns:(report note): seed: 358, period: 65535
+tb/lfsr_tb.vhd:68:7:@2228905ns:(report note): seed: 359, period: 65535
+tb/lfsr_tb.vhd:68:7:@2360017ns:(report note): seed: 360, period: 65535
+tb/lfsr_tb.vhd:68:7:@2491129ns:(report note): seed: 361, period: 65535
+tb/lfsr_tb.vhd:68:7:@2622241ns:(report note): seed: 362, period: 65535
+tb/lfsr_tb.vhd:68:7:@2753353ns:(report note): seed: 363, period: 65535
+tb/lfsr_tb.vhd:68:7:@2884465ns:(report note): seed: 364, period: 65535
+tb/lfsr_tb.vhd:68:7:@3015577ns:(report note): seed: 365, period: 65535
+tb/lfsr_tb.vhd:68:7:@3146689ns:(report note): seed: 366, period: 65535
+tb/lfsr_tb.vhd:68:7:@3277801ns:(report note): seed: 367, period: 65535
+tb/lfsr_tb.vhd:68:7:@3408913ns:(report note): seed: 368, period: 65535
+tb/lfsr_tb.vhd:68:7:@3540025ns:(report note): seed: 369, period: 65535
+tb/lfsr_tb.vhd:68:7:@3671137ns:(report note): seed: 370, period: 65535
+tb/lfsr_tb.vhd:68:7:@3802249ns:(report note): seed: 371, period: 65535
+tb/lfsr_tb.vhd:68:7:@3933361ns:(report note): seed: 372, period: 65535
+tb/lfsr_tb.vhd:68:7:@4064473ns:(report note): seed: 373, period: 65535
+tb/lfsr_tb.vhd:68:7:@4195585ns:(report note): seed: 374, period: 65535
+tb/lfsr_tb.vhd:68:7:@4326697ns:(report note): seed: 375, period: 65535
+tb/lfsr_tb.vhd:68:7:@4457809ns:(report note): seed: 376, period: 65535
+tb/lfsr_tb.vhd:68:7:@4588921ns:(report note): seed: 377, period: 65535
+tb/lfsr_tb.vhd:68:7:@4720033ns:(report note): seed: 378, period: 65535
+tb/lfsr_tb.vhd:68:7:@4851145ns:(report note): seed: 379, period: 65535
