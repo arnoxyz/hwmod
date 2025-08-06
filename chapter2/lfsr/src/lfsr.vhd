@@ -24,7 +24,7 @@ begin
   begin
 
     if res_n = '0' then
-      x <= seed;
+      x <= (others=>'0');
     elsif rising_edge(clk) then
       --set default val
       prdata <= '0';
