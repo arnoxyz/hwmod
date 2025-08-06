@@ -12,8 +12,10 @@ architecture tb of lfsr_tb is
 	constant MAX_POLY_16 : std_ulogic_vector(15 downto 0) := "1101000000001000";
 	constant POLY_16     : std_ulogic_vector(15 downto 0) := "1101001100001000";
 
+  constant POLY_4 : std_ulogic_vector(3 downto 0) := "1100"; --same as in demo2
+
   --generics
-	constant POLYNOMIAL : std_ulogic_vector(3 downto 0) := "1100";
+	constant POLYNOMIAL : std_ulogic_vector := POLY_8;
 	constant LFSR_WIDTH : integer := POLYNOMIAL'LENGTH;
 
   -- local shift reg to save output data (prdata)
