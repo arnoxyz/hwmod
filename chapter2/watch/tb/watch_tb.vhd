@@ -28,9 +28,9 @@ architecture tb of watch_tb is
 
   --in
 	signal clk : std_ulogic := '0';
-  signal res_n : std_ulogic := '0';
-  signal start_n : std_ulogic;
-  signal stop_n  : std_ulogic;
+  signal res_n : std_ulogic := '1';
+  signal start_n : std_ulogic := '1';
+  signal stop_n  : std_ulogic := '1';
   --out
   signal seconds : unsigned(log2c(10**DIGITS)-1 downto 0);
 
@@ -41,8 +41,11 @@ begin
     res_n <= '0';
     wait until rising_edge(clk);
     res_n <= '1';
-    wait for 10*clk_period;
-
+    start_n <= '0';
+    wait for 2*clk_period;
+    start_n <= '1';
+    wait for 100*clk_period;
+    stop_n <= '0';
     clk_stop <= '1';
     report "sim done";
 		wait;

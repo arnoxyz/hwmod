@@ -18,15 +18,22 @@ entity stopwatch is
 end entity;
 
 architecture arch of stopwatch is
+  signal cnt : unsigned(31 downto 0);
+  signal cnt_nxt : unsigned(31 downto 0);
+
 begin
   sync : process(clk, res_n) is
   begin
     if res_n = '0' then
+      seconds <= (others=>'0');
+      cnt <= (others=>'0');
     elsif rising_edge(clk) then
+      cnt <= cnt_nxt;
     end if;
   end process;
 
   comb : process(all) is
   begin
+      cnt_nxt <= cnt + 1;
   end process;
 end architecture;
