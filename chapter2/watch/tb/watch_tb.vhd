@@ -37,16 +37,25 @@ architecture tb of watch_tb is
 begin
 
 	stimulus : process
+    procedure press_btn(signal btn_name_n : out std_ulogic; pulse_width : integer) is
+    begin
+      btn_name_n <= '1';
+      wait for 2*clk_period;
+      btn_name_n <= '0';
+      wait for pulse_width*clk_period;
+      btn_name_n <= '1';
+      wait for 2*clk_period;
+    end procedure;
+
   begin
     report "start sim";
     res_n <= '0';
     wait until rising_edge(clk);
     res_n <= '1';
-    start_n <= '0';
-    wait for 2*clk_period;
-    start_n <= '1';
+    press_btn(start_n, 15);
     wait for 100*clk_period;
-    stop_n <= '0';
+    press_btn(stop_n, 5);
+    wait for 10*clk_period;
     clk_stop <= '1';
     report "sim done";
 		wait;
