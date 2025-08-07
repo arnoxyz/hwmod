@@ -55,8 +55,8 @@ begin
 
     --start clk-counter
     press_btn(start_n, 15);
-    --wait until to_integer(seconds) = 5;
-    wait for 1000*clk_period;
+    wait until to_integer(seconds) = 5;
+    --wait for 1000*clk_period;
 
     --stop clk-counter
     press_btn(stop_n, 5);
@@ -64,7 +64,7 @@ begin
 
     --restart clk-counter (continues to count)
     press_btn(start_n, 15);
-    wait for 10*clk_period;
+    wait until to_integer(seconds) = 10;
 
     --stop clk-counter
     press_btn(stop_n, 5);

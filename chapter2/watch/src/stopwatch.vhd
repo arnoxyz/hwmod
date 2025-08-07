@@ -54,6 +54,7 @@ begin
         --reset the counter if stop pressed again in stop mode
         if last_btn_pressed = '0' then
           cnt <= (others=>'0');
+          cnt_sec <= (others=>'0');
         end if;
         btn_pressed <= '0';
       end if;
