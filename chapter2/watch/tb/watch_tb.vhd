@@ -11,7 +11,7 @@ architecture tb of watch_tb is
 	constant CLK_PERIOD : time := 10 ms;  -- Change as required
   signal clk_stop : std_ulogic := '0';
 
-	constant DIGITS : integer := 2;
+	constant DIGITS : integer := 1;
   component stopwatch is
     generic (
       CLK_PERIOD : time;
@@ -47,33 +47,41 @@ begin
       wait for 2*clk_period;
     end procedure;
 
+    procedure test_stopwatch is
+    begin
+      res_n <= '0';
+      wait until rising_edge(clk);
+      res_n <= '1';
+
+      --start clk-counter
+      press_btn(start_n, 15);
+      wait until to_integer(seconds) = 5;
+      --wait for 1000*clk_period;
+
+      --stop clk-counter
+      press_btn(stop_n, 5);
+      wait for 10*clk_period;
+
+      --restart clk-counter (continues to count)
+      press_btn(start_n, 15);
+      wait until to_integer(seconds) = 9; --max value for 1 digit
+
+      --continue counting should just let display the max value
+      wait for 10*clk_period;
+
+      --stop clk-counter
+      press_btn(stop_n, 5);
+      wait for 10*clk_period;
+
+      --stop clk-counter (stop again while in stop resets the clk to 0)
+      press_btn(stop_n, 5);
+      wait for 10*clk_period;
+      clk_stop <= '1';
+    end procedure;
+
   begin
     report "start sim";
-    res_n <= '0';
-    wait until rising_edge(clk);
-    res_n <= '1';
-
-    --start clk-counter
-    press_btn(start_n, 15);
-    wait until to_integer(seconds) = 5;
-    --wait for 1000*clk_period;
-
-    --stop clk-counter
-    press_btn(stop_n, 5);
-    wait for 10*clk_period;
-
-    --restart clk-counter (continues to count)
-    press_btn(start_n, 15);
-    wait until to_integer(seconds) = 10;
-
-    --stop clk-counter
-    press_btn(stop_n, 5);
-    wait for 10*clk_period;
-
-    --stop clk-counter (stop again while in stop resets the clk to 0)
-    press_btn(stop_n, 5);
-    wait for 10*clk_period;
-    clk_stop <= '1';
+    test_stopwatch;
 
     report "sim done";
 		wait;

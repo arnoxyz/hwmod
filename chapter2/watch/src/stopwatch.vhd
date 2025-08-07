@@ -70,11 +70,20 @@ begin
         cnt_nxt <= cnt;
       end if;
 
-      if cnt >= CLK_FREQUENCY then
-        cnt_sec_nxt <= cnt_sec + 1;
-        cnt_nxt <= (others=>'0');
-      else
+      --with 1digit i can display: up to the value 9
+      -- 2 digits => 99
+      -- 3 digits => 999
+      -- n digits => 10*N-1
+      if to_integer(cnt_sec) = 10**DIGITS-1 then
+        --stop counting (max digit, no overflow)
         cnt_sec_nxt <= cnt_sec;
+      else
+        if cnt >= CLK_FREQUENCY then
+          cnt_sec_nxt <= cnt_sec + 1;
+          cnt_nxt <= (others=>'0');
+        else
+          cnt_sec_nxt <= cnt_sec;
+        end if;
       end if;
 
       seconds <= cnt_sec;
