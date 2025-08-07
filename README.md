@@ -13,3 +13,4 @@
 ### Generic_Adder
 ### Simplecalc
 ### Sorting_Network
+### LFSR
