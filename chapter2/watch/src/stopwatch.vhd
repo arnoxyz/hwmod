@@ -18,8 +18,11 @@ entity stopwatch is
 end entity;
 
 architecture arch of stopwatch is
+  constant CLK_FREQUENCY : integer := integer(1 sec / CLK_PERIOD);
   signal cnt : unsigned(31 downto 0);
   signal cnt_nxt : unsigned(31 downto 0);
+	signal cnt_sec  : unsigned(log2c(10**DIGITS)-1 downto 0);
+	signal cnt_sec_nxt  : unsigned(log2c(10**DIGITS)-1 downto 0);
   signal last_start_n : std_ulogic;
   signal last_stop_n : std_ulogic;
   signal btn_pressed : std_ulogic;
@@ -31,6 +34,7 @@ begin
     if res_n = '0' then
       seconds <= (others=>'0');
       cnt <= (others=>'0');
+      cnt_sec <= (others=>'0');
       last_start_n <= '1';
       last_stop_n <= '1';
       last_btn_pressed <= '0';
@@ -38,6 +42,7 @@ begin
 
     elsif rising_edge(clk) then
       cnt <= cnt_nxt;
+      cnt_sec <= cnt_sec_nxt;
       last_start_n <= start_n;
       last_stop_n <= stop_n;
       last_btn_pressed <= btn_pressed;
@@ -63,6 +68,13 @@ begin
       end if;
       if btn_pressed = '0' then
         cnt_nxt <= cnt;
+      end if;
+
+      if cnt >= CLK_FREQUENCY then
+        cnt_sec_nxt <= cnt_sec + 1;
+        cnt_nxt <= (others=>'0');
+      else
+        cnt_sec_nxt <= cnt_sec;
       end if;
   end process;
 end architecture;
