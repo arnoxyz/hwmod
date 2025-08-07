@@ -52,11 +52,28 @@ begin
     res_n <= '0';
     wait until rising_edge(clk);
     res_n <= '1';
+
+    --start clk-counter
     press_btn(start_n, 15);
     wait for 100*clk_period;
+
+    --stop clk-counter
+    press_btn(stop_n, 5);
+    wait for 10*clk_period;
+
+    --restart clk-counter (continues to count)
+    press_btn(start_n, 15);
+    wait for 10*clk_period;
+
+    --stop clk-counter
+    press_btn(stop_n, 5);
+    wait for 10*clk_period;
+
+    --stop clk-counter (stop again while in stop resets the clk to 0)
     press_btn(stop_n, 5);
     wait for 10*clk_period;
     clk_stop <= '1';
+
     report "sim done";
 		wait;
 	end process;

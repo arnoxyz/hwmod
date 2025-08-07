@@ -23,6 +23,7 @@ architecture arch of stopwatch is
   signal last_start_n : std_ulogic;
   signal last_stop_n : std_ulogic;
   signal btn_pressed : std_ulogic;
+  signal last_btn_pressed : std_ulogic;
 
 begin
   sync : process(clk, res_n) is
@@ -32,18 +33,24 @@ begin
       cnt <= (others=>'0');
       last_start_n <= '1';
       last_stop_n <= '1';
+      last_btn_pressed <= '0';
       btn_pressed <= '0';
 
     elsif rising_edge(clk) then
       cnt <= cnt_nxt;
       last_start_n <= start_n;
       last_stop_n <= stop_n;
+      last_btn_pressed <= btn_pressed;
 
       --detect low active button press
       if (last_start_n = '1' and start_n = '0') then
         btn_pressed <= '1';
       end if;
       if (last_stop_n = '1' and stop_n = '0') then
+        --reset the counter if stop pressed again in stop mode
+        if last_btn_pressed = '0' then
+          cnt <= (others=>'0');
+        end if;
         btn_pressed <= '0';
       end if;
     end if;
