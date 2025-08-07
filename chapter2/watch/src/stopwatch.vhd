@@ -20,6 +20,9 @@ end entity;
 architecture arch of stopwatch is
   signal cnt : unsigned(31 downto 0);
   signal cnt_nxt : unsigned(31 downto 0);
+  signal last_start_n : std_ulogic;
+  signal last_stop_n : std_ulogic;
+  signal btn_pressed : std_ulogic;
 
 begin
   sync : process(clk, res_n) is
@@ -27,13 +30,32 @@ begin
     if res_n = '0' then
       seconds <= (others=>'0');
       cnt <= (others=>'0');
+      last_start_n <= '1';
+      last_stop_n <= '1';
+      btn_pressed <= '0';
+
     elsif rising_edge(clk) then
       cnt <= cnt_nxt;
+      last_start_n <= start_n;
+      last_stop_n <= stop_n;
+
+      --detect low active button press
+      if (last_start_n = '1' and start_n = '0') then
+        btn_pressed <= '1';
+      end if;
+      if (last_stop_n = '1' and stop_n = '0') then
+        btn_pressed <= '0';
+      end if;
     end if;
   end process;
 
   comb : process(all) is
   begin
-      cnt_nxt <= cnt + 1;
+      if btn_pressed = '1' then
+        cnt_nxt <= cnt + 1;
+      end if;
+      if btn_pressed = '0' then
+        cnt_nxt <= cnt;
+      end if;
   end process;
 end architecture;

@@ -36,7 +36,8 @@ architecture tb of watch_tb is
 
 begin
 
-	stimulus : process begin
+	stimulus : process
+  begin
     report "start sim";
     res_n <= '0';
     wait until rising_edge(clk);
