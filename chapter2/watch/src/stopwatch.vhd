@@ -32,7 +32,6 @@ begin
   sync : process(clk, res_n) is
   begin
     if res_n = '0' then
-      seconds <= (others=>'0');
       cnt <= (others=>'0');
       cnt_sec <= (others=>'0');
       last_start_n <= '1';
@@ -76,5 +75,7 @@ begin
       else
         cnt_sec_nxt <= cnt_sec;
       end if;
+
+      seconds <= cnt_sec;
   end process;
 end architecture;

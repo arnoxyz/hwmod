@@ -8,7 +8,7 @@ entity watch_tb is
 end entity;
 
 architecture tb of watch_tb is
-	constant CLK_PERIOD : time := 20 ns;  -- Change as required
+	constant CLK_PERIOD : time := 10 ms;  -- Change as required
   signal clk_stop : std_ulogic := '0';
 
 	constant DIGITS : integer := 2;
@@ -55,7 +55,8 @@ begin
 
     --start clk-counter
     press_btn(start_n, 15);
-    wait for 100*clk_period;
+    --wait until to_integer(seconds) = 5;
+    wait for 1000*clk_period;
 
     --stop clk-counter
     press_btn(stop_n, 5);
