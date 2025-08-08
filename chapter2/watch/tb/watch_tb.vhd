@@ -3,15 +3,17 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 use work.math_pkg.all;
+use work.bin2dec_pkg.all;
 
 entity watch_tb is
 end entity;
 
 architecture tb of watch_tb is
-	constant CLK_PERIOD : time := 10 ms;  -- Change as required
+	constant DIGITS : integer := 1;
+
+	constant CLK_PERIOD : time := 10 ms;
   signal clk_stop : std_ulogic := '0';
 
-	constant DIGITS : integer := 1;
   component stopwatch is
     generic (
       CLK_PERIOD : time;
@@ -26,6 +28,7 @@ architecture tb of watch_tb is
     );
   end component;
 
+  --stopwatch
   --in
 	signal clk : std_ulogic := '0';
   signal res_n : std_ulogic := '1';
@@ -33,6 +36,18 @@ architecture tb of watch_tb is
   signal stop_n  : std_ulogic := '1';
   --out
   signal seconds : unsigned(log2c(10**DIGITS)-1 downto 0);
+
+	--bin2dec
+	constant SSD_DIGITS : integer := DIGITS;
+  --in
+  signal binary : unsigned(log2c(10**SSD_DIGITS)-1 downto 0) := (others=>'0');
+
+  --out
+    --dec_digit_t = 4 bit unsigned to store 1 digit,
+    --dec_digits_t = array of digits
+	signal decimal : dec_digits_t(SSD_DIGITS-1 downto 0) := (others => (others=>'0'));
+
+
 
 begin
 
@@ -79,9 +94,23 @@ begin
       clk_stop <= '1';
     end procedure;
 
+    procedure test_bin2dec is
+    begin
+      res_n <= '0';
+      wait until rising_edge(clk);
+      res_n <= '1';
+      wait for 10*clk_period;
+			binary  <= "0001";
+      wait for 10*clk_period;
+
+      clk_stop <= '1';
+      wait;
+    end procedure;
+
   begin
     report "start sim";
-    test_stopwatch;
+    --test_stopwatch;
+    test_bin2dec;
 
     report "sim done";
 		wait;
@@ -99,6 +128,17 @@ begin
       stop_n  => stop_n,
       seconds => seconds
     );
+
+  uut_bin2dec : bin2dec
+  generic map(
+	  SSD_DIGITS => SSD_DIGITS
+  )
+  port map(
+			clk     => clk,
+			res_n   => res_n,
+			binary  => binary,
+			decimal => decimal
+  );
 
 	clk_gen : process begin
     clk <= '0';

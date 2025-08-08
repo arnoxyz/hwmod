@@ -18,6 +18,15 @@ end entity;
 
 architecture arch of bin2dec is
 begin
+  sync : process(clk, res_n) is
+  begin
+    if res_n = '0' then
+    elsif rising_edge(clk) then
+    end if;
+  end process;
 
-
+  comb : process(all) is
+  begin
+    decimal <= (others=>(others=>'0'));
+  end process;
 end architecture;
