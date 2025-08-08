@@ -17,16 +17,27 @@ entity bin2dec is
 end entity;
 
 architecture arch of bin2dec is
+  signal bin_in_sampled : unsigned(log2c(10**SSD_DIGITS)-1 downto 0);
+  signal bin_in_sampled_nxt : unsigned(log2c(10**SSD_DIGITS)-1 downto 0);
 begin
   sync : process(clk, res_n) is
   begin
     if res_n = '0' then
+      bin_in_sampled <= (others=>'0');
     elsif rising_edge(clk) then
+      --sample input
+      bin_in_sampled <= binary;
     end if;
   end process;
 
   comb : process(all) is
   begin
-    decimal <= (others=>(others=>'0'));
+    bin_in_sampled_nxt <= bin_in_sampled;
+
+    --conversion
+    if to_integer(bin_in_sampled) <= 9 then
+      bin_in_sampled_nxt <= to_unsigned(to_integer(bin_in_sampled mod 10),4);
+      decimal(0) <= to_unsigned(to_integer(bin_in_sampled mod 10),4);
+    end if;
   end process;
 end architecture;

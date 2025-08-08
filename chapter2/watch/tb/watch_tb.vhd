@@ -100,7 +100,15 @@ begin
       wait until rising_edge(clk);
       res_n <= '1';
       wait for 10*clk_period;
+			binary  <= "0000";
+      wait for 10*clk_period;
 			binary  <= "0001";
+      wait for 10*clk_period;
+			binary  <= "0011";
+      wait for 10*clk_period;
+			binary  <= "1001";
+      wait for 10*clk_period;
+			binary  <= "1111";
       wait for 10*clk_period;
 
       clk_stop <= '1';
