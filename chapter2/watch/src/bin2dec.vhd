@@ -36,8 +36,12 @@ begin
 
     --conversion
     if to_integer(bin_in_sampled) <= 9 then
-      bin_in_sampled_nxt <= to_unsigned(to_integer(bin_in_sampled mod 10),4);
+      bin_in_sampled_nxt <= to_unsigned(to_integer(bin_in_sampled mod 10),bin_in_sampled'length);
       decimal(0) <= to_unsigned(to_integer(bin_in_sampled mod 10),4);
+    else
+      bin_in_sampled_nxt <= to_unsigned(to_integer(bin_in_sampled/10 mod 10),bin_in_sampled'length);
+      decimal(1) <= to_unsigned(to_integer(bin_in_sampled/10 mod 10),4);
     end if;
+
   end process;
 end architecture;
