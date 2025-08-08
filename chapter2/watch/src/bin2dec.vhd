@@ -22,6 +22,7 @@ architecture arch of bin2dec is
   signal bin_in_sampled_nxt : unsigned(log2c(10**SSD_DIGITS)-1 downto 0);
   signal cnt : unsigned(31 downto 0);
   signal cnt_nxt : unsigned(31 downto 0);
+  signal start_cnt : std_ulogic := '0';
 
 begin
   sync : process(clk, res_n) is
@@ -30,9 +31,14 @@ begin
       bin_in_sampled <= (others=>'0');
       cnt <= (others=>'0');
     elsif rising_edge(clk) then
-      --sample input
-      bin_in_sampled <= binary;
-      cnt <= cnt_nxt;
+      start_cnt <= '1';
+
+      if start_cnt = '0' then
+        bin_in_sampled <= binary;
+      else
+        bin_in_sampled <= bin_in_sampled_nxt;
+        cnt <= cnt_nxt;
+      end if;
     end if;
   end process;
 
@@ -40,7 +46,7 @@ begin
   begin
     bin_in_sampled_nxt <= bin_in_sampled;
 
-    if to_integer(cnt) < DIGITS then
+    if to_integer(cnt) < DIGITS and bin_in_sampled /= 0 then
       cnt_nxt <= cnt + 1;
     else
       cnt_nxt <= (others=>'0');
@@ -48,12 +54,11 @@ begin
 
     --conversion
     if cnt = 0 then
-      bin_in_sampled_nxt <= to_unsigned(to_integer(bin_in_sampled mod 10),bin_in_sampled'length);
+      bin_in_sampled_nxt <= to_unsigned(to_integer(bin_in_sampled / 10),bin_in_sampled'length);
       decimal(0) <= to_unsigned(to_integer(bin_in_sampled mod 10),4);
     elsif to_integer(cnt) < DIGITS then
-      bin_in_sampled_nxt <= to_unsigned(to_integer(bin_in_sampled/10 mod 10),bin_in_sampled'length);
-      decimal(to_integer(cnt)) <= to_unsigned(to_integer(bin_in_sampled/10 mod 10),4);
+      bin_in_sampled_nxt <= to_unsigned(to_integer(bin_in_sampled / 10),bin_in_sampled'length);
+      decimal(to_integer(cnt)) <= to_unsigned(to_integer(bin_in_sampled mod 10),4);
     end if;
-
   end process;
 end architecture;
