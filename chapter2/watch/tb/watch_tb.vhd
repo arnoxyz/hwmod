@@ -108,6 +108,8 @@ begin
       wait until rising_edge(clk);
       res_n <= '1';
       set_binary_input(123);
+      set_binary_input(432);
+      set_binary_input(891);
       clk_stop <= '1';
       wait;
     end procedure;

@@ -31,10 +31,10 @@ begin
       bin_in_sampled <= (others=>'0');
       cnt <= (others=>'0');
     elsif rising_edge(clk) then
-      start_cnt <= '1';
 
-      if start_cnt = '0' then
+      if bin_in_sampled = 0 then
         bin_in_sampled <= binary;
+        start_cnt <= '1';
       else
         bin_in_sampled <= bin_in_sampled_nxt;
         cnt <= cnt_nxt;
