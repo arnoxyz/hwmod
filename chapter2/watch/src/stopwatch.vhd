@@ -63,11 +63,10 @@ begin
 
   comb : process(all) is
   begin
+      cnt_nxt <= cnt;
+
       if btn_pressed = '1' then
         cnt_nxt <= cnt + 1;
-      end if;
-      if btn_pressed = '0' then
-        cnt_nxt <= cnt;
       end if;
 
       --with 1digit i can display: up to the value 9
