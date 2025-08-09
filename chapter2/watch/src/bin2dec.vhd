@@ -23,6 +23,8 @@ architecture arch of bin2dec is
   signal cnt : unsigned(31 downto 0);
   signal cnt_nxt : unsigned(31 downto 0);
   signal start_cnt : std_ulogic := '0';
+  signal decimal_internal : dec_digits_t(SSD_DIGITS-1 downto 0);
+  signal decimal_internal_nxt : dec_digits_t(SSD_DIGITS-1 downto 0);
 
 begin
   sync : process(clk, res_n) is
@@ -30,8 +32,11 @@ begin
     if res_n = '0' then
       bin_in_sampled <= (others=>'0');
       cnt <= (others=>'0');
+      decimal_internal <= (others=> (others=>'0'));
     elsif rising_edge(clk) then
       cnt <= cnt_nxt;
+      decimal <= decimal_internal;
+      decimal_internal <= decimal_internal_nxt;
 
       if cnt = 0 then
         bin_in_sampled <= binary;
@@ -46,6 +51,7 @@ begin
 
   comb : process(all) is
   begin
+    decimal_internal_nxt <= decimal_internal;
     bin_in_sampled_nxt <= bin_in_sampled;
     cnt_nxt <= cnt;
 
@@ -58,9 +64,8 @@ begin
       cnt_nxt <= cnt + 1;
       if cnt >= 1 then
         bin_in_sampled_nxt <= to_unsigned(to_integer(bin_in_sampled / 10),bin_in_sampled'length);
-        decimal(to_integer(cnt-1)) <= to_unsigned(to_integer(bin_in_sampled mod 10),4);
+        decimal_internal_nxt(to_integer(cnt-1)) <= to_unsigned(to_integer(bin_in_sampled mod 10),4);
       end if;
     end if;
-
   end process;
 end architecture;
