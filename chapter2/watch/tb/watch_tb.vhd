@@ -111,7 +111,6 @@ begin
       set_binary_input(1891);
       set_binary_input(0);
       set_binary_input(5);
-      wait;
     end procedure;
 
   begin
