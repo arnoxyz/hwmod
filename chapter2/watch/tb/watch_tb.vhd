@@ -91,7 +91,6 @@ begin
       --stop clk-counter (stop again while in stop resets the clk to 0)
       press_btn(stop_n, 5);
       wait for 10*clk_period;
-      clk_stop <= '1';
     end procedure;
 
 
@@ -112,15 +111,15 @@ begin
       set_binary_input(1891);
       set_binary_input(0);
       set_binary_input(5);
-      clk_stop <= '1';
       wait;
     end procedure;
 
   begin
     report "start sim";
-    --test_stopwatch;
+    test_stopwatch;
     test_bin2dec;
 
+    clk_stop <= '1';
     report "sim done";
 		wait;
 	end process;
