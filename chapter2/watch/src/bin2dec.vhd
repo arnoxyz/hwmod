@@ -44,6 +44,10 @@ begin
 
   comb : process(all) is
   begin
+    if start_cnt = '0' then
+      decimal <= (others=> (others=>'0'));
+    end if;
+
     bin_in_sampled_nxt <= bin_in_sampled;
 
     if to_integer(cnt) < DIGITS and bin_in_sampled /= 0 then
