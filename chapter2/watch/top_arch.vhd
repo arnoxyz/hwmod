@@ -8,7 +8,7 @@ use work.bin2dec_pkg.all;
 architecture top_arch of top is
   constant CLK_PERIOD_BOARD : time := 20 ns; --50 MHz => 20 ns
   constant CLK_PERIOD_PLL : time := 50 ns; --20 MHz => 50 ns
-	constant CLK_PERIOD : time := CLK_PERIOD_BOARD; -- make sure this is set according to the clock you use!
+	constant CLK_PERIOD : time := CLK_PERIOD_PLL; -- make sure this is set according to the clock you use!
 
 	constant SSD_DIGITS : integer := 4;
   signal seconds_u : unsigned(log2c(10**SSD_DIGITS)-1 downto 0);
@@ -66,7 +66,7 @@ begin
     DIGITS => SSD_DIGITS
   )
   port map(
-    clk     => clk,
+    clk     => clk_20,
     res_n   => res_n,
     start_n => keys(1),
     stop_n  => keys(2),
@@ -80,7 +80,7 @@ begin
     SSD_DIGITS => SSD_DIGITS
   )
   port map(
-    clk     => clk,
+    clk     => clk_20,
     res_n   => res_n,
     binary  => seconds_u,
     decimal => dec_digits(SSD_DIGITS-1 downto 0)
