@@ -75,7 +75,16 @@ begin
 
   ledr(log2c(10**SSD_DIGITS)-1 downto 0) <= std_ulogic_vector(seconds_u);
 
-  --TODO: inst bin2dec
+	bin2dec_inst : bin2dec
+  generic map(
+    SSD_DIGITS => SSD_DIGITS
+  )
+  port map(
+    clk     => clk,
+    res_n   => res_n,
+    binary  => seconds_u,
+    decimal => dec_digits(SSD_DIGITS-1 downto 0)
+  );
 
 	hex0 <= to_segs(std_ulogic_vector(dec_digits(0)));
 	hex1 <= to_segs(std_ulogic_vector(dec_digits(1)));

@@ -51,7 +51,6 @@ begin
 
     if start_cnt = '0' then
       cnt_nxt <= (others=>'0');
-      decimal <= (others=> (others=>'0'));
     end if;
 
     --conversion
