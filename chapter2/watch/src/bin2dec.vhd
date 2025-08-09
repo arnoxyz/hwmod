@@ -31,38 +31,37 @@ begin
       bin_in_sampled <= (others=>'0');
       cnt <= (others=>'0');
     elsif rising_edge(clk) then
+      cnt <= cnt_nxt;
 
-      if bin_in_sampled = 0 then
+      if cnt = 0 then
         bin_in_sampled <= binary;
         start_cnt <= '1';
-      else
+      elsif cnt < SSD_DIGITS then
         bin_in_sampled <= bin_in_sampled_nxt;
-        cnt <= cnt_nxt;
+      else
+        start_cnt <= '0';
       end if;
     end if;
   end process;
 
   comb : process(all) is
   begin
+    bin_in_sampled_nxt <= bin_in_sampled;
+    cnt_nxt <= cnt;
+
     if start_cnt = '0' then
+      cnt_nxt <= (others=>'0');
       decimal <= (others=> (others=>'0'));
     end if;
 
-    bin_in_sampled_nxt <= bin_in_sampled;
-
-    if to_integer(cnt) < DIGITS and bin_in_sampled /= 0 then
-      cnt_nxt <= cnt + 1;
-    else
-      cnt_nxt <= (others=>'0');
-    end if;
-
     --conversion
-    if cnt = 0 then
-      bin_in_sampled_nxt <= to_unsigned(to_integer(bin_in_sampled / 10),bin_in_sampled'length);
-      decimal(0) <= to_unsigned(to_integer(bin_in_sampled mod 10),4);
-    elsif to_integer(cnt) < DIGITS then
-      bin_in_sampled_nxt <= to_unsigned(to_integer(bin_in_sampled / 10),bin_in_sampled'length);
-      decimal(to_integer(cnt)) <= to_unsigned(to_integer(bin_in_sampled mod 10),4);
+    if start_cnt = '1' then
+      cnt_nxt <= cnt + 1;
+      if cnt >= 1 then
+        bin_in_sampled_nxt <= to_unsigned(to_integer(bin_in_sampled / 10),bin_in_sampled'length);
+        decimal(to_integer(cnt-1)) <= to_unsigned(to_integer(bin_in_sampled mod 10),4);
+      end if;
     end if;
+
   end process;
 end architecture;

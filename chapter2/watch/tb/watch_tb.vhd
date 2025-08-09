@@ -9,7 +9,7 @@ entity watch_tb is
 end entity;
 
 architecture tb of watch_tb is
-	constant DIGITS : integer := 3;
+	constant DIGITS : integer := 5;
 
 	constant CLK_PERIOD : time := 10 ms;
   signal clk_stop : std_ulogic := '0';
@@ -108,8 +108,12 @@ begin
       wait until rising_edge(clk);
       res_n <= '1';
       set_binary_input(123);
-      set_binary_input(432);
-      set_binary_input(891);
+      wait for 100*clk_period;
+      --set_binary_input(432);
+      --set_binary_input(891);
+      --set_binary_input(1891);
+      --set_binary_input(0);
+      --set_binary_input(12300);
       clk_stop <= '1';
       wait;
     end procedure;
