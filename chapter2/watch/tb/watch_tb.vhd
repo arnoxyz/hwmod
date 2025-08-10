@@ -115,7 +115,7 @@ begin
 
   begin
     report "start sim";
-    --test_stopwatch;
+    test_stopwatch;
     test_bin2dec;
 
     clk_stop <= '1';
