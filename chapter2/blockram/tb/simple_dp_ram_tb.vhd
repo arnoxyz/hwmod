@@ -77,6 +77,11 @@ begin
     --read data from addr=1 should be "11"
     read_from_mem(addr=>1);
 
+    --write-through
+    write_to_mem(data=>121,addr=>1);
+    assert unsigned(rd_data) = unsigned(wr_data) report to_string(to_integer(unsigned(rd_data)));
+
+
     --read from 0 should always be 0
     read_from_mem(addr=>0);
     assert 0 = to_integer(unsigned(rd_data)) report "read_from_mem(0) error not 0";

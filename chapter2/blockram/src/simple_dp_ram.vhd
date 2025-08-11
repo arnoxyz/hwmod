@@ -30,10 +30,16 @@ begin
       if wr_en = '1' then
           ram_block(to_integer(unsigned(wr_addr))) := wr_data;
       end if;
-      if to_integer(unsigned(rd_addr)) = 0 then
-        rd_data <= (others=>'0');
+
+      if wr_en = '1' and unsigned(wr_addr)=unsigned(rd_addr) then
+        --write-through
+        rd_data <= wr_data;
       else
-        rd_data <= ram_block(to_integer(unsigned(rd_addr)));
+        if to_integer(unsigned(rd_addr)) = 0 then
+          rd_data <= (others=>'0');
+        else
+          rd_data <= ram_block(to_integer(unsigned(rd_addr)));
+        end if;
       end if;
     end if;
   end process;
