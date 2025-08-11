@@ -21,15 +21,16 @@ entity simple_dp_ram is
 end entity;
 
 architecture arch of simple_dp_ram is
+  type MEM is array(0 to ADDR_WIDTH-1) of std_ulogic_vector(DATA_WIDTH-1 downto 0);
 begin
-  sync : process(clk, res_n) is
+  sync : process(clk) is
+    variable ram_block : MEM;
   begin
-    if res_n = '0' then
-    elsif rising_edge(clk) then
+    if rising_edge(clk) then
+      if wr_en = '1' then
+          ram_block(to_integer(unsigned(wr_addr))) := wr_data;
+      end if;
+      rd_data <= ram_block(to_integer(unsigned(rd_addr)));
     end if;
-  end process;
-
-  comb : process(all) is
-  begin
   end process;
 end architecture;
