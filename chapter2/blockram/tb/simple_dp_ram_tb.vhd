@@ -18,10 +18,10 @@ architecture tb of simple_dp_ram_tb is
   constant DATA_WIDTH : positive := 32;
 
   --in
-  signal rd_addr : std_ulogic_vector(ADDR_WIDTH - 1 downto 0);
-  signal wr_en   : std_ulogic;
-  signal wr_addr : std_ulogic_vector(ADDR_WIDTH - 1 downto 0);
-  signal wr_data : std_ulogic_vector(DATA_WIDTH - 1 downto 0);
+  signal rd_addr : std_ulogic_vector(ADDR_WIDTH - 1 downto 0) := (others=>'0');
+  signal wr_en   : std_ulogic := '1';
+  signal wr_addr : std_ulogic_vector(ADDR_WIDTH - 1 downto 0) := (others=>'0');
+  signal wr_data : std_ulogic_vector(DATA_WIDTH - 1 downto 0) := (others=>'0');
 
   --out
   signal rd_data : std_ulogic_vector(DATA_WIDTH - 1 downto 0);
@@ -50,7 +50,24 @@ begin
 	begin
 		res_n <= '0';
 		wait for 10 ns;
+    res_n <= '1';
+
+    --write data "11" into addr=1
+    wr_data <= (0=>'1', 1=>'1', others=>'0');
+    wr_en <= '1';
+    wr_addr <= (0=>'1', others=>'0');
+		wait until rising_edge(clk);
+    wait for 2*clk_period;
+
+    --read data from addr=1 should be "11"
+    wr_en <= '0';
+    rd_addr <= (0=>'1', others=>'0');
+    wait for 2*clk_period;
+    report to_string(rd_data);
+    assert rd_data = wr_data report "error in write or read rd_data=" & to_string(rd_data) & "wr_data " & to_string(wr_data);
+
 		-- End simulation
+    --TODO: read/write from provided file
 		std.env.stop;
 
 	  clk_stop <= '1';
