@@ -15,7 +15,7 @@ architecture tb of simple_dp_ram_tb is
 
   --generics
   constant ADDR_WIDTH : positive := 8;
-  constant DATA_WIDTH : positive := 32;
+  constant DATA_WIDTH : positive := 8;
 
   --in
   signal rd_addr : std_ulogic_vector(ADDR_WIDTH - 1 downto 0) := (others=>'0');
@@ -64,33 +64,42 @@ begin
       report to_string(to_integer(unsigned(rd_data)));
     end procedure;
 
+    procedure blockram_testcase is
+    begin
+      --write data "11" into addr=1
+      write_to_mem(data=>11,addr=>0);
+      write_to_mem(data=>11,addr=>1);
+
+      --read data from addr=1 should be "11"
+      read_from_mem(addr=>1);
+
+      --write-through
+      write_to_mem(data=>121,addr=>1);
+      assert unsigned(rd_data) = unsigned(wr_data) report to_string(to_integer(unsigned(rd_data)));
+
+      --read from 0 should always be 0
+      read_from_mem(addr=>0);
+      assert 0 = to_integer(unsigned(rd_data)) report "read_from_mem(0) error not 0";
+    end procedure;
+
+    procedure blockram_testcase_file is
+    begin
+      report "read data from file now ...";
+      --TODO: read/write from provided file
+      --std.env.stop;
+    end procedure;
+
 	begin
+    report "start sim";
 		res_n <= '0';
 		wait for 10 ns;
     res_n <= '1';
 		wait until rising_edge(clk);
-
-    --write data "11" into addr=1
-    write_to_mem(data=>11,addr=>0);
-    write_to_mem(data=>11,addr=>1);
-
-    --read data from addr=1 should be "11"
-    read_from_mem(addr=>1);
-
-    --write-through
-    write_to_mem(data=>121,addr=>1);
-    assert unsigned(rd_data) = unsigned(wr_data) report to_string(to_integer(unsigned(rd_data)));
-
-
-    --read from 0 should always be 0
-    read_from_mem(addr=>0);
-    assert 0 = to_integer(unsigned(rd_data)) report "read_from_mem(0) error not 0";
-
-		-- End simulation
-    --TODO: read/write from provided file
-		--std.env.stop;
+    --blockram_testcase;
+    blockram_testcase_file;
 
 	  clk_stop <= '1';
+    report "sim done";
     wait;
 	end process;
 
