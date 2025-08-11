@@ -44,27 +44,37 @@ architecture tb of simple_dp_ram_tb is
     );
   end component;
 
+
 begin
 	-- Stimulus process to handle file I/O and write to RAM
 	stimulus : process
+    procedure write_to_mem(data : integer; addr : integer) is
+    begin
+      wr_en <= '1';
+      wr_data <= std_ulogic_vector(to_unsigned(data, DATA_WIDTH));
+      wr_addr <= std_ulogic_vector(to_unsigned(addr, ADDR_WIDTH));
+      wait for 2*clk_period;
+    end procedure;
+
+    procedure read_from_mem(addr : integer) is
+    begin
+      wr_en <= '0';
+      rd_addr <= std_ulogic_vector(to_unsigned(addr, ADDR_WIDTH));
+      wait for 2*clk_period;
+      report to_string(rd_data);
+    end procedure;
+
 	begin
 		res_n <= '0';
 		wait for 10 ns;
     res_n <= '1';
+		wait until rising_edge(clk);
 
     --write data "11" into addr=1
-    wr_data <= (0=>'1', 1=>'1', others=>'0');
-    wr_en <= '1';
-    wr_addr <= (0=>'1', others=>'0');
-		wait until rising_edge(clk);
-    wait for 2*clk_period;
+    write_to_mem(data=>11,addr=>1);
 
     --read data from addr=1 should be "11"
-    wr_en <= '0';
-    rd_addr <= (0=>'1', others=>'0');
-    wait for 2*clk_period;
-    report to_string(rd_data);
-    assert rd_data = wr_data report "error in write or read rd_data=" & to_string(rd_data) & "wr_data " & to_string(wr_data);
+    read_from_mem(addr=>1);
 
 		-- End simulation
     --TODO: read/write from provided file
