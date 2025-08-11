@@ -61,7 +61,7 @@ begin
       wr_en <= '0';
       rd_addr <= std_ulogic_vector(to_unsigned(addr, ADDR_WIDTH));
       wait for 2*clk_period;
-      report to_string(rd_data);
+      report to_string(to_integer(unsigned(rd_data)));
     end procedure;
 
 	begin
@@ -71,10 +71,15 @@ begin
 		wait until rising_edge(clk);
 
     --write data "11" into addr=1
+    write_to_mem(data=>11,addr=>0);
     write_to_mem(data=>11,addr=>1);
 
     --read data from addr=1 should be "11"
     read_from_mem(addr=>1);
+
+    --read from 0 should always be 0
+    read_from_mem(addr=>0);
+    assert 0 = to_integer(unsigned(rd_data)) report "read_from_mem(0) error not 0";
 
 		-- End simulation
     --TODO: read/write from provided file

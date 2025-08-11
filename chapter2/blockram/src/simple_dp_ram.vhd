@@ -30,7 +30,11 @@ begin
       if wr_en = '1' then
           ram_block(to_integer(unsigned(wr_addr))) := wr_data;
       end if;
-      rd_data <= ram_block(to_integer(unsigned(rd_addr)));
+      if to_integer(unsigned(rd_addr)) = 0 then
+        rd_data <= (others=>'0');
+      else
+        rd_data <= ram_block(to_integer(unsigned(rd_addr)));
+      end if;
     end if;
   end process;
 end architecture;
