@@ -68,7 +68,7 @@ begin
 
 		-- End simulation
     --TODO: read/write from provided file
-		std.env.stop;
+		--std.env.stop;
 
 	  clk_stop <= '1';
     wait;
