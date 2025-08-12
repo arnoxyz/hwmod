@@ -9,7 +9,7 @@ end entity;
 architecture tb of simple_dp_ram_tb is
   --file
   file input_file : text open read_mode is "./tb/debugdata_in.txt";
-  file output_file : text open read_mode is "./tb/debugdata_out.txt";
+  file output_file : text open write_mode is "./tb/debugdata_out.txt";
 
   --clk stuff
 	constant CLK_PERIOD : time := 20 ns;
@@ -65,7 +65,7 @@ begin
       wr_en <= '0';
       rd_addr <= std_ulogic_vector(to_unsigned(addr, ADDR_WIDTH));
       wait for 2*clk_period;
-      report to_string(to_integer(unsigned(rd_data)));
+      --report to_string(to_integer(unsigned(rd_data)));
     end procedure;
 
     procedure blockram_testcase is
@@ -92,7 +92,7 @@ begin
       variable data    : std_logic_vector(7 downto 0);
       variable dummy   : character;  -- to skip the ':'
     begin
-      report "read data from file now ...";
+      report "start - read data from file";
       --READ from file and write it to the mem:
         while not endfile(input_file) loop
           readline(input_file, L); -- Read one line from the file
@@ -101,17 +101,22 @@ begin
           read(L, addr);
           read(L, dummy);
           read(L, data);
-          report "Address: " & to_string(addr) & " Data: " & to_string(data);
+          --report "Address: " & to_string(addr) & " Data: " & to_string(data);
 
           --and write it to the mem
           write_to_mem(data=>to_integer(unsigned(data)),addr=>addr);
         end loop;
+      report "done - read data from file";
 
       --WRITE:
       --loop thrugh all possible addr and write out all values from the mem
       --save the values in a file called: debugdata_out.txt
       --Line Format should be:ADDRESS: BINARY_DATA
-
+      for idx in 0 to 2**ADDR_WIDTH-1 loop
+        --report to_string(idx);
+        read_from_mem(idx);
+        report to_string(to_integer(unsigned(rd_data)));
+      end loop;
       std.env.stop;
     end procedure;
 
