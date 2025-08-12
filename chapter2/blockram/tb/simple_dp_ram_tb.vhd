@@ -70,14 +70,14 @@ begin
     procedure blockram_testcase is
     begin
       --write data "11" into addr=1
-      write_to_mem(data=>11,addr=>0);
-      write_to_mem(data=>11,addr=>1);
+      --write_to_mem(data=>11,addr=>0);
+      --write_to_mem(data=>11,addr=>1);
 
       --read data from addr=1 should be "11"
       read_from_mem(addr=>1);
 
       --write-through
-      write_to_mem(data=>121,addr=>1);
+      --write_to_mem(data=>121,addr=>1);
       assert unsigned(rd_data) = unsigned(wr_data) report to_string(to_integer(unsigned(rd_data)));
 
       --read from 0 should always be 0
@@ -95,13 +95,15 @@ begin
       --READ:
       --read from file ./debugdata_in.txt line by line
       --Line Format is: ADDRESS: BINARY_DATA
-      --and write it to the mem
         while not endfile(input_file) loop
           readline(input_file, L); -- Read one line from the file
           read(L, addr);
           read(L, dummy);
           read(L, data);
-          report "Address: " & integer'image(addr) & " Data: " & to_string(data);
+          report "Address: " & to_string(addr) & " Data: " & to_string(data);
+
+          --and write it to the mem
+          write_to_mem(to_integer(unsigned(data)),addr);
         end loop;
 
       --WRITE:

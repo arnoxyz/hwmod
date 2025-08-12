@@ -21,7 +21,7 @@ entity simple_dp_ram is
 end entity;
 
 architecture arch of simple_dp_ram is
-  type MEM is array(0 to ADDR_WIDTH-1) of std_ulogic_vector(DATA_WIDTH-1 downto 0);
+  type MEM is array(0 to 2**ADDR_WIDTH-1) of std_ulogic_vector(DATA_WIDTH-1 downto 0);
 begin
   sync : process(clk) is
     variable ram_block : MEM;
