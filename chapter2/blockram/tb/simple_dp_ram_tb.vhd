@@ -51,7 +51,7 @@ architecture tb of simple_dp_ram_tb is
 
 begin
 	-- Stimulus process to handle file I/O and write to RAM
-	stimulus : process
+  stimulus : process is
     procedure write_to_mem(data : integer; addr : integer) is
     begin
       wr_en <= '1';
@@ -67,6 +67,16 @@ begin
       wait for 2*clk_period;
       --report to_string(to_integer(unsigned(rd_data)));
     end procedure;
+
+    function is_valid(input : std_ulogic_vector) return boolean is
+    begin
+      for idx in input'range loop
+        if not (input(idx) = '0' or input(idx) = '1') then
+          return false;
+        end if;
+      end loop;
+      return true;
+    end function;
 
     procedure blockram_testcase is
     begin
@@ -112,11 +122,15 @@ begin
       --loop thrugh all possible addr and write out all values from the mem
       --save the values in a file called: debugdata_out.txt
       --Line Format should be:ADDRESS: BINARY_DATA
+      report "start - read out all valid data from mem";
       for idx in 0 to 2**ADDR_WIDTH-1 loop
         --report to_string(idx);
         read_from_mem(idx);
-        report to_string(to_integer(unsigned(rd_data)));
+        if is_valid(rd_data) then
+          report to_string(to_integer(unsigned(rd_data)));
+        end if;
       end loop;
+      report "done - read out all valid data from mem";
       std.env.stop;
     end procedure;
 
