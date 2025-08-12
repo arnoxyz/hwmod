@@ -10,6 +10,8 @@ architecture tb of simple_dp_ram_tb is
   --file
   file input_file : text open read_mode is "./tb/debugdata_in.txt";
   file output_file : text open write_mode is "./tb/debugdata_out.txt";
+  file decode_file_in : text open read_mode is "./tb/decode_in.txt";
+  file decode_file_out : text open write_mode is "./tb/decode_out.txt";
 
   --clk stuff
 	constant CLK_PERIOD : time := 20 ns;
@@ -140,7 +142,31 @@ begin
         end if;
       end loop;
       report "done - read out all valid data from mem";
-      std.env.stop;
+    end procedure;
+
+    procedure decode_saved_data is
+      variable L_in       : line;
+      variable L_out      : line;
+      variable ch         : character;
+      variable addr    : integer;
+      variable data    : std_logic_vector(7 downto 0);
+      variable dummy   : character;  -- to skip the ':'
+    begin
+
+      report "start - decode";
+      while not endfile(decode_file_in) loop
+        readline(decode_file_in, L_in);
+        read(L_in, addr);
+        read(L_in, dummy);
+        read(L_in, data);
+
+        ch := character'val(to_integer(unsigned(data)));
+        write(L_out, ch);
+      end loop;
+
+      --write it out in a sentence
+      writeline(decode_file_out, L_out);
+      report "done - decode";
     end procedure;
 
 	begin
@@ -150,10 +176,12 @@ begin
     res_n <= '1';
 		wait until rising_edge(clk);
     --blockram_testcase;
-    blockram_testcase_file;
+    --blockram_testcase_file;
+    decode_saved_data;
 
 	  clk_stop <= '1';
     report "sim done";
+    std.env.stop;
     wait;
 	end process;
 
