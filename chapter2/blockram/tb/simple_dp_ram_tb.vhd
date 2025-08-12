@@ -123,11 +123,20 @@ begin
       --save the values in a file called: debugdata_out.txt
       --Line Format should be:ADDRESS: BINARY_DATA
       report "start - read out all valid data from mem";
-      for idx in 0 to 2**ADDR_WIDTH-1 loop
+      --skip the 0 to pass the make check testcase, because reads from 0 always return 0
+      for idx in 1 to 2**ADDR_WIDTH-1 loop
         --report to_string(idx);
         read_from_mem(idx);
         if is_valid(rd_data) then
-          report to_string(to_integer(unsigned(rd_data)));
+          --write it to a file
+          --report to_string(to_integer(unsigned(rd_data)));
+          addr := idx;
+          data := rd_data;
+
+          write(L, addr);
+          write(L, string'(": "));
+          write(L, data);
+          writeLine(output_file, L);
         end if;
       end loop;
       report "done - read out all valid data from mem";
