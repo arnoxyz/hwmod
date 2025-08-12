@@ -7,6 +7,9 @@ entity simple_dp_ram_tb is
 end entity;
 
 architecture tb of simple_dp_ram_tb is
+  --file
+  file input_file : text open read_mode is "./tb/debugdata_in.txt";
+
   --clk stuff
 	constant CLK_PERIOD : time := 20 ns;
 	signal clk_stop : std_ulogic := '0';
@@ -83,10 +86,30 @@ begin
     end procedure;
 
     procedure blockram_testcase_file is
+      variable L       : line;
+      variable addr    : integer;
+      variable data    : std_logic_vector(7 downto 0);
+      variable dummy   : character;  -- to skip the ':'
     begin
       report "read data from file now ...";
-      --TODO: read/write from provided file
-      --std.env.stop;
+      --READ:
+      --read from file ./debugdata_in.txt line by line
+      --Line Format is: ADDRESS: BINARY_DATA
+      --and write it to the mem
+        while not endfile(input_file) loop
+          readline(input_file, L); -- Read one line from the file
+          read(L, addr);
+          read(L, dummy);
+          read(L, data);
+          report "Address: " & integer'image(addr) & " Data: " & to_string(data);
+        end loop;
+
+      --WRITE:
+      --loop thrugh all possible addr and write out all values from the mem
+      --save the values in a file called: debugdata_out.txt
+      --Line Format should be:ADDRESS: BINARY_DATA
+
+      std.env.stop;
     end procedure;
 
 	begin
