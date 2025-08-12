@@ -9,6 +9,7 @@ end entity;
 architecture tb of simple_dp_ram_tb is
   --file
   file input_file : text open read_mode is "./tb/debugdata_in.txt";
+  file output_file : text open read_mode is "./tb/debugdata_out.txt";
 
   --clk stuff
 	constant CLK_PERIOD : time := 20 ns;
@@ -92,18 +93,18 @@ begin
       variable dummy   : character;  -- to skip the ':'
     begin
       report "read data from file now ...";
-      --READ:
-      --read from file ./debugdata_in.txt line by line
-      --Line Format is: ADDRESS: BINARY_DATA
+      --READ from file and write it to the mem:
         while not endfile(input_file) loop
           readline(input_file, L); -- Read one line from the file
+
+          --Line Format is: ADDRESS: BINARY_DATA
           read(L, addr);
           read(L, dummy);
           read(L, data);
           report "Address: " & to_string(addr) & " Data: " & to_string(data);
 
           --and write it to the mem
-          write_to_mem(to_integer(unsigned(data)),addr);
+          write_to_mem(data=>to_integer(unsigned(data)),addr=>addr);
         end loop;
 
       --WRITE:
