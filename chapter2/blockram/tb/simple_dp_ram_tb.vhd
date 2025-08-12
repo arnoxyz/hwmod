@@ -118,6 +118,7 @@ begin
           --and write it to the mem
           write_to_mem(data=>to_integer(unsigned(data)),addr=>addr);
         end loop;
+      file_close(input_file);
       report "done - read data from file";
 
       --WRITE:
@@ -141,6 +142,8 @@ begin
           writeLine(output_file, L);
         end if;
       end loop;
+      flush(output_file);
+      file_close(output_file);
       report "done - read out all valid data from mem";
     end procedure;
 
@@ -165,7 +168,11 @@ begin
       end loop;
 
       --write it out in a sentence
+      file_close(decode_file_in);
+
       writeline(decode_file_out, L_out);
+      flush(decode_file_out);
+      file_close(decode_file_out);
       report "done - decode";
     end procedure;
 
@@ -175,8 +182,19 @@ begin
 		wait for 10 ns;
     res_n <= '1';
 		wait until rising_edge(clk);
-    blockram_testcase;
+    --just uncomment to run testcases
+
+    --Testcase1: simple testcase read/write some data to the ram
+    --blockram_testcase;
+
+    --Testcase2:
+    --read from debugdata_in.txt and write that data to the ram
+    --then read whole valid data from the ram and write it to debugdata_out.txt
     --blockram_testcase_file;
+
+    --Bonus: Decode the data
+    --Read from a copy of the previous write out data debugdata_out called decode_in.txt
+    --interpret the data as ASCII characters and write that output to decode_out.txt
     --decode_saved_data;
 
 	  clk_stop <= '1';
