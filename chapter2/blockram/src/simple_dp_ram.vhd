@@ -47,13 +47,15 @@ end architecture;
 
 architecture beh_reset of simple_dp_ram is
   type MEM is array(0 to 2**ADDR_WIDTH-1) of std_ulogic_vector(DATA_WIDTH-1 downto 0);
+  signal ram_block : MEM;
 begin
-  sync : process(clk) is
-    variable ram_block : MEM;
+  sync : process(clk, res_n) is
   begin
-    if rising_edge(clk) then
+    if res_n = '0' then
+      ram_block <= (others=> (others=>'0'));
+    elsif rising_edge(clk) then
       if wr_en = '1' then
-          ram_block(to_integer(unsigned(wr_addr))) := wr_data;
+          ram_block(to_integer(unsigned(wr_addr))) <= wr_data;
       end if;
 
       if wr_en = '1' and unsigned(wr_addr)=unsigned(rd_addr) then
