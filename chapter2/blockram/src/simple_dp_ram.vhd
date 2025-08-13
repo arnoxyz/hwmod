@@ -20,7 +20,32 @@ entity simple_dp_ram is
 	);
 end entity;
 
-architecture arch of simple_dp_ram is
+architecture beh of simple_dp_ram is
+  type MEM is array(0 to 2**ADDR_WIDTH-1) of std_ulogic_vector(DATA_WIDTH-1 downto 0);
+begin
+  sync : process(clk) is
+    variable ram_block : MEM;
+  begin
+    if rising_edge(clk) then
+      if wr_en = '1' then
+          ram_block(to_integer(unsigned(wr_addr))) := wr_data;
+      end if;
+
+      if wr_en = '1' and unsigned(wr_addr)=unsigned(rd_addr) then
+        --write-through
+        rd_data <= wr_data;
+      else
+        if to_integer(unsigned(rd_addr)) = 0 then
+          rd_data <= (others=>'0');
+        else
+          rd_data <= ram_block(to_integer(unsigned(rd_addr)));
+        end if;
+      end if;
+    end if;
+  end process;
+end architecture;
+
+architecture beh_reset of simple_dp_ram is
   type MEM is array(0 to 2**ADDR_WIDTH-1) of std_ulogic_vector(DATA_WIDTH-1 downto 0);
 begin
   sync : process(clk) is

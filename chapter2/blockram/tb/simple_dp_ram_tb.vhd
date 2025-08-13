@@ -204,7 +204,7 @@ begin
 	end process;
 
 	-- instantiate uut
-  UUT : simple_dp_ram
+  UUT : entity work.simple_dp_ram(beh)
   generic map(
     ADDR_WIDTH => ADDR_WIDTH,
     DATA_WIDTH => DATA_WIDTH
