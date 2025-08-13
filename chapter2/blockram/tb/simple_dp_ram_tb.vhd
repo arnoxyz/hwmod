@@ -190,12 +190,12 @@ begin
     --Testcase2:
     --read from debugdata_in.txt and write that data to the ram
     --then read whole valid data from the ram and write it to debugdata_out.txt
-    --blockram_testcase_file;
+    blockram_testcase_file;
 
     --Bonus: Decode the data
     --Read from a copy of the previous write out data debugdata_out called decode_in.txt
     --interpret the data as ASCII characters and write that output to decode_out.txt
-    --decode_saved_data;
+    decode_saved_data;
 
 	  clk_stop <= '1';
     report "sim done";

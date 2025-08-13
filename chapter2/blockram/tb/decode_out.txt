@@ -1,0 +1,1 @@
+The first one to send an email to 'hwmod@ecs.tuwien.ac.at' with subject 'i am a master decoder' and attaches the 'simple_dp_ram_tb.vhd' file that decoded this message gets a bonus point!
