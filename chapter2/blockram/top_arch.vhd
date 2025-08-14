@@ -35,8 +35,8 @@ architecture top_arch of top is
 begin
 
   --change to use different implementations
-  ram_inst : entity work.simple_dp_ram(beh_reset)
-  --ram_inst : entity work.simple_dp_ram(beh)
+  --ram_inst : entity work.simple_dp_ram(beh_reset)
+  ram_inst : entity work.simple_dp_ram(beh)
     generic map(
       ADDR_WIDTH => ADDR_WIDTH,
       DATA_WIDTH => DATA_WIDTH
