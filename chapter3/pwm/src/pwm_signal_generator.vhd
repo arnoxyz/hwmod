@@ -17,6 +17,16 @@ end entity;
 
 
 architecture arch of pwm_signal_generator is
+  signal internal_pwm : std_ulogic;
 begin
-	-- TODO: Implement the PWM generator
+  sync : process(clk, res_n) is
+  begin
+    if res_n = '0' then
+      internal_pwm <= '0';
+    elsif rising_edge(clk) then
+      internal_pwm <= '1';
+    end if;
+  end process;
+
+  pwm_out <= internal_pwm;
 end architecture;

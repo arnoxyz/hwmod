@@ -20,7 +20,7 @@ architecture tb of pwm_signal_generator_tb is
   --out
 	signal pwm_out : std_ulogic;
 
-  component hpwm_signal_generator is
+  component pwm_signal_generator is
     generic (
       COUNTER_WIDTH : integer := 8
     );
@@ -54,7 +54,7 @@ begin
       wait;
 	end process;
 
-	uut : entity work.pwm_signal_generator
+	uut : pwm_signal_generator
 		generic map (
 			COUNTER_WIDTH => COUNTER_WIDTH
 		)
