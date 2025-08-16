@@ -13,7 +13,7 @@ architecture tb of pwm_signal_generator_tb is
   signal  res_n : std_ulogic := '0';
 
   --generics
-	constant COUNTER_WIDTH : integer := 2;
+	constant COUNTER_WIDTH : integer := 3;
   --in
   signal en : std_ulogic := '0';
 	signal value : std_ulogic_vector(COUNTER_WIDTH-1 downto 0) := (others=>'0');
