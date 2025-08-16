@@ -10,7 +10,7 @@ architecture tb of pwm_signal_generator_tb is
   constant CLK_PERIOD : time := 2 ns; --50 MHz => 20 ns
   signal clk_stop : std_ulogic := '0';
 	signal clk : std_ulogic;
- signal  res_n : std_ulogic := '0';
+  signal  res_n : std_ulogic := '0';
 
   --generics
 	constant COUNTER_WIDTH : integer := 8;
