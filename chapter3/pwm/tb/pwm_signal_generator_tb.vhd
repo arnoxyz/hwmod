@@ -7,18 +7,21 @@ end entity;
 
 architecture tb of pwm_signal_generator_tb is
   --clk
-  constant CLK_PERIOD : time := 2 ns; --50 MHz => 20 ns
+  constant CLK_FREQUENCY : integer := 1_000_000; -- 1MHz
+  constant CLK_PERIOD : time := 1 sec / CLK_FREQUENCY;
   signal clk_stop : std_ulogic := '0';
 	signal clk : std_ulogic;
   signal  res_n : std_ulogic := '0';
 
   --generics
-	constant COUNTER_WIDTH : integer := 3;
+	constant COUNTER_WIDTH : integer := 8;
   --in
   signal en : std_ulogic := '0';
 	signal value : std_ulogic_vector(COUNTER_WIDTH-1 downto 0) := (others=>'0');
   --out
 	signal pwm_out : std_ulogic;
+
+
 
   component pwm_signal_generator is
     generic (
@@ -62,10 +65,20 @@ begin
       --TODO: implement procedure
 		end procedure;
 
+    procedure sophisticated_testcase is
+	    constant MAX_VALUE : unsigned(COUNTER_WIDTH-1 downto 0) := (others=>'1');
+    begin
+      for idx in 1 to to_integer(MAX_VALUE) loop
+        report to_string(idx);
+        value <= std_logic_vector(to_unsigned(idx, COUNTER_WIDTH));
+        wait for 1 ns;
+      end loop;
+    end procedure;
+
 	begin
       report "sim start";
-      basic_testcase;
-
+      --basic_testcase; --check en,cnt,
+      sophisticated_testcase; --full check
 
       clk_stop <= '1';
       report "sim done";
