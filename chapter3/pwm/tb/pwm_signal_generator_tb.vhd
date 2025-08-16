@@ -61,12 +61,20 @@ begin
     end procedure;
 
 		procedure check_pwm_signal(low_time, high_time: time) is
+      --variable low : integer := (low_time / 1 us);
+      --variable high : integer := (high_time / 1 us);
+      --variable total : integer := 0;
+
 		begin
-      --TODO: implement procedure
+      --report to_string(low/high);
+      report to_string(low_time);
 		end procedure;
 
     procedure sophisticated_testcase is
 	    constant MAX_VALUE : unsigned(COUNTER_WIDTH-1 downto 0) := (others=>'1');
+      variable start_time : time;
+      variable low_time : time;  --time from pwm_out is '0' until pwm_out is '1'
+      variable high_time : time; --time pwm_out is '1' until '0' again (overflow)
     begin
       res_n <= '0';
       en <= '0';
@@ -74,13 +82,23 @@ begin
       res_n <= '1';
       wait until rising_edge(clk);
 
-      for idx in 1 to to_integer(MAX_VALUE) loop
-        report "start with value " & to_string(idx);
+      for idx in 1 to 254 loop --to_integer(MAX_VALUE) loop
+        start_time := now;
+        --report "start time is " & to_string(start_time / 1 ns);
+        --report "start with value " & to_string(idx);
         en <= '1';
         value <= std_logic_vector(to_unsigned(idx, COUNTER_WIDTH));
-        wait for 10*clk_period;
-        en <= '0';
-        wait until falling_edge(pwm_out);
+
+        wait until pwm_out = '1';
+        low_time := (now-start_time);
+        report "low time is " & to_string(low_time / 1 ps);
+        en <= '0'; --deassert en to check if the period is still generated
+
+        --wait until falling_edge(pwm_out);
+        wait until pwm_out = '0';
+        high_time := now-low_time;
+        report "high time is " & to_string(high_time / 1 ps);
+        check_pwm_signal(low_time,high_time);
       end loop;
     end procedure;
 
