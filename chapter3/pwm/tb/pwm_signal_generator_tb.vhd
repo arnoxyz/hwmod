@@ -60,27 +60,41 @@ begin
       wait for 10*clk_period;
     end procedure;
 
-		procedure check_pwm_signal(low_time, high_time: time) is
-      --variable low : integer := (low_time / 1 us);
-      --variable high : integer := (high_time / 1 us);
-      --variable total : integer := 0;
-
+		procedure check_pwm_signal(expected_low_time, expected_high_time: time) is
+      variable start_time : time;
+      variable low_time : time;  --time from pwm_out is '0' until pwm_out is '1'
+      variable high_time : time; --time pwm_out is '1' until '0' again (overflow)
 		begin
-      --report to_string(low/high);
-      --report to_string(low_time / 1 us);
-      --report to_string(high_time / 1 us);
-      --report to_string((low_time / 1 ns) / (high_time / 1 ns));
+        start_time := now;
 
-      --total time
-      report to_string((low_time / 1 us) + (high_time / 1 us));
-      report "---";
+        wait until rising_edge(pwm_out);
+        low_time := (now-start_time);
+        start_time := now;
+        en <= '0';
+
+        wait until falling_edge(pwm_out);
+        high_time := now-start_time;
+
+        --total time
+        --check if the total time is the same for now
+        --report to_string((low_time / 1 us) + (high_time / 1 us));
+
+        assert low_time = expected_low_time  report "Low time mismatch! "
+          & "low time is = " & to_string(low_time)
+          & "expected low time is = " & to_string(expected_low_time)
+          severity error;
+
+        assert high_time = expected_high_time report "High time mismatch!"
+          & "high time is = " & to_string(high_time)
+          & "expected high time is = " & to_string(expected_high_time)
+          severity error;
+
 		end procedure;
 
     procedure sophisticated_testcase is
 	    constant MAX_VALUE : unsigned(COUNTER_WIDTH-1 downto 0) := (others=>'1');
-      variable start_time : time;
-      variable low_time : time;  --time from pwm_out is '0' until pwm_out is '1'
-      variable high_time : time; --time pwm_out is '1' until '0' again (overflow)
+      variable expected_low : time;
+      variable expected_high : time;
     begin
       res_n <= '0';
       en <= '0';
@@ -92,16 +106,12 @@ begin
         value <= std_logic_vector(to_unsigned(idx, COUNTER_WIDTH));
         wait for 2*clk_period;
         en <= '1';
-        start_time := now;
 
-        wait until rising_edge(pwm_out);
-        low_time := (now-start_time);
-        start_time := now;
-        en <= '0';
+        expected_low := clk_period * idx;
+        expected_high := clk_period * to_integer((MAX_VALUE - to_unsigned(idx, COUNTER_WIDTH))) + clk_period;
+        --min of 1 clk period is high
 
-        wait until falling_edge(pwm_out);
-        high_time := now-start_time;
-        check_pwm_signal(low_time,high_time);
+        check_pwm_signal(expected_low, expected_high);
       end loop;
     end procedure;
 
