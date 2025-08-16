@@ -22,6 +22,8 @@ architecture arch of pwm_signal_generator is
   signal counter : unsigned(COUNTER_WIDTH-1 downto 0);
   signal counter_nxt  : unsigned(COUNTER_WIDTH-1 downto 0);
   signal counter_en : std_ulogic;
+  signal sample_val: std_ulogic_vector(COUNTER_WIDTH-1 downto 0);
+  signal sample_val_nxt: std_ulogic_vector(COUNTER_WIDTH-1 downto 0);
 
 begin
   pwm_out <= internal_pwm;
@@ -32,13 +34,16 @@ begin
       internal_pwm <= '0';
       counter <= (others=>'0');
       counter_en <= '0';
+      sample_val <= (others=>'0');
     elsif rising_edge(clk) then
       internal_pwm <= internal_pwm_nxt;
       counter <= counter_nxt;
+      sample_val <= sample_val_nxt;
 
       if counter = 0 then
         if en = '1' then
           counter_en <= '1';
+          sample_val <= value;
         else
           counter_en <= '0';
         end if;
@@ -50,11 +55,11 @@ begin
   begin
     internal_pwm_nxt <= '0';
     counter_nxt <= (others=>'0');
+    sample_val_nxt <= sample_val;
 
     if counter_en = '1' then
       counter_nxt <= counter + 1;
-
-      if counter >= unsigned(value) then
+      if counter >= unsigned(sample_val) then
         internal_pwm_nxt <= '1';
       end if;
     end if;
