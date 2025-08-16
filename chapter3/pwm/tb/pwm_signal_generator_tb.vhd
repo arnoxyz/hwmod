@@ -84,21 +84,21 @@ begin
     begin
       res_n <= '0';
       en <= '0';
-      wait for 10*clk_period;
+      wait until rising_edge(clk);
       res_n <= '1';
 
       for idx in 1 to to_integer(MAX_VALUE) loop
-        en <= '0';
-        value <= std_logic_vector(to_unsigned(idx, COUNTER_WIDTH));
-        wait until rising_edge(clk);
         en <= '1';
+        value <= std_logic_vector(to_unsigned(idx, COUNTER_WIDTH));
+        wait for 2*clk_period;
         start_time := now;
 
-        wait until pwm_out = '1';
+        wait until rising_edge(pwm_out);
         low_time := (now-start_time);
         start_time := now;
+        en <= '0';
 
-        wait until pwm_out = '0';
+        wait until falling_edge(pwm_out);
         high_time := now-start_time;
         check_pwm_signal(low_time,high_time);
       end loop;
