@@ -36,6 +36,27 @@ architecture tb of pwm_signal_generator_tb is
 begin
 
 	stimulus : process
+    procedure basic_testcase is
+    begin
+      res_n <= '0';
+      wait for 2*clk_period;
+      res_n <= '1';
+      wait for 10*clk_period;
+      en <= '1';
+      report "start cnt";
+      wait for 2*clk_period;
+      en <= '0';
+      wait for 2*clk_period;
+      en <= '1';
+      wait for 2*clk_period;
+      en <= '0';
+      wait for 10*clk_period;
+      en <= '1';
+      wait for 2*clk_period;
+      en <= '0';
+      wait for 10*clk_period;
+    end procedure;
+
 		procedure check_pwm_signal(low_time, high_time: time) is
 		begin
       --TODO: implement procedure
@@ -43,23 +64,8 @@ begin
 
 	begin
       report "sim start";
-      res_n <= '0';
-      wait for 2*clk_period;
-      res_n <= '1';
-      wait for 10*clk_period;
-      en <= '1';
-      report "start cnt until overflow";
-      wait for 2*clk_period;
-      en <= '0';
-      wait for 2*clk_period;
-      en <= '1';
-      wait for 2*clk_period;
-      en <= '0';
-      wait for 10*clk_period;
-      en <= '1';
-      wait for 2*clk_period;
-      en <= '0';
-      wait for 10*clk_period;
+      basic_testcase;
+
 
       clk_stop <= '1';
       report "sim done";
