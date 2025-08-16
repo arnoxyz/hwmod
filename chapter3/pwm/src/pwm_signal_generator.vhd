@@ -17,8 +17,6 @@ end entity;
 
 
 architecture arch of pwm_signal_generator is
-  signal internal_pwm : std_ulogic;
-  signal internal_pwm_nxt : std_ulogic;
   signal counter : unsigned(COUNTER_WIDTH-1 downto 0);
   signal counter_nxt  : unsigned(COUNTER_WIDTH-1 downto 0);
   signal counter_en : std_ulogic;
@@ -36,7 +34,7 @@ begin
       counter <= counter_nxt;
       sample_val <= sample_val_nxt;
 
-      if counter = 0 then
+      if counter_nxt = 0 then
         if en = '1' then
           counter_en <= '1';
           sample_val <= value;
@@ -50,7 +48,6 @@ begin
   comb : process(all) is
   begin
 		pwm_out <= '0';
-
     counter_nxt <= (others=>'0');
     sample_val_nxt <= sample_val;
 

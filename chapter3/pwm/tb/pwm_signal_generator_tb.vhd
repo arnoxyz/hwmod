@@ -88,9 +88,10 @@ begin
       res_n <= '1';
 
       for idx in 1 to to_integer(MAX_VALUE) loop
-        en <= '1';
+        en <= '0';
         value <= std_logic_vector(to_unsigned(idx, COUNTER_WIDTH));
         wait for 2*clk_period;
+        en <= '1';
         start_time := now;
 
         wait until rising_edge(pwm_out);
