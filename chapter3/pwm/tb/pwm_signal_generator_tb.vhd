@@ -13,7 +13,7 @@ architecture tb of pwm_signal_generator_tb is
   signal  res_n : std_ulogic := '0';
 
   --generics
-	constant COUNTER_WIDTH : integer := 8;
+	constant COUNTER_WIDTH : integer := 2;
   --in
   signal en : std_ulogic := '0';
 	signal value : std_ulogic_vector(COUNTER_WIDTH-1 downto 0) := (others=>'0');
@@ -47,7 +47,19 @@ begin
       wait for 2*clk_period;
       res_n <= '1';
       wait for 10*clk_period;
-
+      en <= '1';
+      report "start cnt until overflow";
+      wait for 2*clk_period;
+      en <= '0';
+      wait for 2*clk_period;
+      en <= '1';
+      wait for 2*clk_period;
+      en <= '0';
+      wait for 10*clk_period;
+      en <= '1';
+      wait for 2*clk_period;
+      en <= '0';
+      wait for 10*clk_period;
 
       clk_stop <= '1';
       report "sim done";
