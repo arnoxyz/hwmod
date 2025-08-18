@@ -2,11 +2,14 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 architecture top_arch of top is
+  constant STEP_TIME  : time := 1 sec;
+  constant CLK_PERIOD: time := 20 ns; -- f = 50 MHz
 begin
 
-	led_controller : entity work.running_light
+	no_fsm_no_problem_inst : entity work.running_light(beh_no_fsm)
 	generic map(
-		STEP_TIME => 1 sec
+		STEP_TIME => STEP_TIME,
+    CLK_PERIOD => CLK_PERIOD
 	)
 	port map (
 		clk => clk,

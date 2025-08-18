@@ -1,10 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-
 use work.math_pkg.all;
-
---assume clk with f=50 MHz
 
 entity running_light is
 	generic (
@@ -18,9 +15,8 @@ entity running_light is
 	);
 end entity;
 
-architecture beh of running_light is
+architecture beh_no_fsm of running_light is
   constant cc_for_step_time : integer := (STEP_TIME / CLK_PERIOD);
-
   signal counter : unsigned(31 downto 0);
   signal counter_nxt : unsigned(31 downto 0);
   signal leds_internal : unsigned(7 downto 0);
@@ -47,7 +43,6 @@ begin
 
     if counter >= cc_for_step_time then
       counter_nxt <= (others=>'0');
-
       if leds_internal = 1 then
         leds_internal_nxt <= (7=>'1', others=>'0');
       else
