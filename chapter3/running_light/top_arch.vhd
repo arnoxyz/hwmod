@@ -16,5 +16,16 @@ begin
 		res_n => keys(0),
 		leds => ledr(7 downto 0)
 	);
+
+	fsm_inst : entity work.running_light(beh_fsm)
+	generic map(
+		STEP_TIME => STEP_TIME,
+    CLK_PERIOD => CLK_PERIOD
+	)
+	port map (
+		clk => clk,
+		res_n => keys(0),
+		leds => ledr(7 downto 0)
+	);
 end architecture;
 
