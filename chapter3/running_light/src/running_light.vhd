@@ -38,6 +38,12 @@ begin
   comb : process(all) is
   begin
     counter_nxt <= counter + 1;
-    leds_internal_nxt <= shift_right(leds_internal, 1);
+
+    if leds_internal = 1 then
+      leds_internal_nxt <= (7=>'1', others=>'0');
+    else
+      leds_internal_nxt <= shift_right(leds_internal, 1);
+    end if;
+
   end process;
 end architecture;
