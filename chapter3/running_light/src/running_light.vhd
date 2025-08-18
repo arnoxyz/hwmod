@@ -18,21 +18,26 @@ end entity;
 architecture beh of running_light is
   signal counter : unsigned(31 downto 0);
   signal counter_nxt : unsigned(31 downto 0);
+  signal leds_internal : unsigned(7 downto 0);
+  signal leds_internal_nxt : unsigned(7 downto 0);
 
 begin
-  leds <= (others=>'1');
+  leds <= std_ulogic_vector(leds_internal);
 
   sync : process(clk, res_n) is
   begin
     if res_n = '0' then
       counter <= (others=>'0');
+      leds_internal <= (7=>'1', others=>'0');
     elsif rising_edge(clk) then
       counter <= counter_nxt;
+      leds_internal <= leds_internal_nxt;
     end if;
   end process;
 
   comb : process(all) is
   begin
     counter_nxt <= counter + 1;
+    leds_internal_nxt <= shift_right(leds_internal, 1);
   end process;
 end architecture;
