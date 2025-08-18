@@ -5,8 +5,8 @@ entity running_light_tb is
 end entity;
 
 architecture arch of running_light_tb is
-	constant CLK_PERIOD : time := 20 ns;
-	constant STEP_TIME: time := 100 ns;
+  constant CLK_PERIOD : time := 2 ns; --use 2 ns for simulation, fpga clk = 20 ns => 50MHz
+	constant STEP_TIME: time := 10 ns;
 
   --in
 	signal clk_stop : std_ulogic := '0';
@@ -18,7 +18,8 @@ architecture arch of running_light_tb is
 
   component running_light is
     generic (
-      STEP_TIME  : time := 1 sec
+      STEP_TIME  : time := 1 sec;
+      CLK_PERIOD: time := 20 ns
     );
     port (
       clk      : in std_ulogic;
@@ -34,7 +35,10 @@ begin
     res_n <= '0';
     wait until rising_edge(clk);
     res_n <= '1';
-    wait for 100*clk_period;
+    wait until leds = "01000000";
+
+    --go through one pattern cycle
+    wait until leds = "10000000";
 
     clk_stop <= '1';
     report "done sim";
@@ -43,7 +47,8 @@ begin
 
 	uut : running_light
 	generic map (
-		STEP_TIME => STEP_TIME
+		STEP_TIME => STEP_TIME,
+    CLK_PERIOD => CLK_PERIOD
 	)
 	port map (
 		clk => clk,
