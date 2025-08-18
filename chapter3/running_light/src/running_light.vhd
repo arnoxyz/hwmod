@@ -54,7 +54,7 @@ end architecture;
 
 
 
-architecture fsm of running_light is
+architecture beh_fsm of running_light is
   constant cc_for_step_time : integer := (STEP_TIME / CLK_PERIOD);
 
   type fsm_state_t is (OUTPUT_PATTERN);

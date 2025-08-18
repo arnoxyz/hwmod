@@ -15,6 +15,7 @@ architecture arch of running_light_tb is
 
   --out
 	signal leds : std_ulogic_vector(7 downto 0);
+	signal leds2 : std_ulogic_vector(7 downto 0);
 
   component running_light is
     generic (
@@ -45,7 +46,7 @@ begin
     wait;
   end process;
 
-	uut : running_light
+	no_fsm_inst : entity work.running_light(beh_no_fsm)
 	generic map (
 		STEP_TIME => STEP_TIME,
     CLK_PERIOD => CLK_PERIOD
@@ -54,6 +55,17 @@ begin
 		clk => clk,
 		res_n => res_n,
 		leds => leds
+	);
+
+	fsm_inst : entity work.running_light(beh_fsm)
+	generic map(
+		STEP_TIME => STEP_TIME,
+    CLK_PERIOD => CLK_PERIOD
+	)
+	port map (
+		clk => clk,
+		res_n => res_n,
+		leds => leds2
 	);
 
 	clk_gen : process is
