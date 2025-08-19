@@ -16,8 +16,8 @@ architecture tb of bcd_fsm_tb is
   signal clk_stop    : std_ulogic := '0';
 
   --in
-	signal input_data : std_ulogic_vector(15 downto 0);
-	signal signed_mode : std_ulogic;
+	signal input_data : std_ulogic_vector(15 downto 0) := (others=>'0');
+	signal signed_mode : std_ulogic := '0';
 
   --out
 	signal hex_digit1000, hex_digit100, hex_digit10, hex_digit1, hex_sign: std_ulogic_vector(6 downto 0);
@@ -43,9 +43,29 @@ begin
 	begin
     report "sim start";
     res_n <= '0';
-    wait until rising_edge(clk);
+    wait for 10*clk_period;
     res_n <= '1';
-    wait for 100*clk_period;
+    wait for 10*clk_period;
+
+    --test start-process with changing singed_mode input
+    signed_mode <= '1';
+    wait for 10*clk_period;
+    signed_mode <= '0';
+    wait for 10*clk_period;
+    signed_mode <= '1';
+    wait for 10*clk_period;
+    signed_mode <= '0';
+    wait for 10*clk_period;
+    signed_mode <= '0';
+
+    --test start-process with changing data input
+    wait for 10*clk_period;
+    input_data  <= (0=>'1', others=>'0');
+    wait for 10*clk_period;
+    input_data  <= (others=>'0');
+    wait for 10*clk_period;
+    input_data  <= (others=>'1');
+    wait for 10*clk_period;
 
     clk_stop <= '1';
     wait;

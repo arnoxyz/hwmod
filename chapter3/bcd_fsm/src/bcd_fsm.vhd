@@ -46,5 +46,27 @@ begin
 	begin
       input_data_internal_nxt <= input_data_internal;
       signed_mode_internal_nxt <= signed_mode_internal;
+
+      --IDLE-MODE:
+      input_data_internal_nxt <= unsigned(input_data);
+      signed_mode_internal_nxt <= signed_mode;
+
+      --START-CONVERSION-PROCESS:
+      if ((signed_mode_internal = '1' and signed_mode = '0') or
+         (signed_mode_internal = '0' and signed_mode = '1')  or
+         (to_integer(input_data_internal) /= to_integer(unsigned(input_data)))) then
+
+        report "start process";
+        report to_string(signed_mode_internal) & " " & to_string(signed_mode);
+        report to_string(input_data_internal) & " " & to_string(input_data);
+      end if;
 	end process;
+
+
+  --just output this for now
+  hex_digit1     <= (others=>'0');
+  hex_digit10    <= (others=>'0');
+  hex_digit100   <= (others=>'0');
+  hex_digit1000  <= (others=>'0');
+  hex_sign       <= (others=>'0');
 end architecture;
