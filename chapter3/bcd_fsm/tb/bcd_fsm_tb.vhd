@@ -8,6 +8,7 @@ entity bcd_fsm_tb is
 end entity;
 
 architecture tb of bcd_fsm_tb is
+  constant DATA_WIDTH : integer := 16;
   --clk
   constant CLK_PERIOD : time := 2 ns;
 
@@ -16,7 +17,7 @@ architecture tb of bcd_fsm_tb is
   signal clk_stop    : std_ulogic := '0';
 
   --in
-	signal input_data : std_ulogic_vector(15 downto 0) := (others=>'0');
+	signal input_data : std_ulogic_vector(DATA_WIDTH-1 downto 0) := (others=>'0');
 	signal signed_mode : std_ulogic := '0';
 
   --out
@@ -40,6 +41,42 @@ architecture tb of bcd_fsm_tb is
 
 begin
 	stimulus : process
+    procedure test_input_change is begin
+
+      --test start-process with changing singed_mode input
+      signed_mode <= '1';
+      wait for 10*clk_period;
+      signed_mode <= '0';
+      wait for 10*clk_period;
+      signed_mode <= '1';
+      wait for 10*clk_period;
+      signed_mode <= '0';
+      wait for 10*clk_period;
+      signed_mode <= '0';
+
+      --test start-process with changing data input
+      wait for 10*clk_period;
+      input_data  <= (0=>'1', others=>'0');
+      wait for 10*clk_period;
+      input_data  <= (others=>'0');
+      wait for 10*clk_period;
+      input_data  <= (others=>'1');
+      wait for 10*clk_period;
+    end procedure;
+
+    procedure apply_input(data : integer) is
+    begin
+      signed_mode <= '0';
+      input_data  <= std_ulogic_vector(to_unsigned(data, DATA_WIDTH));
+      wait for 100*clk_period;
+    end procedure;
+
+    procedure test_unsigned_input is
+      --TODO: add check the output values after conversation with assertions
+    begin
+      apply_input(5463);
+    end procedure;
+
 	begin
     report "sim start";
     res_n <= '0';
@@ -47,25 +84,8 @@ begin
     res_n <= '1';
     wait for 10*clk_period;
 
-    --test start-process with changing singed_mode input
-    signed_mode <= '1';
-    wait for 10*clk_period;
-    signed_mode <= '0';
-    wait for 10*clk_period;
-    signed_mode <= '1';
-    wait for 10*clk_period;
-    signed_mode <= '0';
-    wait for 10*clk_period;
-    signed_mode <= '0';
-
-    --test start-process with changing data input
-    wait for 10*clk_period;
-    input_data  <= (0=>'1', others=>'0');
-    wait for 10*clk_period;
-    input_data  <= (others=>'0');
-    wait for 10*clk_period;
-    input_data  <= (others=>'1');
-    wait for 10*clk_period;
+    --test_input_change;
+    test_unsigned_input;
 
     clk_stop <= '1';
     wait;
