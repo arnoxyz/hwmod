@@ -85,10 +85,10 @@ begin
 
       input_data_sampled_nxt <= unsigned(input_data);
 
-      hex_digit1000  <= std_ulogic_vector(hex_digit1000_internal);
-      hex_digit100   <= std_ulogic_vector(hex_digit100_internal);
-      hex_digit10    <= std_ulogic_vector(hex_digit10_internal);
-      hex_digit1     <= std_ulogic_vector(hex_digit1_internal);
+      hex_digit1000  <= (others=>'0');
+      hex_digit100   <= (others=>'0');
+      hex_digit10    <= (others=>'0');
+      hex_digit1     <= (others=>'0');
 
       hex_sign       <= (others=>'0');
 
@@ -100,6 +100,11 @@ begin
 
       case state is
         when IDLE =>
+          hex_digit1000  <= std_ulogic_vector(hex_digit1000_internal);
+          hex_digit100   <= std_ulogic_vector(hex_digit100_internal);
+          hex_digit10    <= std_ulogic_vector(hex_digit10_internal);
+          hex_digit1     <= std_ulogic_vector(hex_digit1_internal);
+
           --input_data_internal_nxt <= unsigned(input_data);
           signed_mode_internal_nxt <= signed_mode;
           if ((signed_mode_internal = '1' and signed_mode = '0') or
