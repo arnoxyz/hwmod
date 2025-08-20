@@ -23,14 +23,22 @@ end entity;
 architecture beh of bcd_fsm is
 	constant DATA_WIDTH : integer := 16;
 	-- TODO: Declare a state register record type
-  type fsm_state is (IDLE, GET_DIGIT_1000);
+  type fsm_state is (IDLE, GET_DIGIT_1000, GET_DIGIT_100);
   signal state : fsm_state;
   signal state_nxt : fsm_state;
+  signal cnt : unsigned(6 downto 0);
+  signal cnt_nxt : unsigned(6 downto 0);
 
   signal input_data_internal : unsigned(DATA_WIDTH-1 downto 0);
   signal input_data_internal_nxt : unsigned(DATA_WIDTH-1 downto 0);
   signal signed_mode_internal : std_ulogic;
   signal signed_mode_internal_nxt : std_ulogic;
+
+  signal hex_digit1000_internal : unsigned(6 downto 0);
+  signal hex_digit1000_internal_nxt : unsigned(6 downto 0);
+  --signal hex_digit100_internal  : unsigned(6 downto 0);
+  --signal hex_digit10_internal   : unsigned(6 downto 0);
+  --signal hex_digit1_internal    : unsigned(6 downto 0);
 begin
 
 	sync : process(clk, res_n)
@@ -39,10 +47,14 @@ begin
       state <= IDLE;
       input_data_internal <= (others => '0');
       signed_mode_internal <= '0';
+      cnt <= (others => '0');
+      hex_digit1000_internal <= (others => '0');
     elsif rising_edge(clk) then
       state <= state_nxt;
       input_data_internal <= input_data_internal_nxt;
       signed_mode_internal <= signed_mode_internal_nxt;
+      cnt <= cnt_nxt;
+      hex_digit1000_internal <= hex_digit1000_internal_nxt;
     end if;
 	end process;
 
@@ -52,12 +64,18 @@ begin
       input_data_internal_nxt <= input_data_internal;
       signed_mode_internal_nxt <= signed_mode_internal;
       state_nxt <= state;
+      cnt_nxt <= cnt;
+
+      hex_digit1000_internal_nxt  <= hex_digit1000_internal;
 
       --just output this for now
-      hex_digit1000  <= (others=>'0');
-      hex_digit100   <= (others=>'0');
-      hex_digit10    <= (others=>'0');
-      hex_digit1     <= (others=>'0');
+      hex_digit1000  <= std_ulogic_vector(hex_digit1000_internal);
+      --hex_digit100   <= std_ulogic_vector(hex_digit100_internal);
+      hex_digit100 <= (others=>'0');
+      --hex_digit10    <= std_ulogic_vector(hex_digit10_internal);
+      hex_digit10 <= (others=>'0');
+      --hex_digit1     <= std_ulogic_vector(hex_digit1_internal);
+      hex_digit1 <= (others=>'0');
       hex_sign       <= (others=>'0');
 
       case state is
@@ -74,14 +92,16 @@ begin
           --Now implementing the signed_mode='0' case so the input_data is interpreted as unsigned
           if to_integer(input_data_internal) > 1000 then
             input_data_internal_nxt <= to_unsigned(to_integer(input_data_internal)-1000, DATA_WIDTH);
-
-            --cnt++
-            --stay in same state
-          --else
-            --cnt yields the hex_digit1000
-            --go to the next state -> GET_DIGIT_100
+            cnt_nxt <= cnt+1; --cnt++
+            --stay in same state, omit => because of default assignment at the start
+          else
+            hex_digit1000_internal_nxt  <= cnt; --cnt yields the hex_digit1000
+            cnt_nxt <= (others=>'0'); --reset cnt
+            state_nxt <= GET_DIGIT_100; --go to the next state -> GET_DIGIT_100
           end if;
 
+        when GET_DIGIT_100 =>
+            report "get digit 100...";
 
           --START-CONVERSION:
           --(INPUT_NUMBER - 1000),  1k_cnt++,   until INPUT_NUMBER < 1000
