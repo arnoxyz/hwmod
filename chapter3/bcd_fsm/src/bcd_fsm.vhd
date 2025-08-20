@@ -21,8 +21,10 @@ entity bcd_fsm is
 end entity;
 
 architecture beh of bcd_fsm is
-	-- TODO: Declare an fsm state enum type
 	-- TODO: Declare a state register record type
+  type fsm_state is (IDLE, START);
+  signal state : fsm_state;
+  signal state_nxt : fsm_state;
 
   signal input_data_internal : unsigned(15 downto 0);
   signal input_data_internal_nxt : unsigned(15 downto 0);
@@ -33,9 +35,11 @@ begin
 	sync : process(clk, res_n)
 	begin
     if res_n = '0' then
+      state <= IDLE;
       input_data_internal <= (others => '0');
       signed_mode_internal <= '0';
     elsif rising_edge(clk) then
+      state <= state_nxt;
       input_data_internal <= input_data_internal_nxt;
       signed_mode_internal <= signed_mode_internal_nxt;
     end if;
@@ -46,27 +50,27 @@ begin
 	begin
       input_data_internal_nxt <= input_data_internal;
       signed_mode_internal_nxt <= signed_mode_internal;
+      state_nxt <= state;
 
-      --IDLE-MODE:
-      input_data_internal_nxt <= unsigned(input_data);
-      signed_mode_internal_nxt <= signed_mode;
+      --just output this for now
+      hex_digit1     <= (others=>'0');
+      hex_digit10    <= (others=>'0');
+      hex_digit100   <= (others=>'0');
+      hex_digit1000  <= (others=>'0');
+      hex_sign       <= (others=>'0');
 
-      --START-CONVERSION-PROCESS:
-      if ((signed_mode_internal = '1' and signed_mode = '0') or
-         (signed_mode_internal = '0' and signed_mode = '1')  or
-         (to_integer(input_data_internal) /= to_integer(unsigned(input_data)))) then
-
-        report "start process";
-        report to_string(signed_mode_internal) & " " & to_string(signed_mode);
-        report to_string(input_data_internal) & " " & to_string(input_data);
-      end if;
+      case state is
+        when IDLE =>
+          input_data_internal_nxt <= unsigned(input_data);
+          signed_mode_internal_nxt <= signed_mode;
+          if ((signed_mode_internal = '1' and signed_mode = '0') or
+             (signed_mode_internal = '0' and signed_mode = '1')  or
+             (to_integer(input_data_internal) /= to_integer(unsigned(input_data)))) then
+            state_nxt <= START;
+          end if;
+        when START =>
+          --START-CONVERSION:
+          report "In START Process";
+        end case;
 	end process;
-
-
-  --just output this for now
-  hex_digit1     <= (others=>'0');
-  hex_digit10    <= (others=>'0');
-  hex_digit100   <= (others=>'0');
-  hex_digit1000  <= (others=>'0');
-  hex_sign       <= (others=>'0');
 end architecture;
