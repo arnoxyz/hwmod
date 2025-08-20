@@ -33,6 +33,8 @@ architecture beh of bcd_fsm is
   signal input_data_internal_nxt : unsigned(DATA_WIDTH-1 downto 0);
   signal signed_mode_internal : std_ulogic;
   signal signed_mode_internal_nxt : std_ulogic;
+  signal input_data_sampled : unsigned(DATA_WIDTH-1 downto 0);
+  signal input_data_sampled_nxt : unsigned(DATA_WIDTH-1 downto 0);
 
   signal hex_digit1000_internal : unsigned(6 downto 0);
   signal hex_digit1000_internal_nxt : unsigned(6 downto 0);
@@ -49,6 +51,7 @@ begin
     if res_n = '0' then
       state <= IDLE;
       input_data_internal <= (others => '0');
+      input_data_sampled <= (others => '0');
       signed_mode_internal <= '0';
       cnt <= (others => '0');
       hex_digit1000_internal <= (others => '0');
@@ -59,6 +62,7 @@ begin
       state <= state_nxt;
       input_data_internal <= input_data_internal_nxt;
       signed_mode_internal <= signed_mode_internal_nxt;
+      input_data_sampled <= input_data_sampled_nxt;
       cnt <= cnt_nxt;
       hex_digit1000_internal <= hex_digit1000_internal_nxt;
       hex_digit100_internal <= hex_digit100_internal_nxt;
@@ -79,6 +83,8 @@ begin
       hex_digit10_internal_nxt  <= hex_digit10_internal;
       hex_digit1_internal_nxt  <= hex_digit1_internal;
 
+      input_data_sampled_nxt <= unsigned(input_data);
+
       hex_digit1000  <= std_ulogic_vector(hex_digit1000_internal);
       hex_digit100   <= std_ulogic_vector(hex_digit100_internal);
       hex_digit10    <= std_ulogic_vector(hex_digit10_internal);
@@ -94,11 +100,12 @@ begin
 
       case state is
         when IDLE =>
-          input_data_internal_nxt <= unsigned(input_data);
+          --input_data_internal_nxt <= unsigned(input_data);
           signed_mode_internal_nxt <= signed_mode;
           if ((signed_mode_internal = '1' and signed_mode = '0') or
              (signed_mode_internal = '0' and signed_mode = '1')  or
-             (to_integer(input_data_internal) /= to_integer(unsigned(input_data)))) then
+             (to_integer(input_data_sampled) /= to_integer(unsigned(input_data)))) then
+            input_data_internal_nxt <= input_data_sampled;
             state_nxt <= GET_DIGIT_1000;
           end if;
         when GET_DIGIT_1000 =>

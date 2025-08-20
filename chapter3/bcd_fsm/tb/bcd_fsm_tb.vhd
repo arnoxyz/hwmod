@@ -75,6 +75,9 @@ begin
       --TODO: add check the output values after conversation with assertions
     begin
       apply_input(5463);
+      apply_input(13);
+      apply_input(19813);
+      apply_input(1900);
     end procedure;
 
 	begin
