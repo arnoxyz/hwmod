@@ -85,12 +85,16 @@ begin
 
       input_data_sampled_nxt <= unsigned(input_data);
 
-      hex_digit1000  <= (others=>'0');
-      hex_digit100   <= (others=>'0');
-      hex_digit10    <= (others=>'0');
-      hex_digit1     <= (others=>'0');
-
+      --hex_digit1000  <= (others=>'0');
+      --hex_digit100   <= (others=>'0');
+      --hex_digit10    <= (others=>'0');
+      --hex_digit1     <= (others=>'0');
       hex_sign       <= (others=>'0');
+
+      hex_digit1000  <= std_ulogic_vector(hex_digit1000_internal);
+      hex_digit100   <= std_ulogic_vector(hex_digit100_internal);
+      hex_digit10    <= std_ulogic_vector(hex_digit10_internal);
+      hex_digit1     <= std_ulogic_vector(hex_digit1_internal);
 
       --CONVERSION-PROCESS:
       --(INPUT_NUMBER - 1000),  1k_cnt++,   until INPUT_NUMBER < 1000
@@ -100,22 +104,21 @@ begin
 
       case state is
         when IDLE =>
-          hex_digit1000  <= std_ulogic_vector(hex_digit1000_internal);
-          hex_digit100   <= std_ulogic_vector(hex_digit100_internal);
-          hex_digit10    <= std_ulogic_vector(hex_digit10_internal);
-          hex_digit1     <= std_ulogic_vector(hex_digit1_internal);
-
-          --input_data_internal_nxt <= unsigned(input_data);
+          input_data_internal_nxt <= unsigned(input_data);
           signed_mode_internal_nxt <= signed_mode;
+
           if ((signed_mode_internal = '1' and signed_mode = '0') or
              (signed_mode_internal = '0' and signed_mode = '1')  or
              (to_integer(input_data_sampled) /= to_integer(unsigned(input_data)))) then
-            input_data_internal_nxt <= input_data_sampled;
-            state_nxt <= GET_DIGIT_1000;
+              hex_digit1000_internal_nxt  <= (others=>'0');
+              hex_digit100_internal_nxt   <= (others=>'0');
+              hex_digit10_internal_nxt    <= (others=>'0');
+              hex_digit1_internal_nxt     <= (others=>'0');
+              state_nxt <= GET_DIGIT_1000;
           end if;
         when GET_DIGIT_1000 =>
           --Now implementing the signed_mode='0' case so the input_data is interpreted as unsigned
-          if to_integer(input_data_internal) > 1000 then
+          if to_integer(input_data_internal) >= 1000 then
             input_data_internal_nxt <= to_unsigned(to_integer(input_data_internal)-1000, DATA_WIDTH);
             cnt_nxt <= cnt+1; --cnt++
             --stay in same state, omit => because of default assignment at the start
@@ -123,9 +126,13 @@ begin
             hex_digit1000_internal_nxt  <= cnt; --cnt yields the hex_digit1000
             cnt_nxt <= (others=>'0'); --reset cnt
             state_nxt <= GET_DIGIT_100; --go to the next state -> GET_DIGIT_100
+
+            if to_integer(cnt) = 0 then
+              hex_digit1000_internal_nxt  <= (others=>'0'); --cnt yields the hex_digit1000
+            end if;
           end if;
         when GET_DIGIT_100 =>
-          if to_integer(input_data_internal) > 100 then
+          if to_integer(input_data_internal) >= 100 then
             input_data_internal_nxt <= to_unsigned(to_integer(input_data_internal)-100, DATA_WIDTH);
             cnt_nxt <= cnt+1; --cnt++
             --stay in same state, omit => because of default assignment at the start
@@ -133,9 +140,12 @@ begin
             hex_digit100_internal_nxt  <= cnt; --cnt yields the hex_digit1000
             cnt_nxt <= (others=>'0'); --reset cnt
             state_nxt <= GET_DIGIT_10; --go to the next state -> GET_DIGIT_100
+            if to_integer(cnt) = 0 then
+              hex_digit100_internal_nxt  <= (others=>'0'); --cnt yields the hex_digit1000
+            end if;
           end if;
         when GET_DIGIT_10 =>
-          if to_integer(input_data_internal) > 10 then
+          if to_integer(input_data_internal) >= 10 then
             input_data_internal_nxt <= to_unsigned(to_integer(input_data_internal)-10, DATA_WIDTH);
             cnt_nxt <= cnt+1; --cnt++
             --stay in same state, omit => because of default assignment at the start
@@ -143,6 +153,9 @@ begin
             hex_digit10_internal_nxt  <= cnt; --cnt yields the hex_digit1000
             cnt_nxt <= (others=>'0'); --reset cnt
             state_nxt <= GET_DIGIT_1; --go to the next state -> GET_DIGIT_100
+            if to_integer(cnt) = 0 then
+              hex_digit10_internal_nxt  <= (others=>'0'); --cnt yields the hex_digit1000
+            end if;
           end if;
         when GET_DIGIT_1 =>
           if to_integer(input_data_internal) > 0 then
@@ -153,6 +166,9 @@ begin
             hex_digit1_internal_nxt  <= cnt;
             cnt_nxt <= (others=>'0'); --reset cnt
             state_nxt <= IDLE; --go to the next state
+            if to_integer(cnt) = 0 then
+              hex_digit1_internal_nxt  <= (others=>'0'); --cnt yields the hex_digit1000
+            end if;
           end if;
         end case;
 	end process;

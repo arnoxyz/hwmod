@@ -73,8 +73,24 @@ begin
 
     procedure test_unsigned_input is
       --TODO: add check the output values after conversation with assertions
+      variable input_digit1     : integer;
+      variable input_digit10    : integer;
+      variable input_digit100   : integer;
+      variable input_digit1000  : integer;
+      variable input_val        : integer;
     begin
-      apply_input(5463);
+      input_digit1     := 3;
+      input_digit10    := 6;
+      input_digit100   := 4;
+      input_digit1000  := 5;
+      input_val := input_digit1+input_digit10*10+input_digit100*100+input_digit1000*1000;
+
+      apply_input(input_val);
+
+      assert input_digit1 = to_integer(unsigned(hex_digit1))
+        report "input_digit1 /= hex_digit1 " & to_string(input_digit1) & " " & to_string(hex_digit1);
+	    --hex_digit1000, hex_digit100, hex_digit10, hex_digit1, hex_sign: std_ulogic_vector(6 downto 0);
+
       apply_input(13);
       apply_input(19813);
       apply_input(1900);
