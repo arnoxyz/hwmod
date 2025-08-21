@@ -26,8 +26,8 @@ architecture beh of bcd_fsm is
   type fsm_state is (IDLE, GET_DIGIT_1000, GET_DIGIT_100, GET_DIGIT_10, GET_DIGIT_1);
   signal state : fsm_state;
   signal state_nxt : fsm_state;
-  signal cnt : unsigned(6 downto 0);
-  signal cnt_nxt : unsigned(6 downto 0);
+  signal cnt : unsigned(3 downto 0);
+  signal cnt_nxt : unsigned(3 downto 0);
 
   signal input_data_internal : unsigned(DATA_WIDTH-1 downto 0);
   signal input_data_internal_nxt : unsigned(DATA_WIDTH-1 downto 0);
@@ -131,12 +131,12 @@ begin
             cnt_nxt <= cnt+1; --cnt++
             --stay in same state, omit => because of default assignment at the start
           else
-            hex_digit1000_internal_nxt  <= cnt; --cnt yields the hex_digit1000
+            hex_digit1000_internal_nxt  <= unsigned(to_segs(std_ulogic_vector(cnt)));
             cnt_nxt <= (others=>'0'); --reset cnt
             state_nxt <= GET_DIGIT_100; --go to the next state -> GET_DIGIT_100
 
             if to_integer(cnt) = 0 then
-              hex_digit1000_internal_nxt  <= (others=>'0'); --cnt yields the hex_digit1000
+              hex_digit1000_internal_nxt  <= unsigned(SSD_CHAR_OFF);
             end if;
           end if;
         when GET_DIGIT_100 =>
@@ -145,11 +145,11 @@ begin
             cnt_nxt <= cnt+1; --cnt++
             --stay in same state, omit => because of default assignment at the start
           else
-            hex_digit100_internal_nxt  <= cnt; --cnt yields the hex_digit1000
+            hex_digit100_internal_nxt  <= unsigned(to_segs(std_ulogic_vector(cnt))); --cnt yields the hex_digit1000
             cnt_nxt <= (others=>'0'); --reset cnt
             state_nxt <= GET_DIGIT_10; --go to the next state -> GET_DIGIT_100
             if to_integer(cnt) = 0 then
-              hex_digit100_internal_nxt  <= (others=>'0'); --cnt yields the hex_digit1000
+              hex_digit100_internal_nxt  <= unsigned(SSD_CHAR_OFF);
             end if;
           end if;
         when GET_DIGIT_10 =>
@@ -158,11 +158,11 @@ begin
             cnt_nxt <= cnt+1; --cnt++
             --stay in same state, omit => because of default assignment at the start
           else
-            hex_digit10_internal_nxt  <= cnt; --cnt yields the hex_digit1000
+            hex_digit10_internal_nxt  <= unsigned(to_segs(std_ulogic_vector(cnt))); --cnt yields the hex_digit1000
             cnt_nxt <= (others=>'0'); --reset cnt
             state_nxt <= GET_DIGIT_1; --go to the next state -> GET_DIGIT_100
             if to_integer(cnt) = 0 then
-              hex_digit10_internal_nxt  <= (others=>'0'); --cnt yields the hex_digit1000
+              hex_digit10_internal_nxt  <= unsigned(SSD_CHAR_OFF);
             end if;
           end if;
         when GET_DIGIT_1 =>
@@ -171,11 +171,11 @@ begin
             cnt_nxt <= cnt+1; --cnt++
             --stay in same state, omit => because of default assignment at the start
           else
-            hex_digit1_internal_nxt  <= cnt;
+            hex_digit1_internal_nxt  <= unsigned(to_segs(std_ulogic_vector(cnt)));
             cnt_nxt <= (others=>'0'); --reset cnt
             state_nxt <= IDLE; --go to the next state
             if to_integer(cnt) = 0 then
-              hex_digit1_internal_nxt  <= (others=>'0'); --cnt yields the hex_digit1000
+              hex_digit1_internal_nxt  <= unsigned(SSD_CHAR_OFF);
             end if;
           end if;
         end case;
