@@ -113,7 +113,13 @@ begin
     wait for 10*clk_period;
 
     --test_input_change;
-    test_unsigned;
+    --test_unsigned;
+
+    --test for input bigger than 9999
+    apply_input(10000);
+    apply_input(99);
+    apply_input(19011);
+    apply_input(1984);
 
 
     clk_stop <= '1';

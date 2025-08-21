@@ -110,11 +110,19 @@ begin
           if ((signed_mode_internal = '1' and signed_mode = '0') or
              (signed_mode_internal = '0' and signed_mode = '1')  or
              (to_integer(input_data_sampled) /= to_integer(unsigned(input_data)))) then
-              hex_digit1000_internal_nxt  <= (others=>'0');
-              hex_digit100_internal_nxt   <= (others=>'0');
-              hex_digit10_internal_nxt    <= (others=>'0');
-              hex_digit1_internal_nxt     <= (others=>'0');
-              state_nxt <= GET_DIGIT_1000;
+
+               if (to_integer(unsigned(input_data)) > 9999) then
+                hex_digit1000_internal_nxt  <= unsigned(SSD_CHAR_OFF);
+                hex_digit100_internal_nxt   <= unsigned(SSD_CHAR_O);
+                hex_digit10_internal_nxt    <= unsigned(SSD_CHAR_F);
+                hex_digit1_internal_nxt     <= unsigned(SSD_CHAR_L);
+               else
+                hex_digit1000_internal_nxt  <= unsigned(SSD_CHAR_OFF);
+                hex_digit100_internal_nxt   <= unsigned(SSD_CHAR_OFF);
+                hex_digit10_internal_nxt    <= unsigned(SSD_CHAR_OFF);
+                hex_digit1_internal_nxt     <= unsigned(SSD_CHAR_OFF);
+                state_nxt <= GET_DIGIT_1000;
+               end if;
           end if;
         when GET_DIGIT_1000 =>
           --Now implementing the signed_mode='0' case so the input_data is interpreted as unsigned
