@@ -87,14 +87,14 @@ begin
       assert to_segs(std_ulogic_vector(to_unsigned(input_digit1, 4))) = hex_digit1
         report "input_digit1 /= hex_digit1 " & to_string(to_segs(std_ulogic_vector(to_unsigned(input_digit1, 4)))) & " " & to_string(hex_digit1);
 
-      --assert input_digit10 = to_integer(unsigned(hex_digit10))
-       -- report "input_digit10 /= hex_digit10 " & to_string(input_digit10) & " " & to_string(hex_digit10);
+      assert to_segs(std_ulogic_vector(to_unsigned(input_digit10, 4))) = hex_digit10
+        report "input_digit1 /= hex_digit1 " & to_string(to_segs(std_ulogic_vector(to_unsigned(input_digit10, 4)))) & " " & to_string(hex_digit10);
 
-      --assert input_digit100 = to_integer(unsigned(hex_digit100))
-        --report "input_digit100 /= hex_digit100 " & to_string(input_digit100) & " " & to_string(hex_digit100);
+      assert to_segs(std_ulogic_vector(to_unsigned(input_digit100, 4))) = hex_digit100
+        report "input_digit1 /= hex_digit1 " & to_string(to_segs(std_ulogic_vector(to_unsigned(input_digit100, 4)))) & " " & to_string(hex_digit100);
 
-      --assert input_digit1000 = to_integer(unsigned(hex_digit1000))
-        --report "input_digit1000 /= hex_digit1000 " & to_string(input_digit1000) & " " & to_string(hex_digit1000);
+      assert to_segs(std_ulogic_vector(to_unsigned(input_digit1000, 4))) = hex_digit1000
+        report "input_digit1 /= hex_digit1 " & to_string(to_segs(std_ulogic_vector(to_unsigned(input_digit1000, 4)))) & " " & to_string(hex_digit1000);
     end procedure;
 
     procedure test_unsigned is
