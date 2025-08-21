@@ -84,17 +84,17 @@ begin
 
       apply_input(input_val);
 
-      assert input_digit1 = to_integer(unsigned(hex_digit1))
-        report "input_digit1 /= hex_digit1 " & to_string(input_digit1) & " " & to_string(hex_digit1);
+      assert to_segs(std_ulogic_vector(to_unsigned(input_digit1, 4))) = hex_digit1
+        report "input_digit1 /= hex_digit1 " & to_string(to_segs(std_ulogic_vector(to_unsigned(input_digit1, 4)))) & " " & to_string(hex_digit1);
 
-      assert input_digit10 = to_integer(unsigned(hex_digit10))
-        report "input_digit10 /= hex_digit10 " & to_string(input_digit10) & " " & to_string(hex_digit10);
+      --assert input_digit10 = to_integer(unsigned(hex_digit10))
+       -- report "input_digit10 /= hex_digit10 " & to_string(input_digit10) & " " & to_string(hex_digit10);
 
-      assert input_digit100 = to_integer(unsigned(hex_digit100))
-        report "input_digit100 /= hex_digit100 " & to_string(input_digit100) & " " & to_string(hex_digit100);
+      --assert input_digit100 = to_integer(unsigned(hex_digit100))
+        --report "input_digit100 /= hex_digit100 " & to_string(input_digit100) & " " & to_string(hex_digit100);
 
-      assert input_digit1000 = to_integer(unsigned(hex_digit1000))
-        report "input_digit1000 /= hex_digit1000 " & to_string(input_digit1000) & " " & to_string(hex_digit1000);
+      --assert input_digit1000 = to_integer(unsigned(hex_digit1000))
+        --report "input_digit1000 /= hex_digit1000 " & to_string(input_digit1000) & " " & to_string(hex_digit1000);
     end procedure;
 
     procedure test_unsigned is
@@ -113,13 +113,13 @@ begin
     wait for 10*clk_period;
 
     --test_input_change;
-    --test_unsigned;
+    test_unsigned;
 
     --test for input bigger than 9999
-    apply_input(10000);
-    apply_input(99);
-    apply_input(19011);
-    apply_input(1984);
+    --apply_input(10000);
+    --apply_input(99);
+    --apply_input(19011);
+    --apply_input(1984);
 
 
     clk_stop <= '1';

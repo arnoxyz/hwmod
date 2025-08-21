@@ -136,7 +136,7 @@ begin
             state_nxt <= GET_DIGIT_100; --go to the next state -> GET_DIGIT_100
 
             if to_integer(cnt) = 0 then
-              hex_digit1000_internal_nxt  <= unsigned(SSD_CHAR_OFF);
+              hex_digit1000_internal_nxt  <= unsigned(to_segs(x"0"));
             end if;
           end if;
         when GET_DIGIT_100 =>
@@ -149,7 +149,7 @@ begin
             cnt_nxt <= (others=>'0'); --reset cnt
             state_nxt <= GET_DIGIT_10; --go to the next state -> GET_DIGIT_100
             if to_integer(cnt) = 0 then
-              hex_digit100_internal_nxt  <= unsigned(SSD_CHAR_OFF);
+              hex_digit100_internal_nxt  <= unsigned(to_segs(x"0"));
             end if;
           end if;
         when GET_DIGIT_10 =>
@@ -162,7 +162,7 @@ begin
             cnt_nxt <= (others=>'0'); --reset cnt
             state_nxt <= GET_DIGIT_1; --go to the next state -> GET_DIGIT_100
             if to_integer(cnt) = 0 then
-              hex_digit10_internal_nxt  <= unsigned(SSD_CHAR_OFF);
+              hex_digit10_internal_nxt  <= unsigned(to_segs(x"0"));
             end if;
           end if;
         when GET_DIGIT_1 =>
@@ -175,7 +175,7 @@ begin
             cnt_nxt <= (others=>'0'); --reset cnt
             state_nxt <= IDLE; --go to the next state
             if to_integer(cnt) = 0 then
-              hex_digit1_internal_nxt  <= unsigned(SSD_CHAR_OFF);
+              hex_digit1_internal_nxt  <= unsigned(to_segs(x"0"));
             end if;
           end if;
         end case;
