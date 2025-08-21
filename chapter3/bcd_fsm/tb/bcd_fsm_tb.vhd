@@ -105,6 +105,23 @@ begin
       end loop;
     end procedure;
 
+    procedure test_signed_input(input_val : integer) is
+      variable input_digit1     : integer;
+      variable input_digit10    : integer;
+      variable input_digit100   : integer;
+      variable input_digit1000  : integer;
+    begin
+      input_digit1     := input_val mod 10;
+      input_digit10    := (input_val/10) mod 10;
+      input_digit100   := (input_val/100) mod 10;
+      input_digit1000  := (input_val/1000) mod 10;
+
+      signed_mode <= '1';
+      wait for 10*clk_period;
+
+      apply_input(input_val);
+    end procedure;
+
 	begin
     report "sim start";
     res_n <= '0';
@@ -113,14 +130,15 @@ begin
     wait for 10*clk_period;
 
     --test_input_change;
-    test_unsigned;
+    --test_unsigned;
 
-    --test for input bigger than 9999
+      --test for input bigger than 9999
     --apply_input(10000);
-    --apply_input(99);
     --apply_input(19011);
-    --apply_input(1984);
 
+
+    test_signed_input(400);
+    --test_signed_input(-400);
 
     clk_stop <= '1';
     report "done sim ";
