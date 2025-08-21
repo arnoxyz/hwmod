@@ -71,29 +71,38 @@ begin
       wait for 100*clk_period;
     end procedure;
 
-    procedure test_unsigned_input is
-      --TODO: add check the output values after conversation with assertions
+    procedure test_unsigned_input(input_val : integer) is
       variable input_digit1     : integer;
       variable input_digit10    : integer;
       variable input_digit100   : integer;
       variable input_digit1000  : integer;
-      variable input_val        : integer;
     begin
-      input_digit1     := 3;
-      input_digit10    := 6;
-      input_digit100   := 4;
-      input_digit1000  := 5;
-      input_val := input_digit1+input_digit10*10+input_digit100*100+input_digit1000*1000;
+      input_digit1     := input_val mod 10;
+      input_digit10    := (input_val/10) mod 10;
+      input_digit100   := (input_val/100) mod 10;
+      input_digit1000  := (input_val/1000) mod 10;
 
       apply_input(input_val);
 
       assert input_digit1 = to_integer(unsigned(hex_digit1))
         report "input_digit1 /= hex_digit1 " & to_string(input_digit1) & " " & to_string(hex_digit1);
-	    --hex_digit1000, hex_digit100, hex_digit10, hex_digit1, hex_sign: std_ulogic_vector(6 downto 0);
 
-      apply_input(13);
-      apply_input(19813);
-      apply_input(1900);
+      assert input_digit10 = to_integer(unsigned(hex_digit10))
+        report "input_digit10 /= hex_digit10 " & to_string(input_digit10) & " " & to_string(hex_digit10);
+
+      assert input_digit100 = to_integer(unsigned(hex_digit100))
+        report "input_digit100 /= hex_digit100 " & to_string(input_digit100) & " " & to_string(hex_digit100);
+
+      assert input_digit1000 = to_integer(unsigned(hex_digit1000))
+        report "input_digit1000 /= hex_digit1000 " & to_string(input_digit1000) & " " & to_string(hex_digit1000);
+    end procedure;
+
+    procedure test_unsigned is
+    begin
+      for i in 0 to 9999 loop
+        report "test with input = " & to_string(i);
+        test_unsigned_input(i);
+      end loop;
     end procedure;
 
 	begin
@@ -104,11 +113,12 @@ begin
     wait for 10*clk_period;
 
     --test_input_change;
-    test_unsigned_input;
+    test_unsigned;
+
 
     clk_stop <= '1';
-    wait;
     report "done sim ";
+    wait;
 	end process;
 
 	uut : entity work.bcd_fsm
