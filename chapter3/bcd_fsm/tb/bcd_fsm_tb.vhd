@@ -84,25 +84,48 @@ begin
 
       apply_input(input_val);
 
-      assert to_segs(std_ulogic_vector(to_unsigned(input_digit1, 4))) = hex_digit1
-        report "input_digit1 /= hex_digit1 " & to_string(to_segs(std_ulogic_vector(to_unsigned(input_digit1, 4)))) & " " & to_string(hex_digit1);
+      if input_val <= 9999 then
+        assert to_segs(std_ulogic_vector(to_unsigned(input_digit1, 4))) = hex_digit1
+          report "input_digit1 /= hex_digit1 " & to_string(to_segs(std_ulogic_vector(to_unsigned(input_digit1, 4)))) & " " & to_string(hex_digit1);
 
-      assert to_segs(std_ulogic_vector(to_unsigned(input_digit10, 4))) = hex_digit10
-        report "input_digit1 /= hex_digit1 " & to_string(to_segs(std_ulogic_vector(to_unsigned(input_digit10, 4)))) & " " & to_string(hex_digit10);
+        assert to_segs(std_ulogic_vector(to_unsigned(input_digit10, 4))) = hex_digit10
+          report "input_digit1 /= hex_digit1 " & to_string(to_segs(std_ulogic_vector(to_unsigned(input_digit10, 4)))) & " " & to_string(hex_digit10);
 
-      assert to_segs(std_ulogic_vector(to_unsigned(input_digit100, 4))) = hex_digit100
-        report "input_digit1 /= hex_digit1 " & to_string(to_segs(std_ulogic_vector(to_unsigned(input_digit100, 4)))) & " " & to_string(hex_digit100);
+        assert to_segs(std_ulogic_vector(to_unsigned(input_digit100, 4))) = hex_digit100
+          report "input_digit1 /= hex_digit1 " & to_string(to_segs(std_ulogic_vector(to_unsigned(input_digit100, 4)))) & " " & to_string(hex_digit100);
 
-      assert to_segs(std_ulogic_vector(to_unsigned(input_digit1000, 4))) = hex_digit1000
-        report "input_digit1 /= hex_digit1 " & to_string(to_segs(std_ulogic_vector(to_unsigned(input_digit1000, 4)))) & " " & to_string(hex_digit1000);
+        assert to_segs(std_ulogic_vector(to_unsigned(input_digit1000, 4))) = hex_digit1000
+          report "input_digit1 /= hex_digit1 " & to_string(to_segs(std_ulogic_vector(to_unsigned(input_digit1000, 4)))) & " " & to_string(hex_digit1000);
+      else
+        --output OFL if the input can not be displayed with 4 digits so => everything bigger than 9999
+        assert hex_digit1000 = SSD_CHAR_OFF;
+        assert hex_digit100 = SSD_CHAR_O;
+        assert hex_digit10 = SSD_CHAR_F;
+        assert hex_digit1 = SSD_CHAR_L;
+      end if;
     end procedure;
 
     procedure test_unsigned is
+      variable input_val : integer;
     begin
+        report "start testing unsigned input values";
+
+      --test for valid inputs
       for i in 0 to 9999 loop
-        report "test with input = " & to_string(i);
-        test_unsigned_input(i);
+        input_val := i;
+        report "test with input = " & to_string(input_val);
+        test_unsigned_input(input_val);
       end loop;
+
+      --test for bigger inputs
+      input_val := 10000;
+      report "test with input = " & to_string(input_val);
+      test_unsigned_input(input_val);
+      input_val := 19191;
+      report "test with input = " & to_string(input_val);
+      test_unsigned_input(input_val);
+
+      report "done testing unsigned input values";
     end procedure;
 
 
@@ -118,13 +141,54 @@ begin
       variable input_digit10    : integer;
       variable input_digit100   : integer;
       variable input_digit1000  : integer;
+      variable local_input : integer;
     begin
-      input_digit1     := input_val mod 10;
-      input_digit10    := (input_val/10) mod 10;
-      input_digit100   := (input_val/100) mod 10;
-      input_digit1000  := (input_val/1000) mod 10;
-
       apply_input_signed(input_val);
+
+      local_input := input_val;
+
+      if local_input < 0 then
+        local_input := - local_input;
+      end if;
+
+      input_digit1     := local_input mod 10;
+      input_digit10    := (local_input/10) mod 10;
+      input_digit100   := (local_input/100) mod 10;
+      input_digit1000  := (local_input/1000) mod 10;
+
+      assert to_segs(std_ulogic_vector(to_unsigned(input_digit1, 4))) = hex_digit1
+        report "input_digit1 /= hex_digit1 " & to_string(to_segs(std_ulogic_vector(to_unsigned(input_digit1, 4)))) & " " & to_string(hex_digit1);
+
+      assert to_segs(std_ulogic_vector(to_unsigned(input_digit10, 4))) = hex_digit10
+        report "input_digit1 /= hex_digit1 " & to_string(to_segs(std_ulogic_vector(to_unsigned(input_digit10, 4)))) & " " & to_string(hex_digit10);
+
+      assert to_segs(std_ulogic_vector(to_unsigned(input_digit100, 4))) = hex_digit100
+        report "input_digit1 /= hex_digit1 " & to_string(to_segs(std_ulogic_vector(to_unsigned(input_digit100, 4)))) & " " & to_string(hex_digit100);
+
+      assert to_segs(std_ulogic_vector(to_unsigned(input_digit1000, 4))) = hex_digit1000
+        report "input_digit1 /= hex_digit1 " & to_string(to_segs(std_ulogic_vector(to_unsigned(input_digit1000, 4)))) & " " & to_string(hex_digit1000);
+    end procedure;
+
+    procedure test_signed is
+      variable input_val : integer;
+    begin
+        report "start testing signed input values:";
+
+      --test for pos inputs
+      for i in 0 to 9999 loop
+        input_val := i;
+        report "test with input = " & to_string(input_val);
+        test_signed_input(input_val);
+      end loop;
+
+      --test for neg inputs
+      for i in -9999 to 0 loop
+        input_val := i;
+        report "test with input = " & to_string(input_val);
+        test_signed_input(input_val);
+      end loop;
+
+        report "done testing signed input values";
     end procedure;
 
 	begin
@@ -135,15 +199,8 @@ begin
     wait for 10*clk_period;
 
     --test_input_change;
-    --test_unsigned;
-
-      --test for input bigger than 9999
-    --apply_input(10000);
-    --apply_input(19011);
-
-
-    test_signed_input(-7821);
-    --test_signed_input(8432);
+    test_unsigned;
+    test_signed;
 
     clk_stop <= '1';
     report "done sim ";

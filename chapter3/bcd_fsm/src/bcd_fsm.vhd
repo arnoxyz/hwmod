@@ -21,12 +21,16 @@ entity bcd_fsm is
 end entity;
 
 architecture beh of bcd_fsm is
+  constant POS_SIGN : std_ulogic_vector(6 downto 0) := SSD_CHAR_OFF;
+	constant NEG_SIGN : std_ulogic_vector(6 downto 0) := SSD_CHAR_DASH;
 	constant DATA_WIDTH : integer := 16;
+
   type fsm_state_t is (IDLE, GET_DIGIT_1000, GET_DIGIT_100, GET_DIGIT_10, GET_DIGIT_1);
 
   type state_reg_t is record
     state : fsm_state_t;
     signed_mode_internal : std_ulogic;
+    hex_sign_internal : std_ulogic_vector(6 downto 0);
     cnt : unsigned(3 downto 0);
     input_data_internal : unsigned(DATA_WIDTH-1 downto 0);
     input_data_sampled : unsigned(DATA_WIDTH-1 downto 0);
@@ -36,7 +40,7 @@ architecture beh of bcd_fsm is
     hex_digit1_internal   : unsigned(6 downto 0);
   end record;
 
-  constant RESET_VAL : state_reg_t := (state=>IDLE, signed_mode_internal=> '0', others=> (others=>'0'));
+  constant RESET_VAL : state_reg_t := (state=>IDLE, signed_mode_internal=> '0', hex_sign_internal => POS_SIGN, others=> (others=>'0'));
   signal s, s_nxt : state_reg_t;
 
 begin
@@ -60,7 +64,7 @@ begin
       hex_digit100   <= std_ulogic_vector(s.hex_digit100_internal);
       hex_digit10    <= std_ulogic_vector(s.hex_digit10_internal);
       hex_digit1     <= std_ulogic_vector(s.hex_digit1_internal);
-      hex_sign       <= (others=>'0');
+      hex_sign       <= s.hex_sign_internal;
 
       --CONVERSION-PROCESS:
 
@@ -80,8 +84,8 @@ begin
             s_nxt.input_data_internal <= unsigned(input_data);
             s_nxt.signed_mode_internal <= signed_mode;
 
+         --"0 input (no conversion needed)";
          if to_integer(unsigned(input_data)) = 0 then
-              report "0 input (no conversion needed)";
               s_nxt.hex_digit1000_internal <= unsigned(to_segs(x"0"));
               s_nxt.hex_digit100_internal  <= unsigned(to_segs(x"0"));
               s_nxt.hex_digit10_internal   <= unsigned(to_segs(x"0"));
@@ -91,8 +95,8 @@ begin
                 (s.signed_mode_internal = '1' and signed_mode = '0') or
                 (to_integer(s.input_data_sampled) /= to_integer(unsigned(input_data)))) then
 
+                --"convert unsigned";
                if signed_mode = '0' then
-                 report "convert unsigned";
                  if (to_integer(unsigned(input_data)) > 9999) then
                   s_nxt.hex_digit1000_internal <= unsigned(SSD_CHAR_OFF);
                   s_nxt.hex_digit100_internal  <= unsigned(SSD_CHAR_O);
@@ -107,14 +111,15 @@ begin
                  end if;
               end if;
 
+              --"convert signed";
               if signed_mode = '1' then
-                report "convert signed";
                 if to_integer(signed(input_data)) < 0 then
-                  report to_string(to_integer(- signed(input_data)));
+                  s_nxt.hex_sign_internal <= NEG_SIGN;
                   s_nxt.input_data_internal <= unsigned(- signed(input_data));
                   s_nxt.state <= GET_DIGIT_1000;
                 else
                   s_nxt.input_data_internal <= unsigned(input_data);
+                  s_nxt.state <= GET_DIGIT_1000;
                 end if;
           end if;
         end if;
