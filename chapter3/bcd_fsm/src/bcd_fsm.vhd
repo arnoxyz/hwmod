@@ -63,33 +63,62 @@ begin
       hex_sign       <= (others=>'0');
 
       --CONVERSION-PROCESS:
+
+      --Unsigned 16 Bit input so 0 to 2^16-1
       --(INPUT_NUMBER - 1000),  1k_cnt++,   until INPUT_NUMBER < 1000
       --(INPUT_NUMBER - 100),   100_cnt++,  until INPUT_NUMBER < 100
       --(INPUT_NUMBER - 10),    10_cnt++,   until INPUT_NUMBER < 10
       --(INPUT_NUMBER - 1),     1_cnt++,    until INPUT_NUMBER <= 0
 
+      --Signed 16 Bit input so -2^15 to 2^15-1
+      -- if the input is = 0 just output 0
+      -- if the input is > 0 just interpret the input as unsigned and use same logic as before
+      -- if the input is < 0 use the abs(input) so - signed(input) then same logic as before
+
       case s.state is
         when IDLE =>
-          s_nxt.input_data_internal <= unsigned(input_data);
-          s_nxt.signed_mode_internal <= signed_mode;
+            s_nxt.input_data_internal <= unsigned(input_data);
+            s_nxt.signed_mode_internal <= signed_mode;
 
-          if ((s.signed_mode_internal = '1' and signed_mode = '0') or
-             (s.signed_mode_internal = '0' and signed_mode = '1')  or
-             (to_integer(s.input_data_sampled) /= to_integer(unsigned(input_data)))) then
+         if to_integer(unsigned(input_data)) = 0 then
+              report "0 input (no conversion needed)";
+              s_nxt.hex_digit1000_internal <= unsigned(to_segs(x"0"));
+              s_nxt.hex_digit100_internal  <= unsigned(to_segs(x"0"));
+              s_nxt.hex_digit10_internal   <= unsigned(to_segs(x"0"));
+              s_nxt.hex_digit1_internal    <= unsigned(to_segs(x"0"));
 
-               if (to_integer(unsigned(input_data)) > 9999) then
-                s_nxt.hex_digit1000_internal <= unsigned(SSD_CHAR_OFF);
-                s_nxt.hex_digit100_internal  <= unsigned(SSD_CHAR_O);
-                s_nxt.hex_digit10_internal   <= unsigned(SSD_CHAR_F);
-                s_nxt.hex_digit1_internal    <= unsigned(SSD_CHAR_L);
-               else
-                s_nxt.hex_digit1000_internal <= unsigned(SSD_CHAR_OFF);
-                s_nxt.hex_digit100_internal  <= unsigned(SSD_CHAR_OFF);
-                s_nxt.hex_digit10_internal   <= unsigned(SSD_CHAR_OFF);
-                s_nxt.hex_digit1_internal    <= unsigned(SSD_CHAR_OFF);
-                s_nxt.state <= GET_DIGIT_1000;
-               end if;
+          elsif ((s.signed_mode_internal = '0' and signed_mode = '1') or
+                (s.signed_mode_internal = '1' and signed_mode = '0') or
+                (to_integer(s.input_data_sampled) /= to_integer(unsigned(input_data)))) then
+
+               if signed_mode = '0' then
+                 report "convert unsigned";
+                 if (to_integer(unsigned(input_data)) > 9999) then
+                  s_nxt.hex_digit1000_internal <= unsigned(SSD_CHAR_OFF);
+                  s_nxt.hex_digit100_internal  <= unsigned(SSD_CHAR_O);
+                  s_nxt.hex_digit10_internal   <= unsigned(SSD_CHAR_F);
+                  s_nxt.hex_digit1_internal    <= unsigned(SSD_CHAR_L);
+                 else
+                  s_nxt.hex_digit1000_internal <= unsigned(SSD_CHAR_OFF);
+                  s_nxt.hex_digit100_internal  <= unsigned(SSD_CHAR_OFF);
+                  s_nxt.hex_digit10_internal   <= unsigned(SSD_CHAR_OFF);
+                  s_nxt.hex_digit1_internal    <= unsigned(SSD_CHAR_OFF);
+                  s_nxt.state <= GET_DIGIT_1000;
+                 end if;
+              end if;
+
+              if signed_mode = '1' then
+                report "convert signed";
+                if to_integer(signed(input_data)) < 0 then
+                  report to_string(to_integer(- signed(input_data)));
+                  s_nxt.input_data_internal <= unsigned(- signed(input_data));
+                  s_nxt.state <= GET_DIGIT_1000;
+                else
+                  s_nxt.input_data_internal <= unsigned(input_data);
+                end if;
           end if;
+        end if;
+
         when GET_DIGIT_1000 =>
           if to_integer(s.input_data_internal) >= 1000 then
             s_nxt.input_data_internal <= to_unsigned(to_integer(s.input_data_internal)-1000, DATA_WIDTH);

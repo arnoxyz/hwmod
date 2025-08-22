@@ -105,6 +105,14 @@ begin
       end loop;
     end procedure;
 
+
+    procedure apply_input_signed(data : integer) is
+    begin
+      signed_mode <= '1';
+      input_data  <= std_ulogic_vector(to_signed(data, DATA_WIDTH));
+      wait for 50*clk_period;
+    end procedure;
+
     procedure test_signed_input(input_val : integer) is
       variable input_digit1     : integer;
       variable input_digit10    : integer;
@@ -116,10 +124,7 @@ begin
       input_digit100   := (input_val/100) mod 10;
       input_digit1000  := (input_val/1000) mod 10;
 
-      signed_mode <= '1';
-      wait for 10*clk_period;
-
-      apply_input(input_val);
+      apply_input_signed(input_val);
     end procedure;
 
 	begin
@@ -137,8 +142,8 @@ begin
     --apply_input(19011);
 
 
-    test_signed_input(400);
-    --test_signed_input(-400);
+    test_signed_input(-7821);
+    --test_signed_input(8432);
 
     clk_stop <= '1';
     report "done sim ";
