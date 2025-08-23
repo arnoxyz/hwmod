@@ -1,3 +1,4 @@
+[Back](../../)
 # Generic Adder
 Use the 4Bit-Adders from chapter1 to generate an N-Bit Adder by chaining 4Bit adders together. The Input N is used to set the N-Bit Width for the Adders.
 The design only uses 4Bit-Adders so only multiples of 4Bit are valid. (so 4Bit, 8Bit, 12Bit, ..., 32Bit, ..., 64Bit, ....) <br>

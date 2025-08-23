@@ -1,16 +1,17 @@
+[Back](../../)
 # Linear Feedback Shift Register (LFSR)
-Implementing a LFSR. With a generic width and a polynomial for the feedback loop. 
+Implementing a LFSR. With a generic width and a polynomial for the feedback loop.
 ```
-lfsr_width := 4; 
+lfsr_width := 4;
 --meaning internal shift reg is from: (lfsr_width-1 downto 0) so 3 downto 0
 ```
 
 ```
-polynomial := "1100"; 
+polynomial := "1100";
 -- meaning feedback of the first  x(0) <= (x(3) xor x(2))
 ```
-There can also be a seed inserted using the load_seed_n and seed inputs.  
-The seed is the init values of the shift register. The shift register outputs the data 
+There can also be a seed inserted using the load_seed_n and seed inputs.
+The seed is the init values of the shift register. The shift register outputs the data
 in a seriell output named prdata. (pr=pseudo random) Because lfsr are used to create pseudorandom data.
 ## Implementation and Simulation
 Write boilerplate code for the tb (uut, basic stimulus, clk_gen) and sync process. I used the demo2 lfsr as starting point. So I knew the right pattern for testing already.

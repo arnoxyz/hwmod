@@ -1,3 +1,4 @@
+[Back](../../)
 # Simple Calc
 Creating a simple calculator that can add and subtract two numbers. Using two registers to store inputs from one data input. After storing some data in the registers using store_operand1 and store_operand2, the calculator outputs the result so the sum of the two registers. (this is combinational logic so it will continues output the sum). If sub is '1' the design outputs the subtraction of the registers.
 ## Simulation

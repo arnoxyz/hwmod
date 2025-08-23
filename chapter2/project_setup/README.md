@@ -1,3 +1,4 @@
+[Back](../../)
 # Project Setup - Quartus
 Introduction to the Quartus workflow. So now the VHDL code gets not only simulated with tools like Modelsim/GHDL but real synthesized (generates hw) this is done with the tool: Quartus.
 

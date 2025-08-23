@@ -1,3 +1,4 @@
+[Back](../../)
 # Watch
 Implementing a watch (either a stopwatch or a timer) and a bin2dec module.
 ## Stopwatch Module
@@ -86,7 +87,7 @@ The whole output is an array of dec_digits called dec_digits_t
 dec_digits_t is array(integer range <>) of dec_digit_t
 
 
-so (123)_10 is 
+so (123)_10 is
 array(0) = 0011 = 3
 array(1) = 0010 = 2
 array(2) = 0001 = 1

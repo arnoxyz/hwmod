@@ -1,9 +1,10 @@
+[Back](../../)
 # Illusions
-Draw given illusions.  
+Draw given illusions.
 All my output pictures are converted from bbp (bitmap) to jpg. (to easily upload it to github)
 
 # Ouchi
-## Output 
+## Output
 ![Output Ouchi](./img/ouchi.jpg)
 ## Alternative Coloring
 ![Alternative Ouchi](./img/alt-ouchi.jpg)
@@ -13,7 +14,7 @@ All my output pictures are converted from bbp (bitmap) to jpg. (to easily upload
 # Squarecircle
 ## Output
 ![Output Squarecircle](./img/squarecircle.jpg)
-# Checkerboard 
+# Checkerboard
 ## Chessboard
 ![Output Chessboard](./img/chessboard.jpg)
 ## Output

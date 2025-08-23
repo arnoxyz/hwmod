@@ -1,4 +1,3 @@
-
 # ALU (Arithmetic logic unit)
 **Points:** 1 ` | ` **Keywords:** combinational, arithmetic operations
 
