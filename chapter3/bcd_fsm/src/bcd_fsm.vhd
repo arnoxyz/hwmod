@@ -66,18 +66,6 @@ begin
       hex_digit1     <= std_ulogic_vector(s.hex_digit1_internal);
       hex_sign       <= s.hex_sign_internal;
 
-      --CONVERSION-PROCESS:
-
-      --Unsigned 16 Bit input so 0 to 2^16-1
-      --(INPUT_NUMBER - 1000),  1k_cnt++,   until INPUT_NUMBER < 1000
-      --(INPUT_NUMBER - 100),   100_cnt++,  until INPUT_NUMBER < 100
-      --(INPUT_NUMBER - 10),    10_cnt++,   until INPUT_NUMBER < 10
-      --(INPUT_NUMBER - 1),     1_cnt++,    until INPUT_NUMBER <= 0
-
-      --Signed 16 Bit input so -2^15 to 2^15-1
-      -- if the input is = 0 just output 0
-      -- if the input is > 0 just interpret the input as unsigned and use same logic as before
-      -- if the input is < 0 use the abs(input) so - signed(input) then same logic as before
 
       case s.state is
         when IDLE =>
