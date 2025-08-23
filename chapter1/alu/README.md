@@ -1,12 +1,13 @@
+[Back](../../)
 # Implement and Simu an ALU (Arithmetic-Logic-Unit)
 ALU is part of a processor unit and does arithmetical operations like add, sub of vectors/numbers and also logical operations like and, or, xor of vectors/numbers.
 
 
-## Entity/Interface of the Unit: 
+## Entity/Interface of the Unit:
 ### Inputs:
 - op  = operation, what operation should be executed by the alu, example: alu_add = adds a+b
 - a,b = input numbers, represented as std_ulogic_vectors, example: a="0001", b="0010"
-### Outputs: 
+### Outputs:
 - r   = result of the operation, example: r = a+b
 - z   = flag, extra information of the result, example: '1' if A=B and '0' if A!=B
 ### Generic:
@@ -18,7 +19,7 @@ ALU is part of a processor unit and does arithmetical operations like add, sub o
 - b  = "0001"
 Result should then be:
 - r  = "0001" (result of a+b)
-- z  = "-" (don't care = meaning the output value is of no intrest, when op=ALU_ADD) 
+- z  = "-" (don't care = meaning the output value is of no intrest, when op=ALU_ADD)
 
 ## Operations to implement
 The operations of the ALU are defined in the following table:
@@ -45,16 +46,16 @@ The operations of the ALU are defined in the following table:
 ### Derive the value x:
 - constant x : integer := log2c(DATA_WIDTH);
 #### Example: DATA_WIDTH = 4
-- get how many bits you need to represent that number: log2c(4) = 2, because 2^4 = 4 
+- get how many bits you need to represent that number: log2c(4) = 2, because 2^4 = 4
 - A sll B(x=4 downto 0) so A sll B(4 dowto 0), but then there would be 5 so -1 to x
 #### Final Result:
-- A sll B(4-1 downto 0) 
-- A sll B(x-1 downto 0) 
+- A sll B(4-1 downto 0)
+- A sll B(x-1 downto 0)
 ### Little fun with Conversions (STD_ULOGIC, SIGNED/UNSIGNED, INTEGER):
 - Output r is a std_ulogic_vector
 - r <= std_ulogic_vector(---)
 - To performe shift operation there can be used the shift_left(vector as signed/unsigned, length as integer) function
-- shift by 2, shift_left("0001", 2), result is "0100" 
+- shift by 2, shift_left("0001", 2), result is "0100"
 - r <= std_ulogic_vector(shift_left(---))
 - shift_left(---) = shift_left(unsigned(a), to_integer(unsigned(b(x-1 downto 0))))
 ### Complete Result:
