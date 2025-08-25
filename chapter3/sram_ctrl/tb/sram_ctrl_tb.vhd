@@ -11,8 +11,9 @@ end entity;
 
 architecture tb of sram_ctrl_tb is
 	signal CLK_PERIOD : time := 20 ns;
-	signal stop_clk : boolean := false;
+	signal clk_stop : std_ulogic := '0';
 	signal clk, res_n : std_ulogic;
+
 	signal rd, wr, busy, rd_valid : std_ulogic := '0';
 	signal addr : byte_addr_t;
 	signal wr_data, rd_data : std_ulogic_vector(15 downto 0);
@@ -29,7 +30,16 @@ begin
 
 	stimulus : process is
 	begin
-		-- TODO: reset your design and apply stimuli as needed
+    report "sim start";
+    res_n <= '0';
+    wait for 5*clk_period;
+    res_n <= '1';
+    wait for 10*clk_period;
+
+
+    clk_stop <= '1';
+    report "done sim";
+    wait;
 	end process;
 
 	sequence_fsm_inst : entity work.sequence_fsm
@@ -86,7 +96,14 @@ begin
 
 	clk_gen : process is
 	begin
-	end process;
+    clk <= '0';
+    wait for clk_period / 2;
+    clk <= '1';
+    wait for clk_period / 2;
 
+    if clk_stop = '1' then
+      wait;
+    end if;
+	end process;
 end architecture;
 
