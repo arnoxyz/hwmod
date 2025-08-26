@@ -38,6 +38,8 @@ begin
     res_n <= '1';
     rd <= '1';
     wr <= '0';
+	  addr <= (0=>'1', others=>'0');
+	  access_mode <= BYTE;
     wait for 10*clk_period;
 
     res_n <= '0';
@@ -47,6 +49,9 @@ begin
     res_n <= '1';
     rd <= '0';
     wr <= '1';
+	  addr <= (0=>'1', others=>'0');
+	  wr_data <= (0=>'1', others=>'0');
+	  access_mode <= BYTE;
     wait for 10*clk_period;
 
 

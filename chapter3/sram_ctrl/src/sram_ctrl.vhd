@@ -37,9 +37,12 @@ architecture arch of sram_ctrl is
 
   type reg_t is record
     state : fsm_state_t;
+		access_mode : sram_access_mode_t;
+		addr        : byte_addr_t;
+		wr_data     : uword_t;
   end record;
 
-  constant RESET_VAL : reg_t := (state=>IDLE);
+  constant RESET_VAL : reg_t := (state=>IDLE, access_mode=>BYTE, others=>(others=>'0'));
   signal s, s_nxt : reg_t;
 
 begin
@@ -61,10 +64,15 @@ begin
         when IDLE  =>
           if rd = '1' then
             s_nxt.state <= READ;
-          end if;
+            s_nxt.addr        <= addr;
+            s_nxt.access_mode <= access_mode;
+        end if;
 
           if wr = '1' then
             s_nxt.state <= WRITE;
+            s_nxt.addr        <= addr;
+            s_nxt.access_mode <= access_mode;
+            s_nxt.wr_data     <= wr_data;
           end if;
 
         when READ  =>
