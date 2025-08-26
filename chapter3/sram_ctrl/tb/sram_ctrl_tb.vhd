@@ -33,8 +33,22 @@ begin
     report "sim start";
     res_n <= '0';
     wait for 5*clk_period;
+
+    --check IDLE->READ
     res_n <= '1';
+    rd <= '1';
+    wr <= '0';
     wait for 10*clk_period;
+
+    res_n <= '0';
+    wait for 5*clk_period;
+
+    --check IDLE->WRITE
+    res_n <= '1';
+    rd <= '0';
+    wr <= '1';
+    wait for 10*clk_period;
+
 
 
     clk_stop <= '1';
@@ -42,21 +56,6 @@ begin
     wait;
 	end process;
 
-	sequence_fsm_inst : entity work.sequence_fsm
-	port map (
-		clk   => clk,
-		res_n => res_n,
-
-		wr       => wr,
-		rd       => rd,
-		busy     => busy,
-		rd_valid => rd_valid,
-
-		addr        => addr,
-		access_mode => access_mode,
-		wr_data     => wr_data,
-		rd_data     => rd_data
-	);
 
 	sram_inst : entity work.sram
 	port map (
@@ -93,6 +92,25 @@ begin
 		sram_ce_n => sram_ce_n,
 		sram_oe_n => sram_oe_n
 	);
+
+  /*
+  --For task2: implementation of sequence_fsm
+	sequence_fsm_inst : entity work.sequence_fsm
+	port map (
+		clk   => clk,
+		res_n => res_n,
+
+		wr       => wr,
+		rd       => rd,
+		busy     => busy,
+		rd_valid => rd_valid,
+
+		addr        => addr,
+		access_mode => access_mode,
+		wr_data     => wr_data,
+		rd_data     => rd_data
+	);
+  */
 
 	clk_gen : process is
 	begin

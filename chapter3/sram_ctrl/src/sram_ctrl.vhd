@@ -33,7 +33,7 @@ end entity;
 
 
 architecture arch of sram_ctrl is
-  type fsm_state_t is (IDLE);
+  type fsm_state_t is (IDLE, WRITE, READ);
 
   type reg_t is record
     state : fsm_state_t;
@@ -56,5 +56,24 @@ begin
 	comb : process(all)
 	begin
       s_nxt <= s;
+
+      case s.state is
+        when IDLE  =>
+          if rd = '1' then
+            s_nxt.state <= READ;
+          end if;
+
+          if wr = '1' then
+            s_nxt.state <= WRITE;
+          end if;
+
+        when READ  =>
+          report "in READ";
+        when WRITE =>
+          report "in WRITE";
+      end case;
+
+
+
 	end process;
 end architecture;
