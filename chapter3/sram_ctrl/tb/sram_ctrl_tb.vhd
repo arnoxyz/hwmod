@@ -17,7 +17,7 @@ architecture tb of sram_ctrl_tb is
 	signal rd, wr, busy, rd_valid : std_ulogic := '0';
 	signal addr : byte_addr_t;
 	signal wr_data, rd_data : std_ulogic_vector(15 downto 0);
-	signal access_mode : sram_access_mode_t;
+	signal access_mode : sram_access_mode_t := WORD;
 
 	signal sram_dq : std_logic_vector(15 downto 0) := (others => 'Z');
 	signal sram_addr : word_addr_t;
@@ -29,43 +29,51 @@ architecture tb of sram_ctrl_tb is
 begin
 
 	stimulus : process is
+    procedure write_sram(tmp_addr : integer; tmp_data : integer) is
+    begin
+      --addr <= (0=>'1', others=>'0');
+      --wr_data <= (0=>'1', others=>'0');
+      --res_n <= '1';
+      --wait for 10*clk_period;
+
+      --WRITE
+      --rd <= '0';
+      --wr <= '1';
+      --wait for clk_period;
+
+      --wr <= '0';
+      --wait until busy = '0';
+      --wait for 10*clk_period;
+    end procedure;
+
+    procedure read_sram(tmp_addr : integer) is
+    begin
+      --READ
+      --rd <= '1';
+      --wr <= '0';
+      --wait for clk_period;
+
+      --rd <= '0';
+      --wait until busy = '0';
+      --wait for 10*clk_period;
+    end procedure;
+
+    procedure simple_test is
+    begin
+      write_sram(tmp_addr=>1,tmp_data=>10);
+      read_sram(tmp_addr=>1);
+    end procedure;
+
 	begin
     report "sim start";
-	  access_mode <= WORD; --does not matter now, hardcode to WORD
-    --simple test of sram:
-      --write to addr(1) <= DATA = 10
-      --read from that addr(1)
-      --Read DATA = Write DATA??
-
     res_n <= '0';
-    wait for 2*clk_period;
-
-	  addr <= (0=>'1', others=>'0');
-	  wr_data <= (0=>'1', others=>'0');
-    res_n <= '1';
     wait for 10*clk_period;
 
-    --WRITE
-    rd <= '0';
-    wr <= '1';
-    wait for clk_period;
-
-    wr <= '0';
-    --wait until busy = '0';
-    wait for 10*clk_period;
-
-    --READ
-    rd <= '1';
-    wr <= '0';
-    wait for clk_period;
-
-    rd <= '0';
-    --wait until busy = '0';
-    wait for 10*clk_period;
-
+    simple_test;
 
     clk_stop <= '1';
-    wait for 20 ns;
+    wait for 2*clk_period;
+
     report "done sim";
     wait;
 	end process;
