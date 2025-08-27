@@ -31,33 +31,41 @@ begin
 	stimulus : process is
 	begin
     report "sim start";
-    res_n <= '0';
-    wait for 5*clk_period;
-
-	  addr <= (0=>'1', others=>'0');
-	  access_mode <= BYTE;
-    res_n <= '1';
-    wait for 5*clk_period;
-
-    --check IDLE->READ
-    rd <= '1';
-    wr <= '0';
-    wait for 10*clk_period;
+	  access_mode <= WORD; --does not matter now, hardcode to WORD
+    --simple test of sram:
+      --write to addr(1) <= DATA = 10
+      --read from that addr(1)
+      --Read DATA = Write DATA??
 
     res_n <= '0';
-    wait for 5*clk_period;
+    wait for 2*clk_period;
 
-    --check IDLE->WRITE
-    res_n <= '1';
-    rd <= '0';
-    wr <= '1';
 	  addr <= (0=>'1', others=>'0');
 	  wr_data <= (0=>'1', others=>'0');
-	  access_mode <= BYTE;
+    res_n <= '1';
+    wait for 10*clk_period;
+
+    --WRITE
+    rd <= '0';
+    wr <= '1';
+    wait for clk_period;
+
+    wr <= '0';
+    --wait until busy = '0';
+    wait for 10*clk_period;
+
+    --READ
+    rd <= '1';
+    wr <= '0';
+    wait for clk_period;
+
+    rd <= '0';
+    --wait until busy = '0';
     wait for 10*clk_period;
 
 
     clk_stop <= '1';
+    wait for 20 ns;
     report "done sim";
     wait;
 	end process;
