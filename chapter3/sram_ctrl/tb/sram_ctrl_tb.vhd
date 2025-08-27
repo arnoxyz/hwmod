@@ -34,12 +34,14 @@ begin
     res_n <= '0';
     wait for 5*clk_period;
 
-    --check IDLE->READ
-    res_n <= '1';
-    rd <= '1';
-    wr <= '0';
 	  addr <= (0=>'1', others=>'0');
 	  access_mode <= BYTE;
+    res_n <= '1';
+    wait for 5*clk_period;
+
+    --check IDLE->READ
+    rd <= '1';
+    wr <= '0';
     wait for 10*clk_period;
 
     res_n <= '0';
@@ -53,7 +55,6 @@ begin
 	  wr_data <= (0=>'1', others=>'0');
 	  access_mode <= BYTE;
     wait for 10*clk_period;
-
 
 
     clk_stop <= '1';

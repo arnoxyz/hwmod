@@ -33,7 +33,7 @@ end entity;
 
 
 architecture arch of sram_ctrl is
-  type fsm_state_t is (IDLE, WRITE, READ);
+  type fsm_state_t is (IDLE, WRITE, READ_START, READ_OUT);
 
   type reg_t is record
     state : fsm_state_t;
@@ -57,13 +57,25 @@ begin
 	end process;
 
 	comb : process(all)
+    function to_word_addr(b : byte_addr_t) return word_addr_t is
+    begin
+      return std_logic_vector(b(20 downto 1));
+    end function;
 	begin
       s_nxt <= s;
+      rd_valid <= '0';
+      sram_dq <= (others=>'Z');
+
+      -- external interface to SRAM
+      sram_ce_n <= '0'; --always activate chip
+      --for now only access_mode = WORD is valid
+      sram_ub_n <= '0'; --always activate lower and upper bits
+      sram_lb_n <= '0';
 
       case s.state is
         when IDLE  =>
           if rd = '1' then
-            s_nxt.state <= READ;
+            s_nxt.state <= READ_START;
             s_nxt.addr        <= addr;
             s_nxt.access_mode <= access_mode;
         end if;
@@ -75,13 +87,23 @@ begin
             s_nxt.wr_data     <= wr_data;
           end if;
 
-        when READ  =>
-          report "in READ";
+        when READ_START =>
+          report "READ_START";
+          s_nxt.state <= READ_OUT;
+          --Activate Read cycle no. 1
+          sram_addr <= to_word_addr(s.addr);
+          sram_dq <= (others=>'Z');
+          sram_oe_n <= '0';
+          sram_we_n <= '1';
+
+        when READ_OUT =>
+          report "READ_OUT";
+          s_nxt.state <= IDLE;
+		      rd_data <= sram_dq;
+          rd_valid <= '1';
+
         when WRITE =>
-          report "in WRITE";
+          report "WRITE";
       end case;
-
-
-
 	end process;
 end architecture;

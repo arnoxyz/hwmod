@@ -15,4 +15,5 @@ package sram_ctrl_pkg is
 	subtype word_t is std_logic_vector(15 downto 0);
 	type sequence_t is array(natural range <>) of uword_t;
 
+
 end package;
