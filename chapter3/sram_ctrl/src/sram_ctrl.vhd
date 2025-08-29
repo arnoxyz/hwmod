@@ -20,6 +20,7 @@ entity sram_ctrl is
 		wr_data     : in uword_t;
 		rd_data     : out uword_t;
 
+
 		-- external interface to SRAM
 		sram_dq   : inout word_t;
 		sram_addr : out word_addr_t;
@@ -62,15 +63,18 @@ begin
       s_nxt <= s;
       rd_valid <= '0';
       busy <= '0';
+
+      sram_ce_n <= '0'; --always activate chip
+      sram_dq <= (others=>'Z');
       sram_ub_n <= '0';
       sram_lb_n <= '0';
+
 
       case s.state is
         when IDLE  =>
           sram_ce_n <= '1';
           sram_oe_n <= '1';
           sram_we_n <= '1';
-          sram_dq <= (others=>'Z');
 
           s_nxt.addr        <= addr;
           s_nxt.access_mode <= access_mode;
@@ -78,38 +82,34 @@ begin
 
           if rd = '1' then
             s_nxt.state <= READ_START;
-            busy <= '1';
+            sram_oe_n <= '0';
+            sram_we_n <= '1';
           end if;
 
           if wr = '1' then
             s_nxt.state <= WRITE_START;
-            --activate we and oe
             sram_ce_n <= '0';
             sram_oe_n <= '1';
             sram_we_n <= '0';
-            busy <= '1';
           end if;
 
         when READ_START =>
           --Activate Read cycle no. 1
           s_nxt.state <= READ_OUT;
           busy <= '1';
-          sram_ce_n <= '0';
+
           sram_oe_n <= '0';
           sram_we_n <= '1';
-
           sram_addr <= std_ulogic_vector(s.addr(19 downto 0));
-          sram_dq <= (others=>'Z');
 
         when READ_OUT =>
           s_nxt.state <= IDLE;
           busy <= '1';
-          sram_ce_n <= '0';
+
           sram_oe_n <= '0';
           sram_we_n <= '1';
 
-          sram_dq <= (others=>'Z');
-		      rd_data <= sram_dq;
+		      rd_data <= std_ulogic_vector(sram_dq);
           rd_valid <= '1';
 
         when WRITE_START =>
