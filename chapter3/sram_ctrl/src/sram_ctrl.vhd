@@ -42,12 +42,37 @@ architecture arch of sram_ctrl is
 		access_mode : sram_access_mode_t;
 		addr        : byte_addr_t;
 		wr_data     : uword_t;
+		sram_addr : word_addr_t;
+		sram_ub_n : std_logic;
+		sram_lb_n : std_logic;
+		sram_we_n : std_logic;
+		sram_ce_n : std_logic;
+		sram_oe_n : std_logic;
   end record;
 
-  constant RESET_VAL : reg_t := (state=>IDLE, cnt => (others=>'0'), access_mode=>BYTE, others=>(others=>'0'));
+  constant RESET_VAL : reg_t := (
+        state=> IDLE,
+        access_mode=>BYTE,
+        cnt => (others=>'0'),
+        addr        => (others=>'0'),
+        wr_data     => (others=>'0'),
+        sram_addr => (others=>'0'),
+        sram_ub_n => '1',
+        sram_lb_n => '1',
+        sram_we_n => '1',
+        sram_ce_n => '1',
+        sram_oe_n => '1'
+    );
+
   signal s, s_nxt : reg_t;
 
 begin
+  sram_addr <= s.sram_addr;
+  sram_ub_n <= s.sram_ub_n;
+  sram_lb_n <= s.sram_lb_n;
+  sram_we_n <= s.sram_we_n;
+  sram_ce_n <= s.sram_ce_n;
+  sram_oe_n <= s.sram_oe_n;
 
 	sync : process(clk, res_n)
 	begin
@@ -62,19 +87,20 @@ begin
 	begin
       s_nxt <= s;
       rd_valid <= '0';
+		  rd_data <= (others=>'0');
       busy <= '0';
 
-      sram_ce_n <= '0'; --always activate chip
+      s_nxt.sram_ce_n <= '0'; --always activate chip
+      s_nxt.sram_ub_n <= '0';
+      s_nxt.sram_lb_n <= '0';
       sram_dq <= (others=>'Z');
-      sram_ub_n <= '0';
-      sram_lb_n <= '0';
 
 
       case s.state is
         when IDLE  =>
-          sram_ce_n <= '1';
-          sram_oe_n <= '1';
-          sram_we_n <= '1';
+          s_nxt.sram_ce_n <= '1';
+          s_nxt.sram_oe_n <= '1';
+          s_nxt.sram_we_n <= '1';
 
           s_nxt.addr        <= addr;
           s_nxt.access_mode <= access_mode;
@@ -82,15 +108,15 @@ begin
 
           if rd = '1' then
             s_nxt.state <= READ_START;
-            sram_oe_n <= '0';
-            sram_we_n <= '1';
+            s_nxt.sram_oe_n <= '0';
+            s_nxt.sram_we_n <= '1';
           end if;
 
           if wr = '1' then
             s_nxt.state <= WRITE_START;
-            sram_ce_n <= '0';
-            sram_oe_n <= '1';
-            sram_we_n <= '0';
+            s_nxt.sram_ce_n <= '0';
+            s_nxt.sram_oe_n <= '1';
+            s_nxt.sram_we_n <= '0';
           end if;
 
         when READ_START =>
@@ -98,17 +124,13 @@ begin
           s_nxt.state <= READ_OUT;
           busy <= '1';
 
-          sram_oe_n <= '0';
-          sram_we_n <= '1';
-          sram_addr <= std_ulogic_vector(s.addr(19 downto 0));
+          s_nxt.sram_oe_n <= '0';
+          s_nxt.sram_we_n <= '1';
+          s_nxt.sram_addr <= std_ulogic_vector(s.addr(19 downto 0));
 
         when READ_OUT =>
           s_nxt.state <= IDLE;
           busy <= '1';
-
-          sram_oe_n <= '0';
-          sram_we_n <= '1';
-
 		      rd_data <= std_ulogic_vector(sram_dq);
           rd_valid <= '1';
 
@@ -116,11 +138,7 @@ begin
           --Activate Write cycle no. 3
           s_nxt.cnt <= s.cnt + 1;
           busy <= '1';
-          sram_ce_n <= '0';
-          sram_oe_n <= '1';
-          sram_we_n <= '0';
-
-	        sram_addr <= std_ulogic_vector(s.addr(19 downto 0));
+	        s_nxt.sram_addr <= std_ulogic_vector(s.addr(19 downto 0));
           sram_dq <= std_logic_vector(s.wr_data);
 
           --give the sram 3 cc to complete the write process
